@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import os
 from tqdm import tqdm
+import gc
 
 import sys
 sys.path.append("../")
@@ -16,17 +17,17 @@ class Rank_CNN():
     def __init__(self):
         self.preprocessor = Preprocess.Preprocess()
         self.embedding = Embeddings()
-        self.lr = 1e-4
-        self.batch_size = 128
-        self.n_epoch = 15
+        self.lr = 0.0001
+        self.batch_size = 512
+        self.n_epoch = 16
 
         self.sentence_length = self.preprocessor.max_length
-        self.vec_dim = self.embedding.vec_dim
-        #self.vec_dim = 64
-        self.filter_sizes = [2, 3]
+        #self.vec_dim = self.embedding.vec_dim
+        self.vec_dim = 64
+        self.filter_sizes = [3, 4]
         self.num_filters = 64
-        self.num_hidden = 100
-        self.l2_reg = 0.0004
+        self.num_hidden = 128
+        self.l2_reg = 0.001
         self.num_classes = 2
 
         self.vocab_size = 6119
@@ -39,9 +40,9 @@ class Rank_CNN():
         self.trainable = tf.placeholder(bool, shape=[], name = 'trainable')
 
         with tf.name_scope('embedding'):
-            embedding_matrix = self.embedding.get_es_embedding_matrix()
-            embedding_matrix = tf.Variable(embedding_matrix, trainable=True, name='embedding')
-            #embedding_matrix = tf.get_variable('embedding', [self.vocab_size, self.vec_dim], dtype=tf.float32)
+            # embedding_matrix = self.embedding.get_es_embedding_matrix()
+            # embedding_matrix = tf.Variable(embedding_matrix, trainable=True, name='embedding')
+            embedding_matrix = tf.get_variable('embedding', [self.vocab_size, self.vec_dim], dtype=tf.float32)
             embedding_matrix_fixed = tf.stop_gradient(embedding_matrix, name='embedding_fixed')
 
             question_inputs = tf.cond(self.trainable,
@@ -108,6 +109,8 @@ class Rank_CNN():
             tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
         )
 
+        self.cost_non_reg = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.scores, labels=self.label))
+
         with tf.name_scope('acc'):
             correct = tf.nn.in_top_k(self.scores, self.label, 1)
             self.accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
@@ -156,15 +159,23 @@ class Rank_CNN():
             # [batch_size, |s| - filter_size + 1, 1, num_filters]
             return conv
 
-    def train(self):
+    def train(self, tag='dev'):
         save_path = config.save_prefix_path + 'RankCNN/'
 
         self.define_model()
 
+
         (train_left, train_right, train_labels) = self.preprocessor.get_es_index_padding('train')
         length = len(train_left)
-
         (dev_left, dev_right, dev_labels) = self.preprocessor.get_es_index_padding('dev')
+
+        if tag == 'train':
+            train_left.extend(dev_left)
+            train_right.extend(dev_right)
+            train_labels.extend(dev_labels)
+            del dev_left, dev_right, dev_labels
+            import gc
+            gc.collect()
 
         global_steps = tf.Variable(0, name='global_step', trainable=False)
 
@@ -195,28 +206,30 @@ class Rank_CNN():
                 os.makedirs(save_path)
 
             for epoch in range(self.n_epoch):
-                for iteration in range(length//self.batch_size):
+                for iteration in range(length//self.batch_size + 1):
                     train_feed_dict = self.gen_train_dict(iteration, train_left, train_right, train_labels, True)
-                    train_loss, train_acc, current_step, _ = sess.run([self.cost, self.accuracy, global_steps, self.train_op], feed_dict = train_feed_dict)
-                    if current_step % 64 == 0:
-                        dev_feed_dict = {
-                            self.question: dev_left,
-                            self.answer: dev_right,
-                            self.label: dev_labels,
-                            self.trainable: False,
-                            self.dropout_keep_prob: 1.0,
-                        }
-                        dev_loss = self.cost.eval(feed_dict = dev_feed_dict)
-                        dev_acc = self.accuracy.eval(feed_dict = dev_feed_dict)
+                    train_loss, train_acc, current_step, _= sess.run([self.cost_non_reg, self.accuracy, global_steps, self.train_op], feed_dict = train_feed_dict)
+                    if current_step % 32 == 0:
+                        if tag == 'dev':
+                            dev_feed_dict = {
+                                self.question: dev_left,
+                                self.answer: dev_right,
+                                self.label: dev_labels,
+                                self.trainable: False,
+                                self.dropout_keep_prob: 1.0,
+                            }
+                            dev_loss = self.cost_non_reg.eval(feed_dict = dev_feed_dict)
+                            dev_acc = self.accuracy.eval(feed_dict = dev_feed_dict)
                         print("**********************************************************************************************************")
                         print("Epoch {}, Iteration {}, train loss: {:.4f}, train accuracy: {:.4f}%.".format(epoch,
                                                                                                             current_step,
                                                                                                             train_loss,
                                                                                                             train_acc * 100))
-                        print("Epoch {}, Iteration {}, val loss: {:.4f}, dev accuracy: {:.4f}%.".format(epoch,
-                                                                                                          current_step,
-                                                                                                          dev_loss,
-                                                                                                          dev_acc * 100))
+                        if tag == 'dev':
+                            print("Epoch {}, Iteration {}, val loss: {:.4f}, dev accuracy: {:.4f}%.".format(epoch,
+                                                                                                              current_step,
+                                                                                                              dev_loss,
+                                                                                                              dev_acc * 100))
                         print("**********************************************************************************************************")
                         checkpoint_path = os.path.join(save_path, 'model.ckpt')
                         saver.save(sess, checkpoint_path, global_step = current_step)
@@ -267,7 +280,7 @@ class Rank_CNN():
                 fr.write(str(result) + '\n')
 
 
-    def gen_test_dict(self, iteration, train_questions, train_answers, trainable = False, keep_prob=0.5):
+    def gen_test_dict(self, iteration, train_questions, train_answers, trainable = False, keep_prob=1):
         start = iteration * self.batch_size
         end = min((start + self.batch_size), len(train_questions))
         question_batch = train_questions[start:end]
@@ -300,8 +313,9 @@ class Rank_CNN():
         return feed_dict
 
 if __name__ == '__main__':
+    tf.set_random_seed(2018)
     rank_cnn = Rank_CNN()
-    #rank_cnn.train()
+    rank_cnn.train('train')
     rank_cnn.test()
 
 

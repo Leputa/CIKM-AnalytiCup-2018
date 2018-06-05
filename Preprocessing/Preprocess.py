@@ -21,18 +21,18 @@ class Preprocess():
 
     def load_train_data(self, tag='train'):
         print("导入训练数据")
-        if tag == 'es':
+        if tag == 'en':
             path = config.TOKEN_TRAIN
-        elif tag == 'en':
+        elif tag == 'es':
             path = config.TOKEN_VAL
 
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
 
-        if tag == 'es':
+        if tag == 'en':
             data_path = config.EN_TRAIN_FILE
-        elif tag == 'en':
+        elif tag == 'es':
             data_path = config.ES_TRAIN_FILE
 
         en_sentence_left = []
@@ -47,28 +47,29 @@ class Preprocess():
                 lineList = line.split('\t')
                 assert len(lineList) == 5
                 # 句子切分
-                if tag == 'es':
+                if tag == 'en':
                     tmp_en_left = self.tokenizer.en_str_clean(lineList[0])
                     tmp_en_right = self.tokenizer.en_str_clean(lineList[2])
 
                     tmp_es_left = self.tokenizer.es_str_clean(lineList[1])
                     tmp_es_right = self.tokenizer.es_str_clean(lineList[3])
 
-                elif tag == 'en':
+                elif tag == 'es':
                     tmp_en_left = self.tokenizer.en_str_clean(lineList[1])
                     tmp_en_right = self.tokenizer.en_str_clean(lineList[3])
 
                     tmp_es_left = self.tokenizer.es_str_clean(lineList[0])
                     tmp_es_right = self.tokenizer.es_str_clean(lineList[2])
 
+                # 先不要加trick
                 # 添加公共序列
-                en_common_list = tool.LCS(tmp_en_left, tmp_en_right)
-                tmp_en_left.extend(en_common_list)
-                tmp_en_right.extend(en_common_list)
-
-                es_common_list = tool.LCS(tmp_es_left, tmp_es_right)
-                tmp_es_left.extend(es_common_list)
-                tmp_es_right.extend(es_common_list)
+                # en_common_list = tool.LCS(tmp_en_left, tmp_en_right)
+                # tmp_en_left.extend(en_common_list)
+                # tmp_en_right.extend(en_common_list)
+                #
+                # es_common_list = tool.LCS(tmp_es_left, tmp_es_right)
+                # tmp_es_left.extend(es_common_list)
+                # tmp_es_right.extend(es_common_list)
 
                 en_sentence_left.append(tmp_en_left)
                 en_sentence_right.append(tmp_en_right)
@@ -167,18 +168,11 @@ class Preprocess():
             'dev': 'es'
         }
 
-        if tag == 'train':
-            data_path = config.TOKEN_TRAIN
-        elif tag == 'dev':
-            data_path = config.TOKEN_VAL
-        elif tag == 'test':
-            data_path = config.TOKEN_TEST
 
-        with open(data_path, 'rb') as pkl:
-            if tag == 'train' or tag == 'dev':
-                _, _, left_sentence, right_sentence, labels = self.load_train_data(dic[tag])
-            if tag == 'test':
-                left_sentence, right_sentence = self.load_test()
+        if tag == 'train' or tag == 'dev':
+            _, _, left_sentence, right_sentence, labels = self.load_train_data(dic[tag])
+        if tag == 'test':
+            left_sentence, right_sentence = self.load_test()
 
         word2index = self.es2index()
 
