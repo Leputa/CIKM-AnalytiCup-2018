@@ -9,6 +9,8 @@ from Preprocessing import Preprocess
 
 from Config import config
 from gensim.models.keyedvectors import KeyedVectors
+from gensim.models import Doc2Vec
+from gensim.models.doc2vec import TaggedLineDocument  
 
 
 class Embeddings():
@@ -57,6 +59,26 @@ class Embeddings():
         with open(path, 'wb') as pkl:
             pickle.dump(index2vec, pkl)
         return index2vec
+
+    def doc2vec(self):
+        print("doc2vec...")
+        path = config.cache_prefix_path + 'doc2vec.embedding'
+
+        if os.path.exists(path):
+            return Doc2Vec.load(path)
+
+        es = self.preprocessor.load_all_data()[0]
+        model = Doc2Vec(TaggedLineDocument(inp), 
+                        size = 100,
+                        window = 5,
+                        min_count = 1,
+                        sample = 1e-3,
+                        negative = 5,
+                        workers = 4)
+        model.train(es, total_examples=model.corpus_count, epochs=50)
+        model.save(path)
+
+        return model
 
 
 if __name__ == '__main__':
