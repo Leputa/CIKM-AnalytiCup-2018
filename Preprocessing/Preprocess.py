@@ -19,7 +19,7 @@ class Preprocess():
         self.max_length = 65
         self.tokenizer = Tokenizer()
 
-    def load_train_data(self, tag='train'):
+    def load_train_data(self, tag='en'):
         print("导入训练数据")
         if tag == 'en':
             path = config.TOKEN_TRAIN
@@ -103,9 +103,9 @@ class Preprocess():
                 tmp_left = self.tokenizer.es_str_clean(lineList[0])
                 tmp_right = self.tokenizer.es_str_clean(lineList[1])
 
-                common_list = tool.LCS(tmp_left, tmp_right)
-                tmp_left.extend(common_list)
-                tmp_right.extend(common_list)
+                # common_list = tool.LCS(tmp_left, tmp_right)
+                # tmp_left.extend(common_list)
+                # tmp_right.extend(common_list)
 
                 sentence_left.append(tmp_left)
                 sentence_right.append(tmp_right)
@@ -235,18 +235,107 @@ class Preprocess():
             return (left_index_padding, right_index_padding)
 
 
+    def get_length(self, tag):
+        print("get length")
+        if tag == 'train':
+            path = config.cache_prefix_path + 'train_length.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'dev_length.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'test_length.pkl'
+
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        if tag == 'train':
+            _, _, sentence_left, sentence_right, _ = self.load_train_data('en')
+        elif tag == 'dev':
+            _, _, sentence_left, sentence_right, _ = self.load_train_data('es')
+        elif tag == 'test':
+            sentence_left, sentence_right = self.load_test()
+
+        left_length = [min(len(sentence), self.max_length) for sentence in sentence_left]
+        right_length = [min(len(sentence), self.max_length) for sentence in sentence_right]
+
+        with open(path, 'wb') as pkl:
+            pickle.dump((left_length, right_length), pkl)
+        return (left_length, right_length)
+
+
+    def load_translation_data(self):
+        print("loading translation data")
+
+        path = config.cache_prefix_path + 'translation_token.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        data_path = config.TRANSLATE_FILE
+        es = []
+        en = []
+        with open(data_path, 'r', encoding='utf-8') as fr:
+            lines = fr.readlines()
+            for line in lines:
+                es.append(self.tokenizer.es_str_clean(line[0]))
+                en.append(self.tokenizer.en_str_clean(line[1]))
+
+        with open(path, 'wb') as pkl:
+            pickle.dump((es, en), pkl)
+        return (es, en)
+
+    def load_all_data(self):
+        print('loading all spanish&english')
+
+        path = config.cache_prefix_path + 'all_token.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        en = []
+        es = []
+
+        en_left_train, en_right_train, es_left_train, es_right_train, _ = self.load_train_data('en')
+        en_left_dev, en_right_dev, es_left_dev, es_right_dev, _ = self.load_train_data('es')
+        es_left_test, es_right_test = self.load_test()
+        es_trans, en_trans = self.load_translation_data()
+
+        en.extend(en_left_train)
+        en.extend(en_right_train)
+        en.extend(en_left_dev)
+        en.extend(en_right_dev)
+        en.extend(en_trans)
+
+        es.extend(es_left_train)
+        es.extend(es_right_train)
+        es.extend(es_left_dev)
+        es.extend(es_right_dev)
+        es.extend(es_left_test)
+        es.extend(es_right_test)
+        es.extend(es_trans)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump((es, en), pkl)
+        return es, en
+
+
+
 
 if __name__ == '__main__':
     p = Preprocess()
 
     # p.load_train_data('en')
     # p.load_train_data('es')
-    # p.load_test()
+    p.load_test()
     # p.es2index()
     # p.get_es_index_data('train')
     # p.get_es_index_data('dev')
     # p.get_es_index_data('test')
-    p.get_es_index_padding('train')
-    p.get_es_index_padding('dev')
-    p.get_es_index_padding('test')
-
+    # p.get_es_index_padding('train')
+    # p.get_es_index_padding('dev')
+    # p.get_es_index_padding('test')
+    # p.get_length('train')
+    # p.get_length('dev')
+    # p.get_length('test')
+    # p.load_translation_data()
+    # p.load_all_data()

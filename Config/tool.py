@@ -46,7 +46,3 @@ def LCS(str_a, str_b):
 
 
 
-if __name__ == '__main__':
-    a = [1,3,5,7,8]
-    b = [2,3,5,6,6,7,9]
-    print(LCS(a,b))
