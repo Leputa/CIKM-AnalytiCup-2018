@@ -10,7 +10,7 @@ from Preprocessing import Preprocess
 from Config import config
 from gensim.models.keyedvectors import KeyedVectors
 from gensim.models import Doc2Vec
-from gensim.models.doc2vec import TaggedLineDocument  
+from gensim.models.doc2vec import TaggedDocument
 
 
 class Embeddings():
@@ -60,28 +60,44 @@ class Embeddings():
             pickle.dump(index2vec, pkl)
         return index2vec
 
+
+
     def doc2vec(self):
         print("doc2vec...")
         path = config.cache_prefix_path + 'doc2vec.embedding'
+        dic_path = config.cache_prefix_path + 'doc2dic.pkl'
 
-        if os.path.exists(path):
-            return Doc2Vec.load(path)
+        if os.path.exists(path) and os.path.exists(dic_path):
+            model = Doc2Vec.load(path)
+            with open(dic_path, 'rb') as pkl:
+                dic = pickle.load(pkl)
+            return model, dic
 
         es = self.preprocessor.load_all_data()[0]
-        model = Doc2Vec(TaggedLineDocument(inp), 
-                        size = 100,
+
+        corpus = []
+        for i, text in enumerate(es):
+            doc = TaggedDocument(words=text, tags=[i])
+            corpus.append(doc)
+
+        model = Doc2Vec(vector_size = self.vec_dim//2,
                         window = 5,
                         min_count = 1,
                         sample = 1e-3,
                         negative = 5,
                         workers = 4)
-        model.train(es, total_examples=model.corpus_count, epochs=50)
+
+        model.build_vocab(corpus)
+        model.train(corpus, total_examples=model.corpus_count, epochs=50)
+
         model.save(path)
+        with open(dic_path, 'wb') as pkl:
+            pickle.dump(corpus, pkl)
 
-        return model
-
+        return model, corpus
 
 if __name__ == '__main__':
     embedding = Embeddings()
-    embedding.get_es_embedding_matrix()
+    #embedding.get_es_embedding_matrix()
+    embedding.doc2vec()
 

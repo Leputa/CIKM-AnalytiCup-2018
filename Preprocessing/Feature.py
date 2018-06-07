@@ -69,7 +69,12 @@ class Feature():
         return ((train_features, train_labels), (dev_features, dev_labels), test_features)
 
 
-    def get_doc2vec(self, tag):
+    def getVecs(self, model, start, end, corpus, size):
+        vecs = [np.array(model.docvecs[corpus[i].tags[0]]).reshape((1, size)) for i in range(start, end)]
+        return np.concatenate(vecs)
+
+    def get_doc2vec(self):
+
         print("getting doc2vec......")
 
         path = config.cache_prefix_path + 'doc2vec_feature.pkl'
@@ -77,30 +82,26 @@ class Feature():
             with open(path, 'rb') as pkl:
                 return pickle.load(pickle) 
 
-        model = Doc2Vec.load(config.cache_prefix_path + "doc2vec.embedding")
+        model, dic = self.embeddings.doc2vec()
 
-        # train
-        _, _, train_left, train_right, train_labels = self.preprocess.load_train_data('en')
-        train_left_vector = model.infer_vector(train_left)
-        train_right_vector = model.infer_vector(train_right)
-        train_vec = 
+        train_left_vector = self.getVecs(model, 0, 20000, dic, self.embeddings.vec_dim//2)
+        train_right_vector = self.getVecs(model, 20000, 40000, dic, self.embeddings.vec_dim//2)
+        train_vec = np.hstack([train_left_vector, train_right_vector])
 
-        # dev 
-        _, _, dev_left, dev_right, dev_labels = self.preprocess.load_train_data('es')
-        dev_left_vector = model.infer_vector(dev_left)
-        dev_right_vector = model.infer_vector(dev_right)
-        dev_vec = 
+
+        dev_left_vector = self.getVecs(model, 40000, 41400, dic, self.embeddings.vec_dim//2)
+        dev_right_vector = self.getVecs(model, 41400, 42800, dic, self.embeddings.vec_dim//2)
+        dev_vec = np.hstack([dev_left_vector, dev_right_vector])
 
         # test
-        test_left, test_right = self.preprocess.load_test()
-        test_left_vector = model.infer_vector(test_left)
-        test_right_vector = model.infer_vector(test_right)
-        test_vec = 
+        test_left_vector = self.getVecs(model, 42800, 47800, dic, self.embeddings.vec_dim//2)
+        test_right_vector = self.getVecs(model, 47800, 52800, dic, self.embeddings.vec_dim//2)
+        test_vec = np.hstack([test_left_vector, test_right_vector])
 
         with open(path, 'wb') as pkl:
-            pickle.dump(((train_vec, train_labels),(dev_vec, dev_labels), test_vec), pkl)
+            pickle.dump((train_vec, dev_vec, test_vec), pkl)
 
-        return ((train_vec, train_labels),(dev_vec, dev_labels), test_vec)
+        return (train_vec, dev_vec, test_vec)
 
     def get_average_word2vec(self):
         print ("getting average word2vec")
@@ -112,14 +113,16 @@ class Feature():
 
 
         embedding_matrix = self.embeddings.get_es_embedding_matrix()
-        
+
         # train
         train_left, train_right, train_labels = self.preprocess.get_es_index_data('train')
         train_features = self.deal_average_word2vec(train_left, train_right, embedding_matrix)
+
         #dev
         dev_left, dev_right, dev_labels = self.preprocess.get_es_index_data('dev')
         dev_features = self.deal_average_word2vec(dev_left, dev_right, embedding_matrix)
 
+        # test
         test_left, test_right = self.preprocess.get_es_index_data('test')
         test_features = self.deal_average_word2vec(test_left, test_right, embedding_matrix)
 
@@ -137,20 +140,22 @@ class Feature():
             tmp_vec_left, tmp_vec_right = np.zeros(self.embeddings.vec_dim), np.zeros(self.embeddings.vec_dim)
 
             for index in left_index[i]:
-                tmp_vec_left += embeddings_matrix[index]
+                tmp_vec_left += embedding_matrix[index]
             for index in right_index[i]:
                 tmp_vec_right += embedding_matrix[index]
 
             tmp_vec_left /= len(left_index[i])
             tmp_vec_right /= len(right_index[i])
-            
+
             left_feature[i] = tmp_vec_left
             right_feature[i] = tmp_vec_right
 
-        return 
+        return np.hstack([left_feature, right_feature])
 
 
 
 if __name__ == '__main__':
     feature = Feature()
-    feature.word_tf_idf('char')
+    #feature.word_tf_idf('word')
+    #feature.get_doc2vec()
+    feature.get_average_word2vec()

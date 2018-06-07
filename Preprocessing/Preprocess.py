@@ -277,6 +277,7 @@ class Preprocess():
         with open(data_path, 'r', encoding='utf-8') as fr:
             lines = fr.readlines()
             for line in lines:
+                line = line.split("\t")
                 es.append(self.tokenizer.es_str_clean(line[0]))
                 en.append(self.tokenizer.en_str_clean(line[1]))
 
@@ -318,9 +319,6 @@ class Preprocess():
             pickle.dump((es, en), pkl)
         return es, en
 
-
-
-
 if __name__ == '__main__':
     p = Preprocess()
 
@@ -337,5 +335,5 @@ if __name__ == '__main__':
     # p.get_length('train')
     # p.get_length('dev')
     # p.get_length('test')
-    # p.load_translation_data()
+    p.load_translation_data()
     # p.load_all_data()
