@@ -21,7 +21,7 @@ class AB_CNN():
         self.embedding = Embeddings()
         self.lr = 0.01
         self.batch_size = 64
-        self.n_epoch = 4
+        self.n_epoch = 20
 
         self.sentence_length = self.preprocessor.max_length
         self.w = 4
@@ -415,7 +415,7 @@ class AB_CNN():
 
 if __name__ == '__main__':
     tf.set_random_seed(2018)
-    ABCNN = AB_CNN(model_type='ABCNN3')
-    ABCNN.train('train')
+    ABCNN = AB_CNN(model_type='ABCNN1')
+    ABCNN.train()
     ABCNN.test()
 
