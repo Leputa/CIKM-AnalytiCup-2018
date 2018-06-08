@@ -416,6 +416,6 @@ class AB_CNN():
 if __name__ == '__main__':
     tf.set_random_seed(2018)
     ABCNN = AB_CNN(model_type='ABCNN3')
-    ABCNN.train('train')
-    ABCNN.test()
+    ABCNN.train()
+    #ABCNN.test()
 

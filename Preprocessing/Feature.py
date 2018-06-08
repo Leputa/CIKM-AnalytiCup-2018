@@ -17,7 +17,7 @@ class Feature():
         self.preprocess = Preprocess.Preprocess()
         self.embeddings = Embeddings.Embeddings()
 
-    def word_tf_idf(self, tag='word'):
+    def get_tf_idf(self, tag='word'):
         print("Tfidf on " + tag)
 
         if tag == 'word':
@@ -36,14 +36,14 @@ class Feature():
             vectorizer = TfidfVectorizer(
                 sublinear_tf=True,
                 analyzer='word',
-                ngram_range=(1, 3),
-                max_features=10000
+                ngram_range=(1, 4),
+                max_features=20000
             )
         elif tag == 'char':
             vectorizer = TfidfVectorizer(
                 sublinear_tf=True,
                 analyzer='char',
-                ngram_range=(1, 4),
+                ngram_range=(1, 5),
                 max_features=30000
             )
         vectorizer.fit(corpus)
@@ -80,7 +80,7 @@ class Feature():
         path = config.cache_prefix_path + 'doc2vec_feature.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
-                return pickle.load(pickle) 
+                return pickle.load(pkl)
 
         model, dic = self.embeddings.doc2vec()
 
