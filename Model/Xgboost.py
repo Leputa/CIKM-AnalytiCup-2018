@@ -56,7 +56,11 @@ class Xgboost():
     def train(self, tag='dev'):
         print("Xgboost training")
 
-        train_data, train_labels, dev_data, dev_labels, _ = self.get_tfidf('char')
+        char_train_data, train_labels, char_dev_data, dev_labels, _ = self.get_tfidf('char')
+        word_train_data, _, word_dev_data, _, _ = self.get_tfidf('word')
+
+        train_data = hstack([char_train_data, word_train_data])
+        dev_data = hstack([char_dev_data, word_dev_data])
 
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
         xgb_val = xgb.DMatrix(dev_data, label=dev_labels)
@@ -65,17 +69,32 @@ class Xgboost():
         model = xgb.train(self.params, xgb_train, self.num_rounds, watchlist, early_stopping_rounds=100)
 
     def test(self, name):
-        train_data, train_labels, dev_data, dev_labels, test_data = self.get_tfidf('char')
-        train_data = vstack([train_data, dev_data]).tocsr()
-        train_labels.extend(dev_labels)
+        print("Xgboost testing...")
+        if name == 'char_tfidf':
+            train_data, train_labels, dev_data, dev_labels, test_data = self.get_tfidf('char')
+            train_data = vstack([train_data, dev_data]).tocsr()
 
-        del dev_data, dev_labels
+            train_labels.extend(dev_labels)
+
+            del dev_data, dev_labels
+
+        elif name == 'tfidf':
+            char_train_data, train_labels, char_dev_data, dev_labels, char_test_data = self.get_tfidf('char')
+            word_train_data, _, word_dev_data, _, word_test_data = self.get_tfidf('word')
+
+            train_data = vstack([hstack([char_train_data, word_train_data]), hstack([char_dev_data, word_dev_data])]).tocsr()
+            train_labels.extend(dev_labels)
+
+
+            test_data = hstack([char_test_data, word_test_data])
+            del char_train_data, char_dev_data, dev_labels, char_test_data, word_train_data, word_test_data, word_dev_data
+
         gc.collect()
 
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
         xgb_test = xgb.DMatrix(test_data)
 
-        num_rounds = 1300
+        num_rounds = 1450
         watchlist = [(xgb_train, 'train')]
         model = xgb.train(self.params, xgb_train, num_rounds, watchlist)
 
@@ -88,6 +107,6 @@ class Xgboost():
 if __name__ == "__main__":
     model = Xgboost()
     #model.train()
-    model.test(name='char_tfidf')
+    model.test(name='tfidf')
 
 
