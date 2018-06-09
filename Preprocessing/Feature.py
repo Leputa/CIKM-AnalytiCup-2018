@@ -3,6 +3,7 @@ sys.path.append('../')
 
 import pickle
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.decomposition import TruncatedSVD
 from gensim.models import Doc2Vec
 import os
 import numpy as np
@@ -84,18 +85,18 @@ class Feature():
 
         model, dic = self.embeddings.doc2vec()
 
-        train_left_vector = self.getVecs(model, 0, 20000, dic, self.embeddings.vec_dim//2)
-        train_right_vector = self.getVecs(model, 20000, 40000, dic, self.embeddings.vec_dim//2)
+        train_left_vector = self.getVecs(model, 0, 20000, dic, self.embeddings.vec_dim)
+        train_right_vector = self.getVecs(model, 20000, 40000, dic, self.embeddings.vec_dim)
         train_vec = np.hstack([train_left_vector, train_right_vector])
 
 
-        dev_left_vector = self.getVecs(model, 40000, 41400, dic, self.embeddings.vec_dim//2)
-        dev_right_vector = self.getVecs(model, 41400, 42800, dic, self.embeddings.vec_dim//2)
+        dev_left_vector = self.getVecs(model, 40000, 41400, dic, self.embeddings.vec_dim)
+        dev_right_vector = self.getVecs(model, 41400, 42800, dic, self.embeddings.vec_dim)
         dev_vec = np.hstack([dev_left_vector, dev_right_vector])
 
         # test
-        test_left_vector = self.getVecs(model, 42800, 47800, dic, self.embeddings.vec_dim//2)
-        test_right_vector = self.getVecs(model, 47800, 52800, dic, self.embeddings.vec_dim//2)
+        test_left_vector = self.getVecs(model, 42800, 47800, dic, self.embeddings.vec_dim)
+        test_right_vector = self.getVecs(model, 47800, 52800, dic, self.embeddings.vec_dim)
         test_vec = np.hstack([test_left_vector, test_right_vector])
 
         with open(path, 'wb') as pkl:
@@ -152,10 +153,51 @@ class Feature():
 
         return np.hstack([left_feature, right_feature])
 
+    def LSA(self, tag = 'word'):
+        print("LSA......")
+
+        if tag == 'word':
+            path = config.cache_prefix_path + 'word_lsa.pkl'
+        elif tag == 'char':
+            path = config.cache_prefix_path + 'char_lsa.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        es = self.preprocess.load_all_data()[0]
+        corpus = [" ".join(sentence) for sentence in es]
+
+
+        vectorizer = TfidfVectorizer(
+            sublinear_tf=True,
+            analyzer='word',
+            ngram_range=(1, 4),
+            max_features=20000
+        )
+
+        bow_features = vectorizer.fit_transform(corpus)
+        lsa = TruncatedSVD(150, algorithm='arpack')
+        lsa.fit(bow_features.asfptype())
+
+        ((train_features, train_labels), (dev_features, dev_labels), test_features) = self.get_tf_idf(tag)
+
+        train_features = lsa.transform(train_features.asfptype())
+        dev_features = lsa.transform(dev_features.asfptype())
+        test_features = lsa.transform(test_features.asfptype())
+
+        with open(path, 'wb') as pkl:
+            pickle.dump(((train_features, train_labels), (dev_features, dev_labels), test_features), pkl)
+
+        return ((train_features, train_labels), (dev_features, dev_labels), test_features)
+
+
+    def addtional_feature(self):
+        return None
+
 
 
 if __name__ == '__main__':
     feature = Feature()
     #feature.word_tf_idf('word')
     #feature.get_doc2vec()
-    feature.get_average_word2vec()
+    feature.LSA('word')

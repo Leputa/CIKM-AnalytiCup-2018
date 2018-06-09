@@ -80,15 +80,15 @@ class Embeddings():
             doc = TaggedDocument(words=text, tags=[i])
             corpus.append(doc)
 
-        model = Doc2Vec(vector_size = self.vec_dim//2,
+        model = Doc2Vec(vector_size = self.vec_dim,
                         window = 5,
                         min_count = 1,
                         sample = 1e-3,
                         negative = 5,
-                        workers = 4)
+                        workers = 6)
 
         model.build_vocab(corpus)
-        model.train(corpus, total_examples=model.corpus_count, epochs=50)
+        model.train(corpus, total_examples=model.corpus_count, epochs=20)
 
         model.save(path)
         with open(dic_path, 'wb') as pkl:

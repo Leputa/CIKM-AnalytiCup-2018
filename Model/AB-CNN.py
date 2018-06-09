@@ -21,15 +21,16 @@ class AB_CNN():
         self.embedding = Embeddings()
         self.lr = 0.01
         self.batch_size = 64
-        self.n_epoch = 4
+        self.n_epoch = 5
 
         self.sentence_length = self.preprocessor.max_length
         self.w = 4
         self.l2_reg = 0.01
-        self.di = 50                               # The number of convolution kernels
+        self.di = 64                               # The number of convolution kernels
         self.vec_dim = self.embedding.vec_dim
         self.num_classes = 2
         self.num_layers = 2
+        self.num_features = None
 
         self.clip_gradients = clip_gradients
         self.max_grad_norm = 5.
@@ -41,7 +42,9 @@ class AB_CNN():
         self.question = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='question')
         self.answer = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='answer')
         self.label = tf.placeholder(tf.int32, shape=[None], name='label')
+        self.features = tf.placeholder(tf.float32, shape=[None, self.num_features], name="features")
         self.trainable = tf.placeholder(bool, shape=[], name = 'trainable')
+        self.dropout_keep_prob = tf.placeholder(tf.float32, shape=[], name='dropout_keep_prob')
 
         with tf.name_scope('embedding'):
             embedding_matrix = self.embedding.get_es_embedding_matrix()
@@ -77,9 +80,11 @@ class AB_CNN():
 
         with tf.variable_scope('output_layer'):
             self.output_features = tf.stack(sims, axis=1, name='output_features')
+            self.output_features = tf.layers.batch_normalization(self.output_features)
+            self.hidden_drop = tf.nn.dropout(self.output_features, self.dropout_keep_prob, name='hidden_output_drop')
 
             self.estimation = tf.contrib.layers.fully_connected(
-                inputs = self.output_features,
+                inputs = self.hidden_drop,
                 num_outputs= self.num_classes,
                 activation_fn = None,
                 weights_initializer=tf.contrib.layers.xavier_initializer(),
@@ -284,8 +289,7 @@ class AB_CNN():
             self.train_op = optimizer.apply_gradients(zip(gradients, variables), global_step=global_steps)
         else:
             #self.train_op = tf.train.AdagradOptimizer(self.lr, name='optimizer').minimize(self.cost, global_step=global_steps)
-            self.train_op = tf.train.AdamOptimizer(self.lr, name='optimizer').minimize(self.cost,
-                                                                                          global_step=global_steps)
+            self.train_op = tf.train.AdamOptimizer(self.lr, name='optimizer').minimize(self.cost,global_step=global_steps)
 
 
         # 为了提前停止训练
@@ -395,6 +399,7 @@ class AB_CNN():
             self.question: question_batch,
             self.answer: answer_batch,
             self.trainable: trainable,
+            self.dropout_keep_prob: 1.0,
         }
         return feed_dict
 
@@ -405,17 +410,23 @@ class AB_CNN():
         answer_batch = train_answers[start:end]
         label_batch = train_labels[start:end]
 
+        if trainable == True:
+            dropout_keep_prob = 0.6
+        else:
+            dropout_keep_prob = 1.0
+
         feed_dict = {
             self.question: question_batch,
             self.answer: answer_batch,
             self.label: label_batch,
             self.trainable: trainable,
+            self.dropout_keep_prob: dropout_keep_prob,
         }
         return feed_dict
 
 if __name__ == '__main__':
-    tf.set_random_seed(2018)
+    tf.set_random_seed(1)
     ABCNN = AB_CNN(model_type='ABCNN3')
-    ABCNN.train()
-    #ABCNN.test()
+    ABCNN.train('train')
+    ABCNN.test()
 

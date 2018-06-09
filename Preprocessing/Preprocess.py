@@ -16,7 +16,7 @@ from Preprocessing.WordDict import *
 
 class Preprocess():
     def __init__(self):
-        self.max_length = 65
+        self.max_length = 50
         self.tokenizer = Tokenizer()
 
     def load_train_data(self, tag='en'):
@@ -322,18 +322,18 @@ class Preprocess():
 if __name__ == '__main__':
     p = Preprocess()
 
-    # p.load_train_data('en')
-    # p.load_train_data('es')
+    p.load_train_data('en')
+    p.load_train_data('es')
     p.load_test()
-    # p.es2index()
-    # p.get_es_index_data('train')
-    # p.get_es_index_data('dev')
-    # p.get_es_index_data('test')
-    # p.get_es_index_padding('train')
-    # p.get_es_index_padding('dev')
-    # p.get_es_index_padding('test')
-    # p.get_length('train')
-    # p.get_length('dev')
-    # p.get_length('test')
+    p.es2index()
+    p.get_es_index_data('train')
+    p.get_es_index_data('dev')
+    p.get_es_index_data('test')
+    p.get_es_index_padding('train')
+    p.get_es_index_padding('dev')
+    p.get_es_index_padding('test')
+    p.get_length('train')
+    p.get_length('dev')
+    p.get_length('test')
     p.load_translation_data()
-    # p.load_all_data()
+    p.load_all_data()

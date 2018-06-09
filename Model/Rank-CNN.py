@@ -18,8 +18,8 @@ class Rank_CNN():
         self.preprocessor = Preprocess.Preprocess()
         self.embedding = Embeddings()
         self.lr = 0.0001
-        self.batch_size = 512
-        self.n_epoch = 16
+        self.batch_size = 128
+        self.n_epoch = 50
 
         self.sentence_length = self.preprocessor.max_length
         #self.vec_dim = self.embedding.vec_dim
@@ -315,8 +315,8 @@ class Rank_CNN():
 if __name__ == '__main__':
     tf.set_random_seed(2018)
     rank_cnn = Rank_CNN()
-    rank_cnn.train('train')
-    rank_cnn.test()
+    rank_cnn.train()
+    #rank_cnn.test()
 
 
 
