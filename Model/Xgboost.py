@@ -8,6 +8,7 @@ from Preprocessing import Feature
 import xgboost as xgb
 from scipy.sparse import hstack
 from scipy.sparse import vstack
+from scipy.sparse import coo_matrix
 import gc
 
 
@@ -17,7 +18,6 @@ class Xgboost():
         self.preprocessor = Preprocess.Preprocess()
         self.Feature = Feature.Feature()
         self.params = {  'booster':'gbtree',
-                         'num_leaves':32,
                          'max_depth':6,
                          'eta':0.05,
                          'max_bin':425,
@@ -26,15 +26,15 @@ class Xgboost():
                          'min_split_gain':0,
                          'min_child_weight':6,
                          'min_child_samples':10,
-                         'subsample':0.7,
-                         'colsample_bytree':0.8,
+                         'subsample':0.8,
+                         'colsample_bytree':0.7,
                          'lambda':10,  # 控制模型复杂度的权重值的L2正则化项参数，参数越大，模型越不容易过拟合。
-                         'alpha':1,   #L1正则化
+                         'alpha':1,    # L1正则化
                          'seed':2018,
                          'nthread':7,
                          'silent':True,
                          'gamma':0.1,
-                         'eval_metric':'auc'
+                         'eval_metric':'logloss'
                     }
         self.num_rounds = 5000
         self.early_stop_rounds = 100
@@ -56,6 +56,7 @@ class Xgboost():
     def get_lsa(self, tag='word'):
         (train_features, train_labels), (dev_features, dev_labels), test_features = self.Feature.LSA(tag)
         return train_features, train_labels, dev_features, dev_labels, test_features
+
 
     def train(self, tag):
         print("Xgboost training")
@@ -79,6 +80,20 @@ class Xgboost():
 
         elif tag == 'doc2vec':
             train_data, train_labels, dev_data, dev_labels, _ = self.get_dov2vec_data()
+
+        elif tag == 'concat_feature':
+            char_train_data, train_labels, char_dev_data, dev_labels, _ = self.get_tfidf('char')
+            word_train_data, _, word_dev_data, _, _ = self.get_tfidf('word')
+            tfidf_train = hstack([char_train_data, word_train_data])
+            tfidf_dev = hstack([char_dev_data, word_dev_data])
+
+            word2vec_train, _, word2vec_dev, _, _ = self.get_word2vec_data() #加了这个后反而下降了
+            word2vec_train = coo_matrix(word2vec_train)
+            word2vec_dev = coo_matrix(word2vec_dev)
+
+            train_data = hstack([tfidf_train, word2vec_train])
+            dev_data = hstack([tfidf_dev, word2vec_dev])
+
 
 
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
@@ -125,13 +140,12 @@ class Xgboost():
             del dev_data, dev_labels
 
 
-
         gc.collect()
 
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
         xgb_test = xgb.DMatrix(test_data)
 
-        num_rounds = 700
+        num_rounds = 930
         watchlist = [(xgb_train, 'train')]
         model = xgb.train(self.params, xgb_train, num_rounds, watchlist)
 
@@ -143,7 +157,7 @@ class Xgboost():
 
 if __name__ == "__main__":
     model = Xgboost()
-    model.train('doc2vec')
-    #model.test(name='tfidf')
+    #model.train('tfidf')
+    model.test(name='tfidf')
 
 

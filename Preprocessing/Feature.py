@@ -198,6 +198,6 @@ class Feature():
 
 if __name__ == '__main__':
     feature = Feature()
-    #feature.word_tf_idf('word')
+    feature.get_tf_idf('char')
     #feature.get_doc2vec()
-    feature.LSA('word')
+    #feature.LSA('word')
