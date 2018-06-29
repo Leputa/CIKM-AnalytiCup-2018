@@ -55,8 +55,8 @@ def length(sequence):
     """
     populated = tf.sign(tf.abs(sequence))
     length = tf.cast(tf.reduce_sum(populated, axis=1), tf.int32)
-    # mask = tf.cast(tf.expand_dims(populated, -1), tf.float32)
-    mask = tf.sequence_mask(length, sequence.shape[1],dtype=tf.float32)
+    #mask = tf.cast(tf.expand_dims(populated, -1), tf.float32)
+    mask = tf.sequence_mask(length, 50 ,dtype=tf.float32)
     return length, mask
 
 def biLSTM(inputs, dim, seq_len, name):
