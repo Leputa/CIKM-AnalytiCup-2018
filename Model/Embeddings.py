@@ -98,6 +98,6 @@ class Embeddings():
 
 if __name__ == '__main__':
     embedding = Embeddings()
-    #embedding.get_es_embedding_matrix()
+    embedding.get_es_embedding_matrix()
     embedding.doc2vec()
 

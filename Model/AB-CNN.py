@@ -21,11 +21,11 @@ class AB_CNN():
         self.embedding = Embeddings()
         self.lr = 0.01
         self.batch_size = 64
-        self.n_epoch = 5
+        self.n_epoch = 20
 
         self.sentence_length = self.preprocessor.max_length
         self.w = 4
-        self.l2_reg = 0.01
+        self.l2_reg = 0.005
         self.di = 64                               # The number of convolution kernels
         self.vec_dim = self.embedding.vec_dim
         self.num_classes = 2
@@ -173,7 +173,7 @@ class AB_CNN():
             else:
                 w_ap = tf.layers.average_pooling2d(
                     inputs=x,
-                    pool_size=(1,self.w),   #用w作为卷积窗口可以还原句子长度
+                    pool_size=(1, self.w),   #用w作为卷积窗口可以还原句子长度
                     strides=1,
                     padding='VALID',
                     name='w_ap'
@@ -411,7 +411,7 @@ class AB_CNN():
         label_batch = train_labels[start:end]
 
         if trainable == True:
-            dropout_keep_prob = 0.6
+            dropout_keep_prob = 0.5
         else:
             dropout_keep_prob = 1.0
 
@@ -427,6 +427,7 @@ class AB_CNN():
 if __name__ == '__main__':
     tf.set_random_seed(1)
     ABCNN = AB_CNN(model_type='ABCNN3')
-    ABCNN.train('dev')
-    ABCNN.test()
+    ABCNN.define_model()
+    # ABCNN.train('dev')
+    # # ABCNN.test()
 

@@ -10,34 +10,38 @@ from Config import tool
 from Preprocessing import Preprocess
 from Model.Embeddings import Embeddings
 
-class ESIM():
-
-    def __init__(self):
+class Decomposable_Attention_Model():
+    def __init__(self, clip_gradients=False):
         self.preprocessor = Preprocess.Preprocess()
         self.embedding = Embeddings()
 
-        self.lr = 0.0005
-        self.keep_rate = 0.5
+        self.lr = 4e-5
+        self.keep_prob = 0.5
+        self.atten_keep_prob = 0.8
         self.l2_reg = 0.004
+        self.atten_l2_reg = 0.0
         self.sentence_length = self.preprocessor.max_length
 
         self.vec_dim = self.embedding.vec_dim
-        self.hidden_dim = 150
+        self.hidden_dim = 300
 
         self.num_classes = 2
-        self.batch_size = 128
-        self.n_epoch = 20
+        self.batch_size = 64
+        self.n_epoch = 50
+        self.eclipse = 1e-10
         self.max_grad_norm = 5.
-        self.eclipse = 1e-9
+
+        self.clip_gradients = clip_gradients
 
     def define_model(self):
-        self.left_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='question')
-        self.right_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='answer')
+        self.left_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='left_sentence')
+        self.right_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='right_sentence')
         self.label = tf.placeholder(tf.int32, shape=[None], name='label')
         #self.features = tf.placeholder(tf.float32, shape=[None, self.num_features], name="features")
         self.trainable = tf.placeholder(bool, shape=[], name = 'trainable')
         self.dropout_keep_prob = tf.placeholder(tf.float32, shape=[], name='dropout_keep_prob')
 
+        # Input Encoding
         with tf.name_scope('embedding'):
             embedding_matrix = self.embedding.get_es_embedding_matrix()
             embedding_matrix = tf.Variable(embedding_matrix, trainable=True, name='embedding')
@@ -50,88 +54,67 @@ class ESIM():
                                     lambda: tf.nn.embedding_lookup(embedding_matrix, self.right_sentence),
                                     lambda: tf.nn.embedding_lookup(embedding_matrix_fixed, self.right_sentence))
 
-            left_inputs = tf.nn.dropout(left_inputs, self.dropout_keep_prob)
-            right_inputs = tf.nn.dropout(right_inputs, self.dropout_keep_prob)
-
-        # get lengths of unpadded sentences
-        # x_seq_length: batch_size * 1
-        # x_mask: batch_size * max_length * 1
         left_seq_length, left_mask = tool.length(self.left_sentence)
         right_seq_length, right_mask = tool.length(self.right_sentence)
 
-        def lstm_cell():
-            cell = tf.contrib.rnn.BasicLSTMCell(self.hidden_dim)
-            cell_dropout = tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.dropout_keep_prob)
-            return cell_dropout
+        with tf.name_scope('Bi-LSTM'):
+            left_outputs, _ = tool.biLSTM(left_inputs, self.hidden_dim, left_seq_length, 'left')
+            right_outputs, _ = tool.biLSTM(right_inputs, self.hidden_dim, right_seq_length, 'right')
+            left_outputs = tf.concat(left_outputs, axis=2)
+            right_outputs = tf.concat(right_outputs, axis=2)
 
-        # Input Encoding
-        with tf.name_scope("LSTM"):
-            with tf.variable_scope('left_lstm'):
-                lstm_fwd = tf.contrib.rnn.LSTMCell(num_units=self.hidden_dim)
-                left_outputs, _ = tf.nn.dynamic_rnn(lstm_fwd, left_inputs, sequence_length=left_seq_length, dtype=tf.float32)
-            with tf.variable_scope('right_lstm'):
-                lstm_bwd = tf.contrib.rnn.LSTMCell(num_units=self.hidden_dim)
-                right_outputs, _ = tf.nn.dynamic_rnn(lstm_bwd, right_inputs, sequence_length=right_seq_length, dtype=tf.float32)
+        # Attend
+        with tf.name_scope('Attention'):
+            hidden_dim = left_outputs.shape[-1]*2
 
+            att_left = self.MLP(left_outputs, self.trainable, hidden_dim, 'left_Attention')
+            att_right = self.MLP(right_outputs, self.trainable, hidden_dim, 'right_Attention')
 
-        # 3.2 Local Inference Modeling
-        with tf.name_scope("attention"):
-            # scores&scores_mask: batch_size * sentence_length * sentence_length
-            scores = tf.matmul(left_outputs, right_outputs, adjoint_b=True)
+            scores = tf.matmul(att_left, att_right, adjoint_b=True)
             scores_mask = tf.einsum('bi,bj->bij', left_mask, right_mask)
-            alpha = self.attention_with_mask(scores, right_outputs, 2, scores_mask, name='alpha')
-            beta = self.attention_with_mask(scores, left_outputs, 1, scores_mask, name='beta')
 
-        with tf.name_scope('Enhancement'):
-            m_a = tf.concat([left_outputs, alpha, left_outputs-alpha, left_outputs*alpha], axis=2)
-            m_b = tf.concat([right_outputs, beta, right_outputs-beta, right_outputs*beta], axis=2)
+            right_weights = self.softmax_mask(scores, 2, scores_mask, 'right')
+            left_weights = self.softmax_mask(scores, 1, scores_mask, 'left')
+            left_weights = tf.transpose(left_weights, [0, 2, 1])
 
-        # Inference Composition
-        with tf.name_scope('composition_layer'):
-            with tf.variable_scope('left_lstm_v'):
-                lstm_fwd = tf.contrib.rnn.LSTMCell(num_units=self.hidden_dim)
-                v_left_output, _ = tf.nn.dynamic_rnn(lstm_fwd, m_a, sequence_length=left_seq_length, dtype=tf.float32)
-            with tf.variable_scope('right_lstm_v'):
-                lstm_bwd = tf.contrib.rnn.LSTMCell(num_units=self.hidden_dim)
-                v_right_output, _ = tf.nn.dynamic_rnn(lstm_bwd, m_b, sequence_length=left_seq_length, dtype=tf.float32)
 
-        with tf.name_scope('pooling'):
-            with tf.name_scope('ave_pooling'):
-                v_left_ave =tf.div(tf.reduce_sum(v_left_output, axis=1), tf.expand_dims(tf.cast(left_seq_length, tf.float32), -1))
-                v_right_ave = tf.div(tf.reduce_sum(v_right_output, axis=1), tf.expand_dims(tf.cast(right_seq_length, tf.float32), -1))
-            with tf.name_scope('max_pooling'):
-                v_left_max = tf.reduce_max(v_left_output, axis=1)
-                v_right_max = tf.reduce_max(v_right_output, axis=1)
-            v = tf.concat([v_left_ave, v_right_ave, v_left_max, v_left_max], axis=1)
+            alpha = tf.matmul(left_weights, left_outputs)
+            beta = tf.matmul(right_weights, right_outputs)
 
+        # Compare
+        with tf.name_scope('Compare'):
+            v_input_left = tf.concat([left_inputs, beta], axis=2)
+            v_input_right = tf.concat([right_inputs, alpha], axis=2)
+
+            hidden_dim = ((alpha.shape[-1] + left_inputs.shape[-1]) // 2) * 2
+            v_left = self.MLP(v_input_left, self.trainable, hidden_dim, 'left_Compare')
+            v_right = self.MLP(v_input_right, self.trainable, hidden_dim, 'right_Compare')
+
+        # Aggregate
+        with tf.name_scope('Aggregate'):
+            v_left_mask = v_left * tf.expand_dims(left_mask, -1)
+            v_right_mask = v_right * tf.expand_dims(right_mask, -1)
+
+            v_left_output = tf.reduce_sum(v_left_mask, axis=1)
+            v_right_output = tf.reduce_sum(v_right_mask, axis=1)
+
+            v = tf.concat([v_left_output, v_right_output], axis=1)
+            v_output = self.MLP(v, self.trainable, self.hidden_dim, 'Aggregate')
 
         with tf.name_scope('MLP'):
-            xavier_init = tf.contrib.layers.xavier_initializer()
-            self.W_mlp = tf.get_variable(shape=(self.hidden_dim*4, self.hidden_dim), initializer=xavier_init, name='W_mlp')
-            self.b_mlp = tf.get_variable(shape=(self.hidden_dim), initializer=xavier_init, name='b_mlp')
-            h_mlp = tf.nn.tanh(tf.matmul(v, self.W_mlp) + self.b_mlp)
-
-            h_bn = tf.layers.batch_normalization(h_mlp, name='hidden_bn')
-            h_drop = tf.nn.dropout(h_bn, self.dropout_keep_prob, name='hidden_drop')
-
-        with tf.name_scope('output'):
-            self.W_cl = tf.get_variable(shape=(self.hidden_dim, self.num_classes), initializer=xavier_init, name='W_cl')
-            self.b_cl = tf.get_variable(shape=(self.num_classes), initializer=xavier_init, name='b_cl')
-            self.output = tf.matmul(h_drop, self.W_cl) + self.b_cl
+            self.output = tf.layers.dense(
+                inputs = v_output,
+                units = self.num_classes,
+                kernel_initializer = tf.contrib.layers.xavier_initializer(),
+                kernel_regularizer = tf.contrib.layers.l2_regularizer(scale = self.atten_l2_reg),
+            )
 
             self.prediction = tf.contrib.layers.softmax(self.output)[:, 1]
-
-        with tf.name_scope('regularizer'):
-            regularizer = tf.contrib.layers.l2_regularizer(self.l2_reg)
-            tf.add_to_collection('losses', regularizer(self.W_mlp))
-            tf.add_to_collection('losses', regularizer(self.W_cl))
-
-
 
         with tf.name_scope('cost'):
             self.cost = tf.add(
                 tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.output, labels=self.label)),
-                tf.add_n(tf.get_collection('losses'))
+                tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
             )
             self.cost_non_reg = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.output, labels=self.label))
 
@@ -140,36 +123,42 @@ class ESIM():
             self.accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
 
+    def MLP(self, input, trainable, hidden_dim, name):
+        with tf.variable_scope('mlp' + name):
+            F_output = tf.layers.dense(
+                inputs = input,
+                units = hidden_dim,
+                kernel_initializer = tf.contrib.layers.xavier_initializer(),
+                kernel_regularizer = tf.contrib.layers.l2_regularizer(scale = self.atten_l2_reg),
+                activation = tf.nn.relu,
+            )
+            if trainable == True:
+                if name == 'Aggregate':
+                    keep_drop = self.keep_prob
+                else:
+                    keep_drop = self.atten_keep_prob
+            else:
+                keep_drop = 1.0
+            F_bn = tf.layers.batch_normalization(F_output)
+            F_drop = tf.nn.dropout(F_bn, keep_drop)
+            return F_drop
 
-    def attention_with_mask(self, scores, output, axis, mask, name=None):
+
+    def softmax_mask(self, scores, axis, mask, name=None):
         '''
         求解alpha和belta
         :return: batch_size * sentence_length * vec_dim
         '''
-        with tf.name_scope(name):
+        with tf.name_scope(name + 'softmax'):
             max_axis = tf.reduce_max(scores, axis=axis, keep_dims=True)
             target_exp = tf.exp(scores - max_axis) * mask
             normalize = tf.reduce_sum(target_exp, axis=axis, keep_dims=True)
             softmax = target_exp / (normalize + self.eclipse)
-            # softmax: batch_size * sentence_length * sentence_length
-            # output: batch_size * sentence_length * vec_dim
-            alpha_list = []
-            for i in range(self.sentence_length):
-                if name == 'alpha':
-                    softmax_ = tf.expand_dims(softmax[:,i,:], -1)
-                elif name == 'beta':
-                    softmax_ = tf.expand_dims(softmax[:,:,i], -1)
+            return softmax
 
-                alpha_list.append(tf.reduce_sum(
-                    tf.multiply(output, softmax_),
-                    axis=1,
-                    keep_dims=True
-                ))
-
-            return tf.concat(alpha_list, axis=1)
 
     def train(self, tag='dev'):
-        save_path = config.save_prefix_path + 'ESIM' + '/'
+        save_path = config.save_prefix_path + 'Decom' + '/'
 
         self.define_model()
 
@@ -186,7 +175,19 @@ class ESIM():
             gc.collect()
 
         global_steps = tf.Variable(0, name='global_step', trainable=False)
-        self.train_op = tf.train.AdamOptimizer(self.lr, name='optimizer').minimize(self.cost, global_step=global_steps)
+        if self.clip_gradients == True:
+            optimizer = tf.train.AdagradOptimizer(self.lr)
+
+            grads_and_vars = optimizer.compute_gradients(self.cost)
+            gradients = [output[0] for output in grads_and_vars]
+            variables = [output[1] for output in grads_and_vars]
+
+            gradients = tf.clip_by_global_norm(gradients, clip_norm=self.max_grad_norm)[0]
+            self.grad_norm = tf.global_norm(gradients)
+            self.train_op = optimizer.apply_gradients(zip(gradients, variables), global_step=global_steps)
+
+        else:
+            self.train_op = tf.train.AdamOptimizer(self.lr, name='optimizer').minimize(self.cost,global_step=global_steps)
 
 
         with tf.Session() as sess:
@@ -285,7 +286,7 @@ class ESIM():
         label_batch = train_labels[start:end]
 
         if trainable == True:
-            dropout_keep_prob = self.keep_rate
+            dropout_keep_prob = self.keep_prob
         else:
             dropout_keep_prob = 1.0
 
@@ -300,5 +301,5 @@ class ESIM():
 
 if __name__ == '__main__':
     tf.set_random_seed(1)
-    model = ESIM()
+    model = Decomposable_Attention_Model()
     model.train('dev')

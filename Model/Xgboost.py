@@ -34,7 +34,7 @@ class Xgboost():
                          'nthread':7,
                          'silent':True,
                          'gamma':0.1,
-                         'eval_metric':'logloss'
+                         'eval_metric':'auc'
                     }
         self.num_rounds = 5000
         self.early_stop_rounds = 100
@@ -157,7 +157,7 @@ class Xgboost():
 
 if __name__ == "__main__":
     model = Xgboost()
-    #model.train('tfidf')
-    model.test(name='tfidf')
+    model.train('tfidf')
+    #model.test(name='tfidf')
 
 

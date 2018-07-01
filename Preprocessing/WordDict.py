@@ -10,7 +10,7 @@ class WordDict():
         self.En2IndexDic = {}
         self.Es2IndexDic = {}
 
-        self.special_word = ['<UNKNOWN>', '<DIGITS>']
+        self.special_word = ['<Padding>','<UNKNOWN>', '<DIGITS>']
         for i, word in enumerate(self.special_word):
             self.En2IndexDic[word] = i
             self.Es2IndexDic[word] = i
@@ -18,9 +18,9 @@ class WordDict():
     def add_word(self, word, tag):
         if word.isdigit():
             if tag == 'es':
-                self.Es2IndexDic[word] = 1
+                self.Es2IndexDic[word] = 2
             elif tag == 'en':
-                self.En2IndexDic[word] = 1
+                self.En2IndexDic[word] = 2
         else:
             if tag == 'es':
                 if self.Es2IndexDic.get(word) == None:

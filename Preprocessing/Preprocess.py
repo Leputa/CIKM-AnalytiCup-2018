@@ -180,8 +180,8 @@ class Preprocess():
         right_index = []
 
         for i in range(len(left_sentence)):
-            left_index.append([word2index.get(word, 0) for word in left_sentence[i]])
-            right_index.append([word2index.get(word, 0) for word in right_sentence[i]])
+            left_index.append([word2index.get(word, 1) for word in left_sentence[i]])
+            right_index.append([word2index.get(word, 1) for word in right_sentence[i]])
 
         if tag == 'train' or tag == 'dev':
             with open(path, 'wb') as pkl:
@@ -276,7 +276,7 @@ class Preprocess():
         en = []
         with open(data_path, 'r', encoding='utf-8') as fr:
             lines = fr.readlines()
-            for line in lines:
+            for line in tqdm(lines):
                 line = line.split("\t")
                 es.append(self.tokenizer.es_str_clean(line[0]))
                 en.append(self.tokenizer.en_str_clean(line[1]))
