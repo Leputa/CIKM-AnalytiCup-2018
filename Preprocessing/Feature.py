@@ -18,6 +18,41 @@ class Feature():
         self.preprocess = Preprocess.Preprocess()
         self.embeddings = Embeddings.Embeddings()
 
+        self.stop_words = []
+        stop_words_path = config.data_prefix_path + 'spanish.txt'
+        with open(stop_words_path, 'r') as fr:
+            lines = fr.readlines()
+            for line in lines:
+                self.stop_words.append(line.strip())
+
+    def del_stop_words(self, corpus):
+        stop_corpus = []
+        for i in range(len(corpus)):
+            sentence = corpus[i]
+            corpus[i] = [word for word in sentence if word not in self.stop_words]
+        return corpus
+
+    def clean_stop_words(self, left, right, labels, tag):
+        stop_left = []
+        stop_right = []
+        stop_labels = []
+
+        for i in range(len(left)):
+            left_list = [word for word in left[i] if word not in self.stop_words]
+            right_list = [word for word in right[i] if word not in self.stop_words]
+
+            if tag == 'train' or tag == 'dev':
+                if len(left_list) >= 2 and len(right_list) >= 2:
+                    stop_left.append(left_list)
+                    stop_right.append(right_list)
+                    stop_labels.append(labels[i])
+            elif tag == 'test':
+                stop_left.append(left_list)
+                stop_right.append(right_list)
+
+        return stop_left, stop_right, stop_labels
+
+
     def get_tf_idf(self, tag='word'):
         print("Tfidf on " + tag)
 
@@ -31,6 +66,8 @@ class Feature():
                 return pickle.load(pkl)
 
         es = self.preprocess.load_all_data()[0]
+        # es = self.del_stop_words(es)
+
         corpus = [" ".join(sentence) for sentence in es]
 
         if tag == 'word':
@@ -45,22 +82,26 @@ class Feature():
                 sublinear_tf=True,
                 analyzer='char',
                 ngram_range=(1, 5),
-                max_features=30000
+                max_features=50000
             )
         vectorizer.fit(corpus)
 
         # train
         _, _, train_left, train_right, train_labels = self.preprocess.load_train_data('en')
+        # train_left, train_right, train_labels = self.clean_stop_words(train_left, train_right, train_labels, 'train')
         train_data = [" ".join(train_left[i]) + " . " + " ".join(train_right[i]) for i in range(len(train_left))]
         train_features = vectorizer.transform(train_data)
 
         # dev
         _, _, dev_left, dev_right, dev_labels = self.preprocess.load_train_data('es')
+        # dev_left, dev_right, dev_labels = self.clean_stop_words(dev_left, dev_right, dev_labels, 'dev')
         dev_data = [" ".join(dev_left[i]) + " . " + " ".join(dev_right[i]) for i in range(len(dev_left))]
         dev_features = vectorizer.transform(dev_data)
 
         # test
         test_left, test_right = self.preprocess.load_test()
+        # test_left, test_right, _ = self.clean_stop_words(test_left, test_right, [], 'test')
+        # assert  len(test_left) == 5000
         test_data = [" ".join(test_left[i]) + " . " + " ".join(test_right[i]) for i in range(len(test_left))]
         test_features = vectorizer.transform(test_data)
 

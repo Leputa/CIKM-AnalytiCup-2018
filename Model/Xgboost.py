@@ -20,13 +20,13 @@ class Xgboost():
         self.params = {  'booster':'gbtree',
                          'max_depth':6,
                          'eta':0.05,
-                         'max_bin':425,
-                         'subsample_for_bin':50000,
+                         # 'max_bin':425,
+                         # 'subsample_for_bin':50000,
                          'objective':'binary:logistic',
-                         'min_split_gain':0,
-                         'min_child_weight':6,
-                         'min_child_samples':10,
-                         'subsample':0.8,
+                         # 'min_split_gain':0,
+                         # 'min_child_weight':6,
+                         # 'min_child_samples':10,
+                         'subsample':0.7,
                          'colsample_bytree':0.7,
                          'lambda':10,  # 控制模型复杂度的权重值的L2正则化项参数，参数越大，模型越不容易过拟合。
                          'alpha':1,    # L1正则化
@@ -34,7 +34,7 @@ class Xgboost():
                          'nthread':7,
                          'silent':True,
                          'gamma':0.1,
-                         'eval_metric':'auc'
+                         'eval_metric':'logloss'
                     }
         self.num_rounds = 5000
         self.early_stop_rounds = 100

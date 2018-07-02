@@ -21,7 +21,7 @@ class AB_CNN():
         self.embedding = Embeddings()
         self.lr = 0.01
         self.batch_size = 64
-        self.n_epoch = 20
+        self.n_epoch = 6
 
         self.sentence_length = self.preprocessor.max_length
         self.w = 4
@@ -34,10 +34,10 @@ class AB_CNN():
 
         self.clip_gradients = clip_gradients
         self.max_grad_norm = 5.
-        self.eclipse = 1e-9
-        self.kepp_prob = 0.5
+        self.eclipse = 1e-10
+        self.keep_prob = 0.5
 
-        self.vocab_size = 6119
+        # self.vocab_size = 6119
 
     def define_model(self):
         self.question = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='question')
@@ -388,7 +388,7 @@ class AB_CNN():
         label_batch = train_labels[start:end]
 
         if trainable == True:
-            dropout_keep_prob = self.kepp_prob
+            dropout_keep_prob = self.keep_prob
         else:
             dropout_keep_prob = 1.0
 
@@ -404,6 +404,6 @@ class AB_CNN():
 if __name__ == '__main__':
     tf.set_random_seed(1)
     ABCNN = AB_CNN(model_type='ABCNN3')
-    ABCNN.train('dev')
-    #ABCNN.test()
+    ABCNN.train('train')
+    ABCNN.test()
 

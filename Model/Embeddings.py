@@ -21,12 +21,32 @@ class Embeddings():
 
     def word2vec(self, word_emb, word, scale, vec_dim):
         unknown_word = np.random.uniform(-scale,scale,vec_dim)
-        if word in word_emb:
-            res = word_emb[word]
-            flag = 0
+        if word.endswith('adar') :
+            if word[:-1] in word_emb:
+                res = word_emb[word[:-1]]
+                flag = 0
+            elif word[:-1]+'do' in word_emb:
+                res = word_emb[word[:-1]+'do']
+                flag = 0
+            elif word[:-1]+'ds' in word_emb:
+                res = word_emb[word[:-1]+'ds']
+                flag = 0
+            elif word[:-1]+'os' in word_emb:
+                res = word_emb[word[:-1]+'os']
+                flag = 0
+            elif word[:-1]+'o' in word_emb:
+                res = word_emb[word[:-1]+'ds']
+                flag = 0
+            elif word[:-1]+'s' in word_emb:
+                res = word_emb[word[:-1]+'ds']
+                flag = 0
         else:
-            res = unknown_word
-            flag = 1
+            if word in word_emb:
+                res = word_emb[word]
+                flag = 0
+            else:
+                res = unknown_word
+                flag = 1
         return res,flag
 
     def get_es_embedding_matrix(self):
@@ -40,21 +60,28 @@ class Embeddings():
         word_emb = KeyedVectors.load_word2vec_format(config.ES_EMBEDDING_MATRIX, encoding='utf-8')
         word2index = self.preprocessor.es2index()
 
+
         vocal_size = len(word2index)
         index2vec = np.ones((vocal_size, self.vec_dim), dtype="float32") * 0.01
         unk_count = 0
+        unk_words = []
 
-        for word in word2index:
+        for word in tqdm(word2index):
             index = word2index[word]
-            if index == 0:
+            if index <= 3:
                 continue
             vec, flag = self.word2vec(word_emb, word, self.scale, self.vec_dim)
             index2vec[index] = vec
-            unk_count += flag
+            if flag == 1:
+                unk_count += 1
+                unk_words.append(word)
 
         print("emb vocab size: ", len(word_emb.vocab))
         print("unknown words count: ", unk_count)
         print("index2vec size: ", len(index2vec))
+
+        with open(config.cache_prefix_path + 'unk_words.pkl', 'wb')  as pkl:
+            pickle.dump(unk_words, pkl)
 
         with open(path, 'wb') as pkl:
             pickle.dump(index2vec, pkl)

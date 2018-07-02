@@ -48,9 +48,11 @@ class Preprocess():
                 assert len(lineList) == 5
                 # 句子切分
                 if tag == 'en':
+                    # 英文
                     tmp_en_left = self.tokenizer.en_str_clean(lineList[0])
                     tmp_en_right = self.tokenizer.en_str_clean(lineList[2])
 
+                    # 西班牙文
                     tmp_es_left = self.tokenizer.es_str_clean(lineList[1])
                     tmp_es_right = self.tokenizer.es_str_clean(lineList[3])
 
