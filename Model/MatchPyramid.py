@@ -1,43 +1,51 @@
 import tensorflow as tf
-from tqdm import tqdm
+import numpy as np
 import os
+from tqdm import tqdm
 
 import sys
-sys.path.append('../')
+sys.path.append("../")
 
 from Config import config
 from Config import tool
 from Preprocessing import Preprocess
 from Model.Embeddings import Embeddings
+from tensorflow.python import debug as tf_debug
 
-class ESIM():
+class MatchPyramid():
 
     def __init__(self):
         self.preprocessor = Preprocess.Preprocess()
         self.embedding = Embeddings()
 
-        self.lr = 4e-5
-        self.keep_rate = 0.8
+        self.lr = 0.0005
+        self.keep_prob = 0.5
         self.l2_reg = 0.004
         self.sentence_length = self.preprocessor.max_length
 
         self.vec_dim = self.embedding.vec_dim
-        self.hidden_dim = 150
+        self.hidden_dim = 20
 
         self.num_classes = 2
         self.batch_size = 128
-        self.n_epoch = 20
-        self.max_grad_norm = 5.
-        self.eclipse = 1e-9
+        self.n_epoch = 50
+
+        self.cosine = True
+        self.psize1 = 2
+        self.psize2 = 4
 
     def define_model(self):
-        self.left_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='question')
-        self.right_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='answer')
+        self.left_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='left_sentence')
+        self.right_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='right_sentence')
         self.label = tf.placeholder(tf.int32, shape=[None], name='label')
+        self.left_length = tf.placeholder(tf.int32, shape=[None])
+        self.right_length = tf.placeholder(tf.int32, shape=[None])
         #self.features = tf.placeholder(tf.float32, shape=[None, self.num_features], name="features")
         self.trainable = tf.placeholder(bool, shape=[], name = 'trainable')
         self.dropout_keep_prob = tf.placeholder(tf.float32, shape=[], name='dropout_keep_prob')
+        self.dpool_index = tf.placeholder(tf.int32, name='dpool_index',shape=(None, self.sentence_length, self.sentence_length, 3))
 
+        # Input Encoding
         with tf.name_scope('embedding'):
             embedding_matrix = self.embedding.get_es_embedding_matrix()
             embedding_matrix = tf.Variable(embedding_matrix, trainable=True, name='embedding')
@@ -47,90 +55,72 @@ class ESIM():
                                       lambda: tf.nn.embedding_lookup(embedding_matrix, self.left_sentence),
                                       lambda: tf.nn.embedding_lookup(embedding_matrix_fixed, self.left_sentence))
             right_inputs = tf.cond(self.trainable,
-                                    lambda: tf.nn.embedding_lookup(embedding_matrix, self.right_sentence),
-                                    lambda: tf.nn.embedding_lookup(embedding_matrix_fixed, self.right_sentence))
+                                      lambda: tf.nn.embedding_lookup(embedding_matrix, self.right_sentence),
+                                      lambda: tf.nn.embedding_lookup(embedding_matrix_fixed, self.right_sentence))
 
-            left_inputs = tf.nn.dropout(left_inputs, self.dropout_keep_prob)
-            right_inputs = tf.nn.dropout(right_inputs, self.dropout_keep_prob)
-
-        # get lengths of unpadded sentences
-        # x_seq_length: batch_size * 1
-        # x_mask: batch_size * max_length * 1
         left_seq_length, left_mask = tool.length(self.left_sentence)
         right_seq_length, right_mask = tool.length(self.right_sentence)
 
-        def lstm_cell():
-            cell = tf.contrib.rnn.BasicLSTMCell(self.hidden_dim)
-            cell_dropout = tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=self.dropout_keep_prob)
-            return cell_dropout
+        # Indecator Function
+        with tf.name_scope('Indecator_Function'):
+            # Dot Product
+            M = tf.einsum('abd,acd->abc', left_inputs, right_inputs)
+            # Cosine
+            if self.cosine == True:
+                norm1 = tf.sqrt(tf.reduce_sum(tf.square(left_inputs), axis=2, keepdims=True))
+                norm2 = tf.sqrt(tf.reduce_sum(tf.square(right_inputs), axis=2, keepdims=True))
+                M = M / tf.einsum('abd,acd->abc', norm1, norm2)
+            M = tf.expand_dims(M, 3)
 
-        # Input Encoding
-        with tf.name_scope("LSTM"):
-            with tf.variable_scope('left_lstm'):
-                lstm_fwd = tf.contrib.rnn.LSTMCell(num_units=self.hidden_dim)
-                left_outputs, _ = tf.nn.dynamic_rnn(lstm_fwd, left_inputs, sequence_length=left_seq_length, dtype=tf.float32)
-            with tf.variable_scope('right_lstm'):
-                lstm_bwd = tf.contrib.rnn.LSTMCell(num_units=self.hidden_dim)
-                right_outputs, _ = tf.nn.dynamic_rnn(lstm_bwd, right_inputs, sequence_length=right_seq_length, dtype=tf.float32)
+        with tf.name_scope('convolution_1'):
+            conv1 = tf.layers.conv2d(M, filters=8, kernel_size=[2, 4],
+                                     strides=1, padding='SAME',
+                                     activation=tf.nn.relu, kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=0.2, dtype=tf.float32),
+                                     name='conv1')
 
 
-        # 3.2 Local Inference Modeling
-        with tf.name_scope("attention"):
-            # scores&scores_mask: batch_size * sentence_length * sentence_length
-            scores = tf.matmul(left_outputs, right_outputs, adjoint_b=True)
-            scores_mask = tf.einsum('bi,bj->bij', left_mask, right_mask)
-            alpha = self.attention_with_mask(scores, right_outputs, 2, scores_mask, name='alpha')
-            beta = self.attention_with_mask(scores, left_outputs, 1, scores_mask, name='beta')
-
-        with tf.name_scope('Enhancement'):
-            m_a = tf.concat([left_outputs, alpha, left_outputs-alpha, left_outputs*alpha], axis=2)
-            m_b = tf.concat([right_outputs, beta, right_outputs-beta, right_outputs*beta], axis=2)
-
-        # Inference Composition
-        with tf.name_scope('composition_layer'):
-            with tf.variable_scope('left_lstm_v'):
-                lstm_fwd = tf.contrib.rnn.LSTMCell(num_units=self.hidden_dim)
-                v_left_output, _ = tf.nn.dynamic_rnn(lstm_fwd, m_a, sequence_length=left_seq_length, dtype=tf.float32)
-            with tf.variable_scope('right_lstm_v'):
-                lstm_bwd = tf.contrib.rnn.LSTMCell(num_units=self.hidden_dim)
-                v_right_output, _ = tf.nn.dynamic_rnn(lstm_bwd, m_b, sequence_length=left_seq_length, dtype=tf.float32)
-
-        with tf.name_scope('pooling'):
-            with tf.name_scope('ave_pooling'):
-                v_left_ave =tf.div(tf.reduce_sum(v_left_output, axis=1), tf.expand_dims(tf.cast(left_seq_length, tf.float32), -1))
-                v_right_ave = tf.div(tf.reduce_sum(v_right_output, axis=1), tf.expand_dims(tf.cast(right_seq_length, tf.float32), -1))
-            with tf.name_scope('max_pooling'):
-                v_left_max = tf.reduce_max(v_left_output, axis=1)
-                v_right_max = tf.reduce_max(v_right_output, axis=1)
-            v = tf.concat([v_left_ave, v_right_ave, v_left_max, v_left_max], axis=1)
-
+        with tf.name_scope('dynamic_pooling_1'):
+            '''
+            self.dpool_index: batchsize * length * length * 3
+            3: 
+                0:index
+                1:选择的row
+                2:选择的col
+            conv1_expand:
+            '''
+            conv1_expand = tf.gather_nd(conv1, self.dpool_index, name = 'conv1_expand')
+            pool1 = tf.nn.max_pool(conv1_expand,
+                                   ksize = [1, self.sentence_length//self.psize1, self.sentence_length//self.psize2, 1],
+                                   strides = [1, self.sentence_length//self.psize1, self.sentence_length/self.psize2, 1],
+                                   padding='VALID',
+                                   name = 'pool1')
+            pool_flatten = tf.reshape(pool1, [-1, self.psize1 * self.psize2 * 8], name='pool1_flatten')
+            pool_bn = tf.layers.batch_normalization(pool_flatten)
 
         with tf.name_scope('MLP'):
-            xavier_init = tf.contrib.layers.xavier_initializer()
-            self.W_mlp = tf.get_variable(shape=(self.hidden_dim*4, self.hidden_dim), initializer=xavier_init, name='W_mlp')
-            self.b_mlp = tf.get_variable(shape=(self.hidden_dim), initializer=xavier_init, name='b_mlp')
-            h_mlp = tf.nn.tanh(tf.matmul(v, self.W_mlp) + self.b_mlp)
-
-            h_bn = tf.layers.batch_normalization(h_mlp, name='hidden_bn')
-            h_drop = tf.nn.dropout(h_bn, self.dropout_keep_prob, name='hidden_drop')
+            fc = tf.layers.dense(
+                inputs = pool_bn,
+                units = self.hidden_dim,
+                kernel_initializer = tf.contrib.layers.xavier_initializer(),
+                kernel_regularizer = tf.contrib.layers.l2_regularizer(scale = self.l2_reg),
+            )
+            fc_bn = tf.layers.batch_normalization(fc)
+            fc_dropout = tf.nn.dropout(fc_bn, keep_prob=self.dropout_keep_prob)
 
         with tf.name_scope('output'):
-            self.W_cl = tf.get_variable(shape=(self.hidden_dim, self.num_classes), initializer=xavier_init, name='W_cl')
-            self.b_cl = tf.get_variable(shape=(self.num_classes), initializer=xavier_init, name='b_cl')
-            self.output = tf.matmul(h_drop, self.W_cl) + self.b_cl
+            self.output = tf.layers.dense(
+                inputs = fc_dropout,
+                units = self.num_classes,
+                kernel_initializer = tf.contrib.layers.xavier_initializer(),
+                kernel_regularizer = tf.contrib.layers.l2_regularizer(scale = self.l2_reg),
+            )
 
             self.prediction = tf.contrib.layers.softmax(self.output)[:, 1]
-
-        with tf.name_scope('regularizer'):
-            regularizer = tf.contrib.layers.l2_regularizer(self.l2_reg)
-            tf.add_to_collection('losses', regularizer(self.W_mlp))
-            tf.add_to_collection('losses', regularizer(self.W_cl))
-
 
         with tf.name_scope('cost'):
             self.cost = tf.add(
                 tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.output, labels=self.label)),
-                tf.add_n(tf.get_collection('losses'))
+                tf.reduce_sum(tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES))
             )
             self.cost_non_reg = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.output, labels=self.label))
 
@@ -139,44 +129,46 @@ class ESIM():
             self.accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
 
-
-    def attention_with_mask(self, scores, output, axis, mask, name=None):
+    def dynamic_pooling_index(self, len1, len2, max_len1, max_len2):
         '''
-        求解alpha和belta
-        :return: batch_size * sentence_length * vec_dim
+        get self.dpool_index
         '''
-        with tf.name_scope(name):
-            max_axis = tf.reduce_max(scores, axis=axis, keep_dims=True)
-            target_exp = tf.exp(scores - max_axis) * mask
-            normalize = tf.reduce_sum(target_exp, axis=axis, keep_dims=True)
-            softmax = target_exp / (normalize + self.eclipse)
-            # softmax: batch_size * sentence_length * sentence_length
-            # output: batch_size * sentence_length * vec_dim
-            if name == 'alpha':
-                return tf.matmul(softmax, output)
-            elif name == 'beta':
-                return tf.matmul(tf.transpose(softmax, [0, 2, 1]), output)
-
+        def dpool_index(idx, len1_one, len2_one, max_len1, max_len2):
+            stride_1 = 1.0 * max_len1 / len1_one
+            stride_2 = 1.0 * max_len2 / len2_one
+            idx1_one = [int(i/stride_1) for i in range(max_len1)]
+            idx2_one = [int(i/stride_2) for i in range(max_len2)]
+            mesh1, mesh2 = np.meshgrid(idx1_one, idx2_one)
+            index_one = np.transpose(np.stack([np.ones(mesh1.shape)*idx, mesh1, mesh2]), (2,1,0))
+            return index_one
+        index = []
+        for i in range(len(len1)):
+            index.append(dpool_index(i, len1[i], len2[i], max_len1, max_len2))
+        return  np.array(index)
 
     def train(self, tag='dev'):
-        save_path = config.save_prefix_path + 'ESIM' + '/'
+        save_path = config.save_prefix_path + 'MatchPyramid' + '/'
 
         self.define_model()
 
         (train_left, train_right, train_labels) = self.preprocessor.get_es_index_padding('train')
+        (train_left_length, train_right_length) = self.preprocessor.get_length('train')
         length = len(train_left)
         (dev_left, dev_right, dev_labels) = self.preprocessor.get_es_index_padding('dev')
+        (dev_left_length, dev_right_length) = self.preprocessor.get_length('dev')
 
         if tag == 'train':
             train_left.extend(dev_left)
             train_right.extend(dev_right)
             train_labels.extend(dev_labels)
+            train_left_length.extend(dev_left_length)
+            train_right_length.extend(dev_left_length)
             del dev_left, dev_right, dev_labels
             import gc
             gc.collect()
 
         global_steps = tf.Variable(0, name='global_step', trainable=False)
-        self.train_op = tf.train.AdamOptimizer(self.lr, name='optimizer').minimize(self.cost, global_step=global_steps)
+        self.train_op = tf.train.AdamOptimizer(self.lr, name='optimizer').minimize(self.cost,global_step=global_steps)
 
 
         with tf.Session() as sess:
@@ -198,14 +190,14 @@ class ESIM():
 
             for epoch in range(self.n_epoch):
                 for iteration in range(length//self.batch_size + 1):
-                    train_feed_dict = self.gen_train_dict(iteration, train_left, train_right, train_labels, True)
+                    train_feed_dict = self.gen_train_dict(iteration, train_left, train_right, train_left_length, train_right_length, train_labels, True)
                     train_loss, train_acc, current_step, _ = sess.run([self.cost_non_reg, self.accuracy, global_steps, self.train_op], feed_dict = train_feed_dict)
                     if current_step % 64 == 0:
                         dev_loss = 0
                         dev_acc = 0
                         if tag == 'dev':
                             for iter in range(len(dev_labels)//self.batch_size + 1):
-                                dev_feed_dict = self.gen_train_dict(iter, dev_left, dev_right, dev_labels, False)
+                                dev_feed_dict = self.gen_train_dict(iter, dev_left, dev_right, dev_left_length, dev_right_length, dev_labels, False)
                                 dev_loss += self.cost_non_reg.eval(feed_dict = dev_feed_dict)
                                 dev_acc += self.accuracy.eval(feed_dict = dev_feed_dict)
                             dev_loss = dev_loss/(len(dev_labels)//self.batch_size + 1)
@@ -267,15 +259,17 @@ class ESIM():
         }
         return feed_dict
 
-    def gen_train_dict(self, iteration, train_questions, train_answers, train_labels, trainable):
+    def gen_train_dict(self, iteration, train_questions, train_answers, train_left_length, train_right_length, train_labels, trainable):
         start = iteration * self.batch_size
         end = min((start + self.batch_size), len(train_questions))
         question_batch = train_questions[start:end]
         answer_batch = train_answers[start:end]
         label_batch = train_labels[start:end]
+        left_length_batch = train_left_length[start:end]
+        right_length_batch = train_right_length[start:end]
 
         if trainable == True:
-            dropout_keep_prob = self.keep_rate
+            dropout_keep_prob = self.keep_prob
         else:
             dropout_keep_prob = 1.0
 
@@ -285,10 +279,12 @@ class ESIM():
             self.label: label_batch,
             self.trainable: trainable,
             self.dropout_keep_prob: dropout_keep_prob,
+            self.dpool_index: self.dynamic_pooling_index(left_length_batch, right_length_batch, self.sentence_length, self.sentence_length)
         }
         return feed_dict
 
+
+
 if __name__ == '__main__':
-    tf.set_random_seed(1)
-    model = ESIM()
+    model = MatchPyramid()
     model.train('dev')

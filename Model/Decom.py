@@ -11,11 +11,15 @@ from Preprocessing import Preprocess
 from Model.Embeddings import Embeddings
 
 class Decomposable_Attention_Model():
+    '''
+    sim: 0.35
+    concat-mlp: 0.37
+    '''
     def __init__(self, clip_gradients=False):
         self.preprocessor = Preprocess.Preprocess()
         self.embedding = Embeddings()
 
-        self.lr = 4e-5
+        self.lr = 3e-5
         self.keep_prob = 0.5
         self.atten_keep_prob = 0.8
         self.l2_reg = 0.004
@@ -63,6 +67,15 @@ class Decomposable_Attention_Model():
             left_outputs = tf.concat(left_outputs, axis=2)
             right_outputs = tf.concat(right_outputs, axis=2)
 
+            # left_outputs_mask = left_outputs * tf.expand_dims(left_mask, -1)
+            # right_outputs_mask = right_outputs * tf.expand_dims(right_mask, -1)
+            #
+            # left_max = tf.reduce_max(left_outputs_mask, axis=1)
+            # right_max = tf.reduce_max(right_outputs_mask, axis=1)
+            #
+            # left_mean = tf.reduce_sum(left_outputs_mask, axis=1) / tf.expand_dims(tf.cast(left_seq_length, tf.float32), -1)
+            # right_mean = tf.reduce_sum(right_outputs_mask, axis=1) / tf.expand_dims(tf.cast(right_seq_length, tf.float32), -1)
+
         # Attend
         with tf.name_scope('Attention'):
             hidden_dim = left_outputs.shape[-1]*2
@@ -80,6 +93,13 @@ class Decomposable_Attention_Model():
 
             alpha = tf.matmul(left_weights, left_outputs)
             beta = tf.matmul(right_weights, right_outputs)
+
+            # alpha_max = tf.reduce_max(alpha, axis=1)
+            # beta_max = tf.reduce_max(beta, axis=1)
+            # alpha_mean = tf.reduce_mean(alpha, axis=1)
+            # beta_mean = tf.reduce_mean(beta, axis=1)
+            #
+            # sims = [self.cos_sim(alpha_max, beta_max), self.cos_sim(alpha_mean, beta_mean), self.cos_sim(left_max, right_max), self.cos_sim(left_mean, right_mean)]
 
         # Compare
         with tf.name_scope('Compare'):
@@ -100,6 +120,16 @@ class Decomposable_Attention_Model():
 
             v = tf.concat([v_left_output, v_right_output], axis=1)
             v_output = self.MLP(v, self.trainable, self.hidden_dim, 'Aggregate')
+            # v_left_max = tf.reduce_max(v_left_mask, axis=1)
+            # v_right_max = tf.reduce_max(v_right_mask, axis=1)
+            # v_left_mean = tf.reduce_sum(v_left_mask, axis=1)/tf.expand_dims(tf.cast(left_seq_length, tf.float32), -1)
+            # v_right_mean = tf.reduce_sum(v_right_mask, axis=1)/tf.expand_dims(tf.cast(right_seq_length, tf.float32), -1)
+            #
+            # sims.append(self.cos_sim(v_left_max, v_right_max))
+            # sims.append(self.cos_sim(v_left_mean, v_right_mean))
+            #
+            # v_output = tf.stack(sims, axis=1)
+
 
         with tf.name_scope('MLP'):
             self.output = tf.layers.dense(
@@ -121,6 +151,13 @@ class Decomposable_Attention_Model():
         with tf.name_scope('acc'):
             correct = tf.nn.in_top_k(self.output, self.label, 1)
             self.accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
+
+    def cos_sim(self, v1, v2):
+        norm1 = tf.sqrt(tf.reduce_sum(tf.square(v1), axis=1))
+        norm2 = tf.sqrt(tf.reduce_sum(tf.square(v2), axis=1))
+        dot_products = tf.reduce_sum(v1*v2, axis=1, name='cos_sim')
+
+        return dot_products / (norm1 * norm2)
 
 
     def MLP(self, input, trainable, hidden_dim, name):
@@ -302,4 +339,5 @@ class Decomposable_Attention_Model():
 if __name__ == '__main__':
     tf.set_random_seed(1)
     model = Decomposable_Attention_Model()
+    # model.define_model()
     model.train('dev')

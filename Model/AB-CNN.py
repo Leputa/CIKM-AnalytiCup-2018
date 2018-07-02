@@ -35,6 +35,7 @@ class AB_CNN():
         self.clip_gradients = clip_gradients
         self.max_grad_norm = 5.
         self.eclipse = 1e-9
+        self.kepp_prob = 0.5
 
         self.vocab_size = 6119
 
@@ -291,13 +292,6 @@ class AB_CNN():
             #self.train_op = tf.train.AdagradOptimizer(self.lr, name='optimizer').minimize(self.cost, global_step=global_steps)
             self.train_op = tf.train.AdamOptimizer(self.lr, name='optimizer').minimize(self.cost,global_step=global_steps)
 
-
-        # 为了提前停止训练
-        # best_loss_test = np.infty
-        # checks_since_last_progress = 0
-        # max_checks_without_progress = 40
-        # best_model_params = None
-
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
             saver = tf.train.Saver(tf.global_variables())
@@ -342,23 +336,6 @@ class AB_CNN():
                             print("**********************************************************************************************************")
                         checkpoint_path = os.path.join(save_path, 'model.ckpt')
                         saver.save(sess, checkpoint_path, global_step = current_step)
-
-            #             if test_loss < best_loss_test:
-            #                 best_loss_test = test_loss
-            #                 checks_since_last_progress = 0
-            #                 best_model_params = tool.get_model_params()
-            #             else:
-            #                 checks_since_last_progress += 1
-            #
-            #             if checks_since_last_progress>max_checks_without_progress:
-            #                 print("Early Stopping")
-            #                 break
-            #     if checks_since_last_progress > max_checks_without_progress:
-            #         break
-            #
-            # if best_model_params:
-            #     tool.restore_model_params(best_model_params)
-            # saver.save(sess, os.path.join(save_path, 'best_model.ckpt'))
 
     def test(self):
         save_path = config.save_prefix_path + self.model_type + '/'
@@ -411,7 +388,7 @@ class AB_CNN():
         label_batch = train_labels[start:end]
 
         if trainable == True:
-            dropout_keep_prob = 0.5
+            dropout_keep_prob = self.kepp_prob
         else:
             dropout_keep_prob = 1.0
 
@@ -427,7 +404,6 @@ class AB_CNN():
 if __name__ == '__main__':
     tf.set_random_seed(1)
     ABCNN = AB_CNN(model_type='ABCNN3')
-    ABCNN.define_model()
-    # ABCNN.train('dev')
-    # # ABCNN.test()
+    ABCNN.train('dev')
+    #ABCNN.test()
 
