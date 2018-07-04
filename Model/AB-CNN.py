@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import os
 from tqdm import tqdm
+from tensorflow.python import debug as tf_debug
 
 import sys
 sys.path.append("../")
@@ -10,7 +11,8 @@ from Config import config
 from Config import tool
 from Preprocessing import Preprocess
 from Model.Embeddings import Embeddings
-from tensorflow.python import debug as tf_debug
+from Preprocessing import Feature
+
 
 class AB_CNN():
 
@@ -19,18 +21,23 @@ class AB_CNN():
 
         self.preprocessor = Preprocess.Preprocess()
         self.embedding = Embeddings()
-        self.lr = 0.01
+        self.Feature = Feature.Feature()
+
+        self.lr = 0.002
         self.batch_size = 64
-        self.n_epoch = 6
+        self.n_epoch = 20
 
         self.sentence_length = self.preprocessor.max_length
         self.w = 4
-        self.l2_reg = 0.005
-        self.di = 64                               # The number of convolution kernels
+        self.l2_reg = 0.001
+        self.di = 32                               # The number of convolution kernels
         self.vec_dim = self.embedding.vec_dim
+        self.hidden_dim = 8
+
+
         self.num_classes = 2
         self.num_layers = 2
-        self.num_features = None
+        self.num_features = 3
 
         self.clip_gradients = clip_gradients
         self.max_grad_norm = 5.
@@ -81,8 +88,23 @@ class AB_CNN():
 
         with tf.variable_scope('output_layer'):
             self.output_features = tf.stack(sims, axis=1, name='output_features')
+            self.output_features = tf.concat([self.output_features, self.features], axis=1)
+
+
             self.output_features = tf.layers.batch_normalization(self.output_features)
-            self.hidden_drop = tf.nn.dropout(self.output_features, self.dropout_keep_prob, name='hidden_output_drop')
+            self.output_features = tf.nn.dropout(self.output_features, self.dropout_keep_prob, name='hidden_output_drop')
+
+            self.fc = tf.contrib.layers.fully_connected(
+                inputs = self.output_features,
+                num_outputs= self.hidden_dim,
+                activation_fn = tf.nn.tanh,
+                weights_initializer=tf.contrib.layers.xavier_initializer(),
+                weights_regularizer=tf.contrib.layers.l2_regularizer(scale=self.l2_reg),
+                biases_initializer=tf.constant_initializer(1e-02),
+                scope="FC"
+            )
+            self.fc_bn = tf.layers.batch_normalization(self.fc)
+            self.hidden_drop = tf.nn.dropout(self.fc, self.dropout_keep_prob, name='fc_drop')
 
             self.estimation = tf.contrib.layers.fully_connected(
                 inputs = self.hidden_drop,
@@ -91,7 +113,7 @@ class AB_CNN():
                 weights_initializer=tf.contrib.layers.xavier_initializer(),
                 weights_regularizer=tf.contrib.layers.l2_regularizer(scale=self.l2_reg),
                 biases_initializer=tf.constant_initializer(1e-04),
-                scope="FC"
+                scope="FC_2"
             )
 
         self.prediction = tf.contrib.layers.softmax(self.estimation)[:, 1]
@@ -264,17 +286,34 @@ class AB_CNN():
         self.define_model()
 
         (train_left, train_right, train_labels) = self.preprocessor.get_es_index_padding('train')
-        length = len(train_left)
+        (train_left_swap, train_right_swap, train_labels_swap) = self.preprocessor.swap_data('train', 'padding')
+        train_left.extend(train_left_swap)
+        train_right.extend(train_right_swap)
+        train_labels.extend(train_labels_swap)
+
+        train_features = self.Feature.addtional_feature('train')
+        train_features = np.vstack([train_features, train_features])
+
         (dev_left, dev_right, dev_labels) = self.preprocessor.get_es_index_padding('dev')
+        dev_features = self.Feature.addtional_feature('dev')
 
         if tag == 'train':
+            (dev_left_swap, dev_right_swap, dev_labels_swap) = self.preprocessor.swap_data('dev', 'padding')
+            dev_left.extend(dev_left_swap)
+            dev_right.extend(dev_right_swap)
+            dev_labels.extend(dev_labels_swap)
+            dev_features = np.vstack([dev_features, dev_features])
+
             train_left.extend(dev_left)
             train_right.extend(dev_right)
             train_labels.extend(dev_labels)
-            del dev_left, dev_right, dev_labels
+            train_features = np.vstack([train_features, dev_features])
+
+            del dev_left, dev_right, dev_labels, dev_features
             import gc
             gc.collect()
 
+        length = len(train_left)
         global_steps = tf.Variable(0, name='global_step', trainable=False)
 
         if self.clip_gradients == True:
@@ -289,8 +328,8 @@ class AB_CNN():
 
             self.train_op = optimizer.apply_gradients(zip(gradients, variables), global_step=global_steps)
         else:
-            #self.train_op = tf.train.AdagradOptimizer(self.lr, name='optimizer').minimize(self.cost, global_step=global_steps)
             self.train_op = tf.train.AdamOptimizer(self.lr, name='optimizer').minimize(self.cost,global_step=global_steps)
+
 
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
@@ -310,15 +349,19 @@ class AB_CNN():
                 os.makedirs(save_path)
 
             for epoch in range(self.n_epoch):
-                for iteration in range(length//self.batch_size + 1):
-                    train_feed_dict = self.gen_train_dict(iteration, train_left, train_right, train_labels, True)
+                if length % self.batch_size == 0:
+                    iters = length // self.batch_size
+                else:
+                    iters = length // self.batch_size + 1
+                for iteration in range(iters):
+                    train_feed_dict = self.gen_train_dict(iteration, train_left, train_right, train_features, train_labels, True)
                     train_loss, train_acc, current_step, _ = sess.run([self.cost_non_reg, self.accuracy, global_steps, self.train_op], feed_dict = train_feed_dict)
                     if current_step % 64 == 0:
                         dev_loss = 0
                         dev_acc = 0
                         if tag == 'dev':
                             for iter in range(len(dev_labels)//self.batch_size + 1):
-                                dev_feed_dict = self.gen_train_dict(iter, dev_left, dev_right, dev_labels, False)
+                                dev_feed_dict = self.gen_train_dict(iter, dev_left, dev_right, dev_features, dev_labels, False)
                                 dev_loss += self.cost_non_reg.eval(feed_dict = dev_feed_dict)
                                 dev_acc += self.accuracy.eval(feed_dict = dev_feed_dict)
                             dev_loss = dev_loss/(len(dev_labels)//self.batch_size + 1)
@@ -342,10 +385,9 @@ class AB_CNN():
         assert os.path.isdir(save_path)
 
         test_left, test_right = self.preprocessor.get_es_index_padding('test')
-        # test_left, test_right, _ = self.preprocessor.get_es_index_padding('dev')
+        test_features = self.Feature.addtional_feature('test')
 
         tf.reset_default_graph()
-
         self.define_model()
         saver = tf.train.Saver()
 
@@ -358,7 +400,7 @@ class AB_CNN():
             # saver.restore(sess, os.path.join(save_path, 'best_model.ckpt'))
 
             for step in tqdm(range(len(test_left)//self.batch_size + 1)):
-                test_feed_dict = self.gen_test_dict(step, test_left, test_right, False)
+                test_feed_dict = self.gen_test_dict(step, test_left, test_right, test_features, False)
                 pred = sess.run(self.prediction, feed_dict = test_feed_dict)
                 test_results.extend(pred.tolist())
 
@@ -366,26 +408,29 @@ class AB_CNN():
             for result in test_results:
                 fr.write(str(result) + '\n')
 
-    def gen_test_dict(self, iteration, train_questions, train_answers, trainable = False):
+    def gen_test_dict(self, iteration, train_questions, train_answers, features, trainable = False):
         start = iteration * self.batch_size
         end = min((start + self.batch_size), len(train_questions))
         question_batch = train_questions[start:end]
         answer_batch = train_answers[start:end]
+        features_batch = features[start:end]
 
         feed_dict = {
             self.question: question_batch,
             self.answer: answer_batch,
+            self.features: features_batch,
             self.trainable: trainable,
             self.dropout_keep_prob: 1.0,
         }
         return feed_dict
 
-    def gen_train_dict(self, iteration, train_questions, train_answers, train_labels, trainable):
+    def gen_train_dict(self, iteration, train_questions, train_answers, train_features, train_labels, trainable):
         start = iteration * self.batch_size
         end = min((start + self.batch_size), len(train_questions))
         question_batch = train_questions[start:end]
         answer_batch = train_answers[start:end]
         label_batch = train_labels[start:end]
+        feature_batch = train_features[start:end]
 
         if trainable == True:
             dropout_keep_prob = self.keep_prob
@@ -398,12 +443,13 @@ class AB_CNN():
             self.label: label_batch,
             self.trainable: trainable,
             self.dropout_keep_prob: dropout_keep_prob,
+            self.features: feature_batch
         }
         return feed_dict
 
 if __name__ == '__main__':
     tf.set_random_seed(1)
     ABCNN = AB_CNN(model_type='ABCNN3')
-    ABCNN.train('train')
-    ABCNN.test()
+    ABCNN.train('dev')
+    #ABCNN.test()
 

@@ -4,13 +4,19 @@ sys.path.append('../')
 import pickle
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
+from sklearn.externals import joblib
 from gensim.models import Doc2Vec
 import os
 import numpy as np
+from tqdm import tqdm
+import gc
 
 from Preprocessing import Preprocess
 from Config import config
 from Model import Embeddings
+from Config import tool
+
+
 
 
 class Feature():
@@ -53,17 +59,17 @@ class Feature():
         return stop_left, stop_right, stop_labels
 
 
-    def get_tf_idf(self, tag='word'):
-        print("Tfidf on " + tag)
+    ### nlp feature
+    def count_tf_idf(self, tag='word'):
+        print('tfidf model on ' + tag)
 
         if tag == 'word':
-            path = config.cache_prefix_path + 'Tfidf_word.pkl'
+            path = config.cache_prefix_path + 'Tfidf_word_model.m'
         elif tag == 'char':
-            path = config.cache_prefix_path + 'Tfidf_char.pkl'
+            path = config.cache_prefix_path + 'Tfidf_char_model.m'
 
         if os.path.exists(path):
-            with open(path, 'rb') as pkl:
-                return pickle.load(pkl)
+            return joblib.load(path)
 
         es = self.preprocess.load_all_data()[0]
         # es = self.del_stop_words(es)
@@ -85,6 +91,41 @@ class Feature():
                 max_features=50000
             )
         vectorizer.fit(corpus)
+
+        joblib.dump(vectorizer, path)
+        return vectorizer
+
+    def count_lsa(self):
+        print('lsa model....')
+        path = config.cache_prefix_path + 'lsa_model.m'
+        if os.path.exists(path):
+            return joblib.load(path)
+
+        vectorizer = self.count_tf_idf()
+
+        es = self.preprocess.load_all_data()[0]
+        corpus = [" ".join(sentence) for sentence in es]
+        bow_features = vectorizer.fit_transform(corpus)
+        lsa = TruncatedSVD(150, algorithm='arpack')
+        lsa.fit(bow_features.asfptype())
+
+        joblib.dump(lsa, path)
+        return lsa
+
+
+    def get_tf_idf(self, tag='word'):
+        print("Tfidf on " + tag)
+
+        if tag == 'word':
+            path = config.cache_prefix_path + 'Tfidf_word.pkl'
+        elif tag == 'char':
+            path = config.cache_prefix_path + 'Tfidf_char.pkl'
+
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        vectorizer = self.count_tf_idf(tag)
 
         # train
         _, _, train_left, train_right, train_labels = self.preprocess.load_train_data('en')
@@ -111,11 +152,11 @@ class Feature():
         return ((train_features, train_labels), (dev_features, dev_labels), test_features)
 
 
-    def getVecs(self, model, start, end, corpus, size):
-        vecs = [np.array(model.docvecs[corpus[i].tags[0]]).reshape((1, size)) for i in range(start, end)]
-        return np.concatenate(vecs)
-
     def get_doc2vec(self):
+
+        def getVecs(model, start, end, corpus, size):
+            vecs = [np.array(model.docvecs[corpus[i].tags[0]]).reshape((1, size)) for i in range(start, end)]
+            return np.concatenate(vecs)
 
         print("getting doc2vec......")
 
@@ -126,13 +167,13 @@ class Feature():
 
         model, dic = self.embeddings.doc2vec()
 
-        train_left_vector = self.getVecs(model, 0, 20000, dic, self.embeddings.vec_dim)
-        train_right_vector = self.getVecs(model, 20000, 40000, dic, self.embeddings.vec_dim)
+        train_left_vector = getVecs(model, 0, 20000, dic, self.embeddings.vec_dim)
+        train_right_vector = getVecs(model, 20000, 40000, dic, self.embeddings.vec_dim)
         train_vec = np.hstack([train_left_vector, train_right_vector])
 
 
-        dev_left_vector = self.getVecs(model, 40000, 41400, dic, self.embeddings.vec_dim)
-        dev_right_vector = self.getVecs(model, 41400, 42800, dic, self.embeddings.vec_dim)
+        dev_left_vector = getVecs(model, 40000, 41400, dic, self.embeddings.vec_dim)
+        dev_right_vector = getVecs(model, 41400, 42800, dic, self.embeddings.vec_dim)
         dev_vec = np.hstack([dev_left_vector, dev_right_vector])
 
         # test
@@ -205,20 +246,7 @@ class Feature():
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
 
-        es = self.preprocess.load_all_data()[0]
-        corpus = [" ".join(sentence) for sentence in es]
-
-
-        vectorizer = TfidfVectorizer(
-            sublinear_tf=True,
-            analyzer='word',
-            ngram_range=(1, 4),
-            max_features=20000
-        )
-
-        bow_features = vectorizer.fit_transform(corpus)
-        lsa = TruncatedSVD(150, algorithm='arpack')
-        lsa.fit(bow_features.asfptype())
+        lsa = self.count_lsa()
 
         ((train_features, train_labels), (dev_features, dev_labels), test_features) = self.get_tf_idf(tag)
 
@@ -232,13 +260,259 @@ class Feature():
         return ((train_features, train_labels), (dev_features, dev_labels), test_features)
 
 
-    def addtional_feature(self):
-        return None
+    ### statistics feature
+    def load_left_right(self, tag):
+        dic = {
+            'train':'en',
+            'dev': 'es'
+        }
+        if tag == 'train' or tag == 'dev':
+            _, _, left, right, _ = self.preprocess.load_train_data(dic[tag])
+        elif tag == 'test':
+            left, right = self.preprocess.load_test()
+
+        return left, right
+
+
+    def get_word_share(self, tag):
+
+        def extract_share_words(left, right):
+            q1words = {}
+            q2words = {}
+            for word in left:
+                if word not in self.stop_words:
+                    q1words[word] = q1words.get(word, 0) + 1
+            for word in right:
+                if word not in self.stop_words:
+                    q2words[word] = q2words.get(word, 0) + 1
+            n_shared_word_in_q1 = sum([q1words[w] for w in q1words if w in q2words])
+            n_shared_word_in_q2 = sum([q2words[w] for w in q2words if w in q1words])
+            n_tol = sum(q1words.values()) + sum(q2words.values())
+            if 1e-6 > n_tol:
+                return [0.]
+            else:
+                return [1.0 * (n_shared_word_in_q1 + n_shared_word_in_q2) / n_tol]
+
+        print('getting share words...')
+
+        if tag == 'train':
+            path = config.cache_prefix_path + 'share_words_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'share_words_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'share_words_test.pkl'
+
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+        dic = {
+            'train':'en',
+            'dev': 'es'
+        }
+
+        if tag == 'train' or tag == 'dev':
+            _, _, left, right, _ = self.preprocess.load_train_data(dic[tag])
+        elif tag == 'test':
+            left, right = self.preprocess.load_test()
+
+        share_words_list = []
+        for i in tqdm(range(len(left))):
+            share_words_list.append(extract_share_words(left[i], right[i]))
+
+        assert len(share_words_list) == len(left)
+
+        share_words_list = np.array(share_words_list)
+        with open(path, 'wb') as pkl:
+            pickle.dump(share_words_list, pkl)
+
+        return share_words_list
+
+    def get_tfidf_sim(self, tag):
+
+        def extract_tfidf_sim(left, right):
+            left = left.toarray()
+            right = right.toarray()
+            return [tool.cos_sim(left, right)]
+
+        print("getting tfidf share...")
+        if tag == 'train':
+            path = config.cache_prefix_path + 'tfidf_sim_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'tfidf_sim_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'tfidf_sim_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        vectorizer = self.count_tf_idf()
+
+        left, right = self.load_left_right(tag)
+
+        tfidf_sim_list = []
+        for i in tqdm(range(left.shape[0])):
+            tfidf_sim_list.append(extract_tfidf_sim(left[i], right[i]))
+            gc.collect()
+
+        assert len(tfidf_sim_list) == left.shape[0]
+
+        tfidf_sim_list = np.array(tfidf_sim_list)
+        with open(path, 'wb') as pkl:
+            pickle.dump(tfidf_sim_list, pkl)
+
+        return tfidf_sim_list
+
+    def get_lsa_sim(self, tag):
+
+        def extract_lsa_sim(left, right):
+            return [tool.cos_sim(left, right)]
+
+        print("getting lsa sim...")
+        if tag == 'train':
+            path = config.cache_prefix_path + 'lsa_sim_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'lsa_sim_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'lsa_sim_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        lsa = self.count_lsa()
+        vectorizer = self.count_tf_idf()
+        left, right = self.load_left_right(tag)
+
+        left = vectorizer.transform([" ".join(sentence) for sentence in left])
+        right = vectorizer.transform([" ".join(sentence) for sentence in right])
+
+        left = lsa.transform(left)
+        right = lsa.transform(right)
+
+        lsa_sim_list = []
+        for i in tqdm(range(left.shape[0])):
+            lsa_sim_list.append(extract_lsa_sim(left[i], right[i]))
+            gc.collect()
+        lsa_sim_list = np.array(lsa_sim_list)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump(lsa_sim_list, pkl)
+        return lsa_sim_list
+
+    def get_doc2vec_sim(self, tag):
+        def getVecs(model, start, end, corpus, size):
+            vecs = [np.array(model.docvecs[corpus[i].tags[0]]).reshape((1, size)) for i in range(start, end)]
+            return np.concatenate(vecs)
+
+        def extract_sim(left, right):
+            return [tool.cos_sim(left, right)]
+
+        print("getting doc2vec sim...")
+        if tag == 'train':
+            path = config.cache_prefix_path + 'doc2vec_sim_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'doc2vec_sim_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'doc2vec_sim_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        model, dic = self.embeddings.doc2vec()
+        if tag == 'train':
+            left_vector = getVecs(model, 0, 20000, dic, self.embeddings.vec_dim)
+            right_vector = getVecs(model, 20000, 40000, dic, self.embeddings.vec_dim)
+        elif tag == 'dev':
+            left_vector = getVecs(model, 40000, 41400, dic, self.embeddings.vec_dim)
+            right_vector = getVecs(model, 41400, 42800, dic, self.embeddings.vec_dim)
+        elif tag == 'test':
+            left_vector = getVecs(model, 42800, 47800, dic, self.embeddings.vec_dim)
+            right_vector = getVecs(model, 47800, 52800, dic, self.embeddings.vec_dim)
+
+        feature = []
+        for i in tqdm(range(left_vector.shape[0])):
+            feature.append(extract_sim(left_vector[i], right_vector[i]))
+            gc.collect()
+        feature = np.array(feature)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+
+
+    def get_length_diff(self, tag):
+        def extract_row(left, right):
+            return [abs(len(left) - len(right))]
+
+        print("getting length diff...")
+        if tag == 'train':
+            path = config.cache_prefix_path + 'length_diff_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'length_diff_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'length_diff_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        left, right = self.load_left_right(tag)
+
+        len_diff_list = []
+        for i in range(len(left)):
+            len_diff_list.append(extract_row(left[i], right[i]))
+
+        len_diff_list = np.array(len_diff_list)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump(len_diff_list, pkl)
+        return len_diff_list
+
+
+    def get_length_diff_rate(self, tag):
+        def extract_row(left, right):
+            if max(len(left), len(right)) > 1e-06:
+                return [min(len(left), len(right))/max(len(left), len(right))]
+            else:
+                return [0.]
+
+        print("getting length diff Rate...")
+        if tag == 'train':
+            path = config.cache_prefix_path + 'length_diff_rate_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'length_diff_rate_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'length_diff_rate_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        left, right = self.load_left_right(tag)
+
+        len_diff_rate_list = []
+        for i in range(len(left)):
+            len_diff_rate_list.append(extract_row(left[i], right[i]))
+
+        len_diff_rate_list = np.array(len_diff_rate_list)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump(len_diff_rate_list, pkl)
+        return len_diff_rate_list
+
+
+    def addtional_feature(self, tag):
+        #tfidf_sim = self.get_tfidf_sim(tag)
+        lsa_sim =self.get_lsa_sim(tag)
+        word_share =  self.get_word_share(tag)
+        doc2vec_sim = self.get_doc2vec_sim(tag)
+
+        return np.hstack([lsa_sim, word_share, doc2vec_sim])
+
+
 
 
 
 if __name__ == '__main__':
     feature = Feature()
-    feature.get_tf_idf('char')
-    #feature.get_doc2vec()
-    #feature.LSA('word')
+    feature.get_doc2vec_sim('train')
+    feature.get_doc2vec_sim('dev')
+    feature.get_doc2vec_sim('test')

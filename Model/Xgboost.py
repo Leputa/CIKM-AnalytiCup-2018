@@ -34,7 +34,7 @@ class Xgboost():
                          'nthread':7,
                          'silent':True,
                          'gamma':0.1,
-                         'eval_metric':'logloss'
+                         'eval_metric':'auc'
                     }
         self.num_rounds = 5000
         self.early_stop_rounds = 100
@@ -145,7 +145,7 @@ class Xgboost():
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
         xgb_test = xgb.DMatrix(test_data)
 
-        num_rounds = 930
+        num_rounds = 820
         watchlist = [(xgb_train, 'train')]
         model = xgb.train(self.params, xgb_train, num_rounds, watchlist)
 
@@ -157,7 +157,7 @@ class Xgboost():
 
 if __name__ == "__main__":
     model = Xgboost()
-    model.train('tfidf')
-    #model.test(name='tfidf')
+    #model.train('tfidf')
+    model.test(name='tfidf')
 
 

@@ -18,21 +18,21 @@ class MatchPyramid():
         self.preprocessor = Preprocess.Preprocess()
         self.embedding = Embeddings()
 
-        self.lr = 0.0005
+        self.lr = 0.0004
         self.keep_prob = 0.5
         self.l2_reg = 0.004
         self.sentence_length = self.preprocessor.max_length
 
         self.vec_dim = self.embedding.vec_dim
-        self.hidden_dim = 20
+        self.hidden_dim = 16
 
         self.num_classes = 2
         self.batch_size = 128
-        self.n_epoch = 50
+        self.n_epoch = 20
 
         self.cosine = True
         self.psize1 = 2
-        self.psize2 = 4
+        self.psize2 = 2
 
     def define_model(self):
         self.left_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='left_sentence')
@@ -162,7 +162,7 @@ class MatchPyramid():
             train_right.extend(dev_right)
             train_labels.extend(dev_labels)
             train_left_length.extend(dev_left_length)
-            train_right_length.extend(dev_left_length)
+            train_right_length.extend(dev_right_length)
             del dev_left, dev_right, dev_labels
             import gc
             gc.collect()

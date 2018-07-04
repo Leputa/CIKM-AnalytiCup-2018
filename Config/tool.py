@@ -1,4 +1,5 @@
 import tensorflow as tf
+import numpy as np
 
 def get_model_params():
     gvars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES)
@@ -85,5 +86,15 @@ def masked_softmax(scores, mask):
     denominator = tf.reduce_sum(numerator, 1, keep_dims=True)
     weights = tf.div(numerator, denominator)
     return weights
+
+
+def cos_sim(v1, v2):
+    dot = np.vdot(v1, v2)
+    l2_norm = (np.linalg.norm(v1) * np.linalg.norm(v2))
+    if l2_norm < 1e-06:
+        return 0.
+    else:
+        return dot/l2_norm
+
 
 

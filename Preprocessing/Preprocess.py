@@ -321,6 +321,48 @@ class Preprocess():
             pickle.dump((es, en), pkl)
         return es, en
 
+    def swap_data(self, tag1, tag2):
+        print('Swapping data')
+
+        if tag1 == 'train':
+            if tag2 == 'token':
+                path = config.cache_prefix_path + 'train_token_swap.pkl'
+            elif tag2 == 'index':
+                path = config.cache_prefix_path + 'train_index_swap.pkl'
+            elif tag2 == 'padding':
+                path = config.cache_prefix_path + 'train_padding_swap.pkl'
+        elif tag1 == 'dev':
+            if tag2 == 'token':
+                path = config.cache_prefix_path + 'dev_token_swap.pkl'
+            elif tag2 == 'index':
+                path = config.cache_prefix_path + 'dev_index_swap.pkl'
+            elif tag2 == 'padding':
+                path = config.cache_prefix_path + 'dev_padding_swap.pkl'
+
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        dic = {
+            'train':'en',
+            'dev': 'es'
+        }
+
+        if tag2 == 'token':
+            _, _, left, right, labels = self.load_train_data(dic[tag1])
+        elif tag2 == 'index':
+            left, right, labels = self.get_es_index_data(tag1)
+        elif tag2 == 'padding':
+            left, right, labels = self.get_es_index_padding(tag1)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump((right, left, labels), pkl)
+
+        return (right, left, labels)
+
+
+
+
 if __name__ == '__main__':
     p = Preprocess()
 

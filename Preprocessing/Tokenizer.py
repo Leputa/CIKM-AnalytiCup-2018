@@ -25,8 +25,15 @@ class Tokenizer():
         text= text.strip().lower()
         text = ' ' + text + ' '
 
+        # text = re.sub(r"á", "a", text)
+        # text = re.sub(r"ó", "o", text)
+        # text = re.sub(r"é", "e", text)
+        # text = re.sub(r"í", "i", text)
+        # text = re.sub(r"ú", "u", text)
+
         # acronym
         text = re.sub(r"can\'t", "can not", text)
+        text = re.sub(r"can′t", "can not", text)
 
         # punctuation
         text = re.sub(r"\[([^\]]+)\]", " ", text)
@@ -38,7 +45,8 @@ class Tokenizer():
         text = re.sub(r"¿", " ¿ ", text)
         text = re.sub(r"？", "", text)
         text = re.sub(r"¡", " ¡ ", text)
-        text = re.sub(r"´", " ´ ", text)
+        text = re.sub(r"´", " ", text)
+        text = re.sub(r"`", " ", text)
         text = re.sub(r"-", " - ", text)
         text = re.sub(r"^[!]", " ! ", text)
         text = re.sub(r"^[?]", " ¿ ", text)
@@ -48,6 +56,7 @@ class Tokenizer():
 
         # unit
         text = re.sub(r"(\d+)h ", lambda m: m.group(1) + ' hora ', text)
+        text = re.sub(r"(\d+)% ", lambda m: m.group(1) + ' por ciento ', text)
         text = re.sub(r"(\d+)cm ", lambda m: m.group(1) + ' cm ', text)
         text = re.sub(r"(\d+)€ ", lambda m: m.group(1) + ' euro ', text)
 
@@ -91,12 +100,15 @@ class Tokenizer():
         text = re.sub(r"=", " equal ", text)
         text = re.sub(r"\+", " plus ", text)
 
-        text = re.sub(r" e \- mail ", " correo electrónico ", text)
-        text = re.sub(r" e\-mail ", " correo electrónico ", text)
+        text = re.sub(r" e \- mail ", " email ", text)
+        text = re.sub(r" e\-mail ", " email ", text)
+        text = re.sub(r" imail ", " email ", text)
+        text = re.sub(r" 3d ", " tridimensional ", text)
         text = re.sub(r" mp4 ", " el jugadores ", text)
         text = re.sub(r" trademanager ", " alibaba ", text)
         text = re.sub(r" hmmmmm ", " bueno ", text)
         text = re.sub(r' :\) ', " alegría ", text)
+        text = re.sub(r' :o ', " sorprendieron ", text)
 
         # 词形还原
         string = ' '.join(lemEsp.Sentence(lemEsp.parse(text, lemmata=True)).lemmata)
