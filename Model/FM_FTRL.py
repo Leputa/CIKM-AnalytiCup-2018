@@ -33,7 +33,7 @@ class FM_FTRL_Model(BaseMlModel):
             L2_fm=0.1,        # v的L2正则
 
             init_fm=0.01,
-            D_fm=200,
+            D_fm=20,
             e_noise=0.0001,
             iters=5,
             inv_link="sigmoid",
@@ -83,4 +83,4 @@ class FM_FTRL_Model(BaseMlModel):
 
 if __name__ == '__main__':
     model = FM_FTRL_Model()
-    model.train('tfidf')
+    model.train('concat_feature')

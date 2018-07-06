@@ -27,7 +27,6 @@ class ESIM():
         self.num_classes = 2
         self.batch_size = 128
         self.n_epoch = 20
-        self.max_grad_norm = 5.
         self.eclipse = 1e-9
 
     def define_model(self):

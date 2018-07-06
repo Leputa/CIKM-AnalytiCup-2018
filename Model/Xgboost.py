@@ -4,6 +4,7 @@ sys.path.append('../')
 from Config import config
 from Preprocessing import Preprocess
 from Preprocessing import Feature
+from Preprocessing import PowerfulWord
 from Model.BaseMlModel import BaseMlModel
 
 import xgboost as xgb
@@ -15,6 +16,8 @@ class Xgboost(BaseMlModel):
     def __init__(self):
         self.preprocessor = Preprocess.Preprocess()
         self.Feature = Feature.Feature()
+        self.Powerfulwords = PowerfulWord.PowerfulWord()
+
         self.params = {  'booster':'gbtree',
                          'max_depth':6,
                          'eta':0.05,
@@ -35,7 +38,7 @@ class Xgboost(BaseMlModel):
                          'eval_metric':'logloss'
                     }
         self.num_rounds = 5000
-        self.early_stop_rounds = 100
+        self.early_stop_rounds = 200
 
 
     def train(self, tag):
@@ -57,7 +60,7 @@ class Xgboost(BaseMlModel):
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
         xgb_test = xgb.DMatrix(test_data)
 
-        num_rounds = 820
+        num_rounds = 900
         watchlist = [(xgb_train, 'train')]
         model = xgb.train(self.params, xgb_train, num_rounds, watchlist)
 
@@ -69,7 +72,8 @@ class Xgboost(BaseMlModel):
 
 if __name__ == "__main__":
     model = Xgboost()
-    model.train('tfidf')
+    model.train('human_feature')
+    #model.test('human_feature')
 
 
 

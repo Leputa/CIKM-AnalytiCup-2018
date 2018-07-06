@@ -15,6 +15,7 @@ from Preprocessing import Preprocess
 from Config import config
 from Model import Embeddings
 from Config import tool
+from Config.utils import  NgramUtil,DistanceUtil
 
 
 
@@ -23,6 +24,7 @@ class Feature():
     def __init__(self):
         self.preprocess = Preprocess.Preprocess()
         self.embeddings = Embeddings.Embeddings()
+
 
         self.stop_words = []
         stop_words_path = config.data_prefix_path + 'spanish.txt'
@@ -439,6 +441,32 @@ class Feature():
         return feature
 
 
+    def get_length(self, tag):
+        print('getting length..')
+
+        if tag == 'train':
+            path = config.cache_prefix_path + 'length_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'length_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'length_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        left, right = self.load_left_right(tag)
+
+        feature = []
+        for i in range(len(left)):
+            feature.append([len(left[i]), len(right[i])])
+
+        feature = np.array(feature)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+
 
     def get_length_diff(self, tag):
         def extract_row(left, right):
@@ -498,14 +526,172 @@ class Feature():
             pickle.dump(len_diff_rate_list, pkl)
         return len_diff_rate_list
 
+    def get_dul_num_sentence(self, tag):
+        ############  这个特征感觉没什么用  ##############
+        def add_dul_num(dum_num, tag2):
+            train_left, train_right = self.load_left_right(tag2)
+            for i in range(len(train_left)):
+                left = ' '.join(train_left[i])
+                right = ' '.join(train_right[i])
+                dum_num[left] = dum_num.get(left, 0) + 1
+                if left != right:
+                    dum_num[right] = dum_num.get(right, 0) + 1
+            return dum_num
+
+        def generate_dul_num():
+            path = config.cache_prefix_path + 'dul_num_sentence.pkl'
+            if os.path.exists(path):
+                with open(path, 'rb') as pkl:
+                    return pickle.load(pkl)
+            dum_num = {}
+            dum_num = add_dul_num(dum_num, 'train')
+            dum_num = add_dul_num(dum_num, 'dev')
+            dum_num = add_dul_num(dum_num, 'test')
+
+            with open(path, 'wb') as pkl:
+                pickle.dump(dum_num, pkl)
+
+            return dum_num
+
+        print("getting sentence dul num...")
+        if tag == 'train':
+            path = config.cache_prefix_path + 'dum_num_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'dum_num_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'dum_num_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        dum_num = generate_dul_num()
+
+        left, right = self.load_left_right(tag)
+
+        feature = []
+        for i in range(len(left)):
+            left_str = ' '.join(left[i])
+            right_str = ' '.join(right[i])
+            dn1 = dum_num[left_str]
+            dn2 = dum_num[right_str]
+            feature.append([dn1, dn2, max(dn1, dn2), min(dn1, dn2)])
+
+        feature = np.array(feature)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def ngram_jaccard_coef(self, tag):
+        def extract_row(q1_words, q2_words):
+            fs = list()
+            for n in range(1, 4):
+                q1_ngrams = NgramUtil.ngrams(q1_words, n)
+                q2_ngrams = NgramUtil.ngrams(q2_words, n)
+                # jaccard_coef: (A&B) / (A|B)
+                fs.append(DistanceUtil.jaccard_coef(q1_ngrams, q2_ngrams))
+            return fs
+
+        print("getting ngram jaccard coef......")
+        if tag == 'train':
+            path = config.cache_prefix_path + 'ngram_jaccard_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'ngram_jaccard_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'ngram_jaccard_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(left[i], right[i]))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def ngram_dice_distance(self, tag):
+        def extract_row(q1_words, q2_words):
+            fs = list()
+            for n in range(1, 4):
+                q1_ngrams = NgramUtil.ngrams(q1_words, n)
+                q2_ngrams = NgramUtil.ngrams(q2_words, n)
+                # jaccard_coef: (A&B) / (A|B)
+                fs.append(DistanceUtil.dice_dist(q1_ngrams, q2_ngrams))
+            return fs
+
+        print("getting ngram dice distance......")
+        if tag == 'train':
+            path = config.cache_prefix_path + 'ngram_dice_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'ngram_dice_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'ngram_dice_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in range(len(left)):
+            feature.append(extract_row(left[i], right[i]))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def get_edit_distance(self, tag):
+
+        def extract_row(q1, q2, distance_func):
+            return [distance_func(q1, q2)]
+
+        print("getting distance......")
+
+        if tag == 'train':
+            path = config.cache_prefix_path + 'edit_dis_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'edit_dis_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'edit_dis_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        distance_func = getattr(DistanceUtil, 'edit_dist')
+
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(left[i], right[i], distance_func))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
 
     def addtional_feature(self, tag):
-        #tfidf_sim = self.get_tfidf_sim(tag)
+        # ABCNN只选了这3个
         lsa_sim =self.get_lsa_sim(tag)
         word_share =  self.get_word_share(tag)
         doc2vec_sim = self.get_doc2vec_sim(tag)
 
-        return np.hstack([lsa_sim, word_share, doc2vec_sim])
+        #return np.hstack([lsa_sim, word_share, doc2vec_sim])
+
+        length = self.get_length(tag)
+        length_diff = self.get_length_diff(tag)
+        length_diff_rate = self.get_length_diff_rate(tag)
+
+        ngram_jaccard_dis = self.ngram_jaccard_coef(tag)
+        ngram_dice_dis = self.ngram_dice_distance(tag)
+
+        edit_dictance = self.get_edit_distance(tag)
+
+        return np.hstack([lsa_sim, word_share, doc2vec_sim, length, length_diff, length_diff_rate, ngram_jaccard_dis, ngram_dice_dis, edit_dictance])
 
 
 
@@ -513,6 +699,4 @@ class Feature():
 
 if __name__ == '__main__':
     feature = Feature()
-    feature.get_doc2vec_sim('train')
-    feature.get_doc2vec_sim('dev')
-    feature.get_doc2vec_sim('test')
+    feature.get_edit_distance('train')

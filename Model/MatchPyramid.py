@@ -10,6 +10,8 @@ from Config import config
 from Config import tool
 from Preprocessing import Preprocess
 from Model.Embeddings import Embeddings
+from Preprocessing import Feature
+
 from tensorflow.python import debug as tf_debug
 
 class MatchPyramid():
@@ -17,10 +19,11 @@ class MatchPyramid():
     def __init__(self):
         self.preprocessor = Preprocess.Preprocess()
         self.embedding = Embeddings()
+        self.Feature = Feature.Feature()
 
         self.lr = 0.0004
         self.keep_prob = 0.5
-        self.l2_reg = 0.004
+        self.l2_reg = 0.04
         self.sentence_length = self.preprocessor.max_length
 
         self.vec_dim = self.embedding.vec_dim
@@ -29,10 +32,12 @@ class MatchPyramid():
         self.num_classes = 2
         self.batch_size = 128
         self.n_epoch = 20
+        self.eclipse = 1e-10
+        self.num_features = 11
 
         self.cosine = True
-        self.psize1 = 2
-        self.psize2 = 2
+        self.psize1 = 3
+        self.psize2 = 3
 
     def define_model(self):
         self.left_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='left_sentence')
@@ -40,7 +45,7 @@ class MatchPyramid():
         self.label = tf.placeholder(tf.int32, shape=[None], name='label')
         self.left_length = tf.placeholder(tf.int32, shape=[None])
         self.right_length = tf.placeholder(tf.int32, shape=[None])
-        #self.features = tf.placeholder(tf.float32, shape=[None, self.num_features], name="features")
+        self.features = tf.placeholder(tf.float32, shape=[None, self.num_features], name="features")
         self.trainable = tf.placeholder(bool, shape=[], name = 'trainable')
         self.dropout_keep_prob = tf.placeholder(tf.float32, shape=[], name='dropout_keep_prob')
         self.dpool_index = tf.placeholder(tf.int32, name='dpool_index',shape=(None, self.sentence_length, self.sentence_length, 3))
@@ -64,16 +69,29 @@ class MatchPyramid():
         # Indecator Function
         with tf.name_scope('Indecator_Function'):
             # Dot Product
-            M = tf.einsum('abd,acd->abc', left_inputs, right_inputs)
+            dot = tf.einsum('abd,acd->abc', left_inputs, right_inputs)
             # Cosine
             if self.cosine == True:
                 norm1 = tf.sqrt(tf.reduce_sum(tf.square(left_inputs), axis=2, keepdims=True))
                 norm2 = tf.sqrt(tf.reduce_sum(tf.square(right_inputs), axis=2, keepdims=True))
-                M = M / tf.einsum('abd,acd->abc', norm1, norm2)
-            M = tf.expand_dims(M, 3)
+                cos = dot / tf.einsum('abd,acd->abc', norm1, norm2)
+
+            identity = tf.cast(
+                tf.equal(
+                    tf.expand_dims(self.left_sentence, 2),
+                    tf.expand_dims(self.right_sentence, 1)
+                ), tf.float32)
+
+            # M = tf.concat([dot, cos, identity], axis=-1)
+            atten_m = self.make_attention_mat(left_inputs, right_inputs)
+            cos = cos * atten_m
+
+            M = tf.expand_dims(cos, 3)
+
+
 
         with tf.name_scope('convolution_1'):
-            conv1 = tf.layers.conv2d(M, filters=8, kernel_size=[2, 4],
+            conv1 = tf.layers.conv2d(M, filters=8, kernel_size=[4, 4],
                                      strides=1, padding='SAME',
                                      activation=tf.nn.relu, kernel_initializer=tf.truncated_normal_initializer(mean=0.0, stddev=0.2, dtype=tf.float32),
                                      name='conv1')
@@ -95,6 +113,9 @@ class MatchPyramid():
                                    padding='VALID',
                                    name = 'pool1')
             pool_flatten = tf.reshape(pool1, [-1, self.psize1 * self.psize2 * 8], name='pool1_flatten')
+
+
+            pool_bn = tf.concat([pool_flatten, self.features], axis=1)
             pool_bn = tf.layers.batch_normalization(pool_flatten)
 
         with tf.name_scope('MLP'):
@@ -128,6 +149,19 @@ class MatchPyramid():
             correct = tf.nn.in_top_k(self.output, self.label, 1)
             self.accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
+    def make_attention_mat(self, x1, x2):
+        # x1  [batch_size, vec_dim, sentence_length, 1]
+        # tf.matrix_transpose(x2) [batch_size, vec_dim, 1, sentence_length]
+
+        # 广播产生一个 [sentence_length_0, sentence_length_1]的矩阵
+        # x1 - tf.matrix_transpose(x2)  [batch_size, vec_dim, sentence_length, sentence_length]
+        # euclidean [bath_size, sentence_length, sentence_length]
+        x1 = tf.expand_dims(tf.transpose(x1, [0, 2, 1]), -1)
+        x2 = tf.expand_dims(tf.transpose(x2, [0, 2, 1]), -1)
+
+        euclidean = tf.sqrt(tf.reduce_sum(tf.square(x1 - tf.matrix_transpose(x2)), axis=1) + self.eclipse)
+        return 1 / (1 + euclidean)
+
 
     def dynamic_pooling_index(self, len1, len2, max_len1, max_len2):
         '''
@@ -157,13 +191,17 @@ class MatchPyramid():
         (dev_left, dev_right, dev_labels) = self.preprocessor.get_es_index_padding('dev')
         (dev_left_length, dev_right_length) = self.preprocessor.get_length('dev')
 
+        train_features = self.Feature.addtional_feature('train')
+        dev_features = self.Feature.addtional_feature('dev')
+
         if tag == 'train':
             train_left.extend(dev_left)
             train_right.extend(dev_right)
             train_labels.extend(dev_labels)
             train_left_length.extend(dev_left_length)
             train_right_length.extend(dev_right_length)
-            del dev_left, dev_right, dev_labels
+            train_features = np.vstack([train_features, dev_features])
+            del dev_left, dev_right, dev_labels, dev_features
             import gc
             gc.collect()
 
@@ -190,14 +228,14 @@ class MatchPyramid():
 
             for epoch in range(self.n_epoch):
                 for iteration in range(length//self.batch_size + 1):
-                    train_feed_dict = self.gen_train_dict(iteration, train_left, train_right, train_left_length, train_right_length, train_labels, True)
+                    train_feed_dict = self.gen_train_dict(iteration, train_left, train_right, train_left_length, train_right_length, train_labels, train_features, True)
                     train_loss, train_acc, current_step, _ = sess.run([self.cost_non_reg, self.accuracy, global_steps, self.train_op], feed_dict = train_feed_dict)
                     if current_step % 64 == 0:
                         dev_loss = 0
                         dev_acc = 0
                         if tag == 'dev':
                             for iter in range(len(dev_labels)//self.batch_size + 1):
-                                dev_feed_dict = self.gen_train_dict(iter, dev_left, dev_right, dev_left_length, dev_right_length, dev_labels, False)
+                                dev_feed_dict = self.gen_train_dict(iter, dev_left, dev_right, dev_left_length, dev_right_length, dev_labels, dev_features, False)
                                 dev_loss += self.cost_non_reg.eval(feed_dict = dev_feed_dict)
                                 dev_acc += self.accuracy.eval(feed_dict = dev_feed_dict)
                             dev_loss = dev_loss/(len(dev_labels)//self.batch_size + 1)
@@ -259,7 +297,7 @@ class MatchPyramid():
         }
         return feed_dict
 
-    def gen_train_dict(self, iteration, train_questions, train_answers, train_left_length, train_right_length, train_labels, trainable):
+    def gen_train_dict(self, iteration, train_questions, train_answers, train_left_length, train_right_length, train_labels, train_features, trainable):
         start = iteration * self.batch_size
         end = min((start + self.batch_size), len(train_questions))
         question_batch = train_questions[start:end]
@@ -267,6 +305,7 @@ class MatchPyramid():
         label_batch = train_labels[start:end]
         left_length_batch = train_left_length[start:end]
         right_length_batch = train_right_length[start:end]
+        features_batch = train_features[start:end]
 
         if trainable == True:
             dropout_keep_prob = self.keep_prob
@@ -277,6 +316,7 @@ class MatchPyramid():
             self.left_sentence: question_batch,
             self.right_sentence: answer_batch,
             self.label: label_batch,
+            self.features: features_batch,
             self.trainable: trainable,
             self.dropout_keep_prob: dropout_keep_prob,
             self.dpool_index: self.dynamic_pooling_index(left_length_batch, right_length_batch, self.sentence_length, self.sentence_length)
@@ -286,5 +326,6 @@ class MatchPyramid():
 
 
 if __name__ == '__main__':
+    tf.set_random_seed(1)
     model = MatchPyramid()
     model.train('dev')

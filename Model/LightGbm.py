@@ -4,14 +4,18 @@ sys.path.append('../')
 from Config import config
 from Preprocessing import Preprocess
 from Preprocessing import Feature
+from Preprocessing import PowerfulWord
 from Model.BaseMlModel import BaseMlModel
 
 import lightgbm as lgb
 
 class LightGbm(BaseMlModel):
+
     def __init__(self):
         self.preprocessor = Preprocess.Preprocess()
         self.Feature = Feature.Feature()
+        self.Powerfulwords = PowerfulWord.PowerfulWord()
+
         self.params = {
                 # 核心参数
                 'task': 'train',  # 设置是否是训练任务
@@ -26,14 +30,14 @@ class LightGbm(BaseMlModel):
 
                 # 学习控制参数
                 'max_depth': 6,  # 限制树模型的最大深度，用于减少过拟合，<0表示没有限制
-                # 'min_data_in_leaf':20,# 一个叶子中最少数据个数，用于制止过拟合
+                'min_data_in_leaf': 10,# 一个叶子中最少数据个数，用于制止过拟合
                 # 'min_sum_hessian_in_leaf':0.00001,# minimal sum hessian in one leaf,制止过拟合
                 # 'feature_fraction':1.0,# 随机抽取的特征列的占比，用于加快训练和防止过拟合
-                # 'feature_fraction_seed':2,# 随机抽取的特征列的随机产生种子
+                'feature_fraction_seed':2018,# 随机抽取的特征列的随机产生种子
                 # 'bagging_fraction':1.0,# 随机选择部分数据的占比，用于加快训练和防止过拟合
                 # 'bagging_freq':1,# 每隔k次就进行随机bagging，k=0表示不bagging
-                # 'bagging_seed':3,# bagging的随机产生种子
-                'lambda_l1':0,# L1 regularization
+                'bagging_seed': 2018,# bagging的随机产生种子
+                'lambda_l1':1,# L1 regularization
                 'lambda_l2':10,# L2 regularization
                 # 'min_split_gain':0,# 分裂一次最少要获取多少收益
                 # 'max_cat_threshold':32,# limit the max threshold points in categorical features
@@ -77,7 +81,7 @@ class LightGbm(BaseMlModel):
                         verbose_eval=1)
 
     def test(self, name):
-        print("Xgboost testing...")
+        print("LightGbm testing...")
 
         train_data, train_labels, test_data = self.prepare_test_data(name)
 
@@ -85,7 +89,7 @@ class LightGbm(BaseMlModel):
         lgb_test = lgb.Dataset(test_data)
 
         model = lgb.train(self.params, lgb_train, valid_sets=[lgb_train],
-                          num_boost_round=50, verbose_eval=1)
+                          num_boost_round=1900, verbose_eval=1)
 
         submit = model.predict(test_data)
         with open(config.output_prefix_path + 'lightgbm_' + name +'-summit.txt', 'w') as fr:
@@ -95,5 +99,5 @@ class LightGbm(BaseMlModel):
 
 if __name__ == "__main__":
     model = LightGbm()
-    # model.train('tfidf')
-    model.test('tfidf')
+    #model.train('human_feature')
+    model.test('human_feature')

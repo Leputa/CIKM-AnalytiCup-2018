@@ -4,6 +4,7 @@ sys.path.append('../')
 from Config import config
 from Preprocessing import Preprocess
 from Preprocessing import Feature
+from Preprocessing import PowerfulWord
 
 from scipy.sparse import hstack
 from scipy.sparse import vstack
@@ -16,6 +17,7 @@ class BaseMlModel():
     def __init__(self):
         self.preprocessor = Preprocess.Preprocess()
         self.Feature = Feature.Feature()
+        self.Powerfulwords = PowerfulWord.PowerfulWord()
 
     def get_dov2vec_data(self):
         train_data, dev_data, test_data = self.Feature.get_doc2vec()
@@ -71,6 +73,22 @@ class BaseMlModel():
             train_data = hstack([tfidf_train, word2vec_train])
             dev_data = hstack([tfidf_dev, word2vec_dev])
 
+        elif tag == 'human_feature':
+            char_train_data, train_labels, char_dev_data, dev_labels, _ = self.get_tfidf('char')
+            word_train_data, _, word_dev_data, _, _ = self.get_tfidf('word')
+            train_data = hstack([char_train_data, word_train_data])
+            dev_data = hstack([char_dev_data, word_dev_data])
+
+            train_feature = coo_matrix(self.Feature.addtional_feature('train'))
+            dev_feature = coo_matrix(self.Feature.addtional_feature('dev'))
+
+            words_train_feature = coo_matrix(self.Powerfulwords.addtional_feature('train'))
+            words_dev_features = coo_matrix(self.Powerfulwords.addtional_feature('dev'))
+
+
+            train_data = hstack([char_train_data, word_train_data, train_feature, words_train_feature])
+            dev_data = hstack([char_dev_data, word_dev_data, dev_feature, words_dev_features])
+
         return train_data, train_labels, dev_data, dev_labels
 
 
@@ -109,6 +127,35 @@ class BaseMlModel():
             train_labels.extend(dev_labels)
 
             del dev_data, dev_labels
+
+        elif name == 'human_feature':
+            char_train_data, train_labels, char_dev_data, dev_labels, char_test_data = self.get_tfidf('char')
+            word_train_data, _, word_dev_data, _, word_test_data = self.get_tfidf('word')
+
+            train_data = vstack([hstack([char_train_data, word_train_data]), hstack([char_dev_data, word_dev_data])]).tocsr()
+            train_labels.extend(dev_labels)
+
+            train_feature = coo_matrix(self.Feature.addtional_feature('train'))
+            dev_feature = coo_matrix(self.Feature.addtional_feature('dev'))
+
+            train_feature = vstack([train_feature, dev_feature])
+            test_feature = coo_matrix(self.Feature.addtional_feature('test'))
+
+
+            words_train_feature = coo_matrix(self.Powerfulwords.addtional_feature('train'))
+            words_dev_feature = coo_matrix(self.Powerfulwords.addtional_feature('dev'))
+
+            words_train_feature = vstack([words_train_feature, words_dev_feature])
+            words_test_feature = coo_matrix(self.Powerfulwords.addtional_feature('test'))
+
+            train_data = hstack([train_data, train_feature, words_train_feature])
+            test_data = hstack([char_test_data, word_test_data, test_feature, words_test_feature])
+
+            print(train_data.shape)
+            print(test_data.shape)
+
+            del char_train_data, char_dev_data, dev_labels, char_test_data, word_train_data, word_test_data, word_dev_data
+
 
         return train_data, train_labels, test_data
 

@@ -70,10 +70,10 @@ class PowerfulWord():
                 words_power[word][6] /= words_power[word][5]
             # 计算双侧语句对比例
             words_power[word][5] /= words_power[word][0]
-        sorted_words_power = sorted(words_power.items(), key=lambda d: d[1][0], reverse=True)
+        #words_power = sorted(words_power.items(), key=lambda d: d[1][0], reverse=True)
         with open(path, 'wb') as pkl:
-            pickle.dump(sorted_words_power, pkl)
-        return sorted_words_power
+            pickle.dump(words_power, pkl)
+        return words_power
 
 
     def powerful_word_double_side(self):
@@ -122,6 +122,85 @@ class PowerfulWord():
             pickle.dump(feature, pkl)
         return feature
 
+    def add_double_rate_feature(self, tag):
+        def extract_row(q1_words, q2_words, pword_dict):
+
+            num_least = 200
+            rate = [1.0]
+            share_words = list(set(q1_words).intersection(set(q2_words)))
+
+            for word in share_words:
+                if word not in pword_dict:
+                    continue
+                if pword_dict[word][0] * pword_dict[word][5] < num_least:
+                    continue
+                rate[0] *= (1.0 - pword_dict[word][6])
+            rate = [1 - num for num in rate]
+            return rate
+
+        if tag == 'train':
+            path = config.cache_prefix_path + 'pword_dside_rate_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'pword_dside_rate_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'pword_dside_rate_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        left, right = self.load_left_right(tag)
+        pword_dside = self.generate_powerful_word()
+
+        feature = []
+
+        for i in range(len(left)):
+            feature.append(extract_row(left[i], right[i], pword_dside))
+        feature = np.array(feature)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def add_one_rate_feature(self, tag):
+        def extract_row(q1_words, q2_words, pword_dict):
+
+            num_least = 200
+            rate = [1.0]
+            share_words = list(set(q1_words).intersection(set(q2_words)))
+
+            for word in share_words:
+                if word not in pword_dict:
+                    continue
+                if pword_dict[word][0] * pword_dict[word][3] < num_least:
+                    continue
+                rate[0] *= (1.0 - pword_dict[word][4])
+            rate = [1 - num for num in rate]
+            return rate
+
+        if tag == 'train':
+            path = config.cache_prefix_path + 'pword_oside_rate_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'pword_oside_rate_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'pword_oside_rate_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        left, right = self.load_left_right(tag)
+        pword_dside = self.generate_powerful_word()
+
+        feature = []
+
+        for i in range(len(left)):
+            feature.append(extract_row(left[i], right[i], pword_dside))
+        feature = np.array(feature)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+
 
     def powerful_word_one_side(self):
         # 不存在满足条件的这类词, 忽略这个特征
@@ -136,7 +215,6 @@ class PowerfulWord():
         return double_words_power
 
 
-
     def load_left_right(self, tag):
         dic = {
             'train':'en',
@@ -149,9 +227,14 @@ class PowerfulWord():
 
         return left, right
 
+    def addtional_feature(self, tag):
+        dwords_rate = self.add_double_rate_feature(tag)
+        owords_rate = self.add_one_rate_feature(tag)
+        return np.hstack([dwords_rate, owords_rate])
+
 
 
 if __name__ == '__main__':
     model = PowerfulWord()
-    words_oside =model.powerful_word_one_side()
-    print(words_oside)
+    drate = model.add_one_rate_feature('train')
+
