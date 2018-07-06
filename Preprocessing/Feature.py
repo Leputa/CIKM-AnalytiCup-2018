@@ -645,6 +645,7 @@ class Feature():
         return feature
 
     def get_edit_distance(self, tag):
+        ##########试了下，这个特征居然没用###########
 
         def extract_row(q1, q2, distance_func):
             return [distance_func(q1, q2)]
@@ -689,9 +690,9 @@ class Feature():
         ngram_jaccard_dis = self.ngram_jaccard_coef(tag)
         ngram_dice_dis = self.ngram_dice_distance(tag)
 
-        edit_dictance = self.get_edit_distance(tag)
+        #edit_dictance = self.get_edit_distance(tag)
 
-        return np.hstack([lsa_sim, word_share, doc2vec_sim, length, length_diff, length_diff_rate, ngram_jaccard_dis, ngram_dice_dis, edit_dictance])
+        return np.hstack([lsa_sim, word_share, doc2vec_sim, length, length_diff, length_diff_rate, ngram_jaccard_dis, ngram_dice_dis])
 
 
 
