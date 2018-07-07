@@ -4,6 +4,7 @@ sys.path.append('../')
 import pickle
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
+from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.externals import joblib
 from gensim.models import Doc2Vec
 import os
@@ -108,11 +109,30 @@ class Feature():
         es = self.preprocess.load_all_data()[0]
         corpus = [" ".join(sentence) for sentence in es]
         bow_features = vectorizer.fit_transform(corpus)
+
         lsa = TruncatedSVD(150, algorithm='arpack')
         lsa.fit(bow_features.asfptype())
 
         joblib.dump(lsa, path)
         return lsa
+
+    def count_lda(self):
+        print('lda model....')
+        path = config.cache_prefix_path + 'lda_model.m'
+        if os.path.exists(path):
+            return joblib.load(path)
+
+        vectorizer = self.count_tf_idf()
+
+        es = self.preprocess.load_all_data()[0]
+        corpus = [" ".join(sentence) for sentence in es]
+        bow_features = vectorizer.fit_transform(corpus)
+
+        lda = LatentDirichletAllocation(n_topics=10, learning_method='batch', max_iter=30)
+        lda.fit(bow_features.asfptype())
+
+        joblib.dump(lda, path)
+        return lda
 
 
     def get_tf_idf(self, tag='word'):
@@ -201,15 +221,15 @@ class Feature():
 
         # train
         train_left, train_right, train_labels = self.preprocess.get_es_index_data('train')
-        train_features = self.deal_average_word2vec(train_left, train_right, embedding_matrix)
+        train_features = np.hstack([self.deal_average_word2vec(train_left, train_right, embedding_matrix)])
 
         #dev
         dev_left, dev_right, dev_labels = self.preprocess.get_es_index_data('dev')
-        dev_features = self.deal_average_word2vec(dev_left, dev_right, embedding_matrix)
+        dev_features = np.hstack([self.deal_average_word2vec(dev_left, dev_right, embedding_matrix)])
 
         # test
         test_left, test_right = self.preprocess.get_es_index_data('test')
-        test_features = self.deal_average_word2vec(test_left, test_right, embedding_matrix)
+        test_features = np.hstack([self.deal_average_word2vec(test_left, test_right, embedding_matrix)])
 
         with open(path, 'wb') as pkl:
             pickle.dump(((train_features, train_labels), (dev_features, dev_labels), test_features), pkl)
@@ -235,7 +255,7 @@ class Feature():
             left_feature[i] = tmp_vec_left
             right_feature[i] = tmp_vec_right
 
-        return np.hstack([left_feature, right_feature])
+        return left_feature, right_feature
 
     def LSA(self, tag = 'word'):
         print("LSA......")
@@ -329,7 +349,7 @@ class Feature():
 
         return share_words_list
 
-    def get_tfidf_sim(self, tag):
+    def get_tfidf_sim(self, tag1, tag2):
 
         def extract_tfidf_sim(left, right):
             left = left.toarray()
@@ -337,19 +357,21 @@ class Feature():
             return [tool.cos_sim(left, right)]
 
         print("getting tfidf share...")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'tfidf_sim_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'tfidf_sim_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'tfidf_sim_test.pkl'
+        if tag1 == 'train':
+            path = config.cache_prefix_path + tag2 +'_tfidf_sim_train.pkl'
+        elif tag1 == 'dev':
+            path = config.cache_prefix_path + tag2 + '_tfidf_sim_dev.pkl'
+        elif tag1 == 'test':
+            path = config.cache_prefix_path + tag2 + '_tfidf_sim_test.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
 
-        vectorizer = self.count_tf_idf()
+        vectorizer = self.count_tf_idf(tag2)
 
-        left, right = self.load_left_right(tag)
+        left, right = self.load_left_right(tag1)
+        left = vectorizer.transform([" ".join(sentence) for sentence in left])
+        right = vectorizer.transform([" ".join(sentence) for sentence in right])
 
         tfidf_sim_list = []
         for i in tqdm(range(left.shape[0])):
@@ -363,6 +385,77 @@ class Feature():
             pickle.dump(tfidf_sim_list, pkl)
 
         return tfidf_sim_list
+
+    def get_word2vec_ave_sim(self, tag):
+        def extract_word2vec_ave_sim(left, right):
+            return [tool.cos_sim(left, right)]
+        print("getting word2vec average sim...")
+        if tag == 'train':
+            path = config.cache_prefix_path + 'word2vec_sim_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'word2vec_sim_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'word2vec_sim_test.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        embedding_matrix = self.embeddings.get_es_embedding_matrix()
+        if tag == 'train' or tag == 'dev':
+            left, right, _ = self.preprocess.get_es_index_data(tag)
+        elif tag == 'test':
+            left, right = self.preprocess.get_es_index_data(tag)
+        left, right = self.deal_average_word2vec(left, right, embedding_matrix)
+
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_word2vec_ave_sim(left[i], right[i]))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def get_lda_sim(self, tag):
+        # 可能是我参数有问题,这个特征看着不大对劲
+
+        def extract_lda_sim(left, right):
+            return [tool.cos_sim(left, right)]
+
+        print("getting lda sim...")
+        if tag == 'train':
+            path = config.cache_prefix_path + 'lda_sim_train.pkl'
+        elif tag == 'dev':
+            path = config.cache_prefix_path + 'lda_sim_dev.pkl'
+        elif tag == 'test':
+            path = config.cache_prefix_path + 'lda_sim_test.pkl'
+
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        lda = self.count_lda()
+        vectorizer = self.count_tf_idf()
+        left, right = self.load_left_right(tag)
+
+        left = vectorizer.transform([" ".join(sentence) for sentence in left])
+        right = vectorizer.transform([" ".join(sentence) for sentence in right])
+
+        left = lda.transform(left)
+        right = lda.transform(right)
+        print(left.shape)
+
+        lda_sim_list = []
+        for i in tqdm(range(left.shape[0])):
+            lda_sim_list.append(extract_lda_sim(left[i], right[i]))
+            gc.collect()
+        lda_sim_list = np.array(lda_sim_list)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump(lda_sim_list, pkl)
+        return lda_sim_list
+
 
     def get_lsa_sim(self, tag):
 
@@ -677,11 +770,15 @@ class Feature():
 
     def addtional_feature(self, tag):
         # ABCNN只选了这3个
-        lsa_sim =self.get_lsa_sim(tag)
+        lsa_sim = self.get_lsa_sim(tag)
+        #lda_sim = self.get_lda_sim(tag)
+        tfidf_char_sim = self.get_tfidf_sim(tag, 'char')
         word_share =  self.get_word_share(tag)
         doc2vec_sim = self.get_doc2vec_sim(tag)
+        word2vec_sim = self.get_word2vec_ave_sim(tag)
 
-        #return np.hstack([lsa_sim, word_share, doc2vec_sim])
+        # return np.hstack([lsa_sim, word_share, doc2vec_sim])
+
 
         length = self.get_length(tag)
         length_diff = self.get_length_diff(tag)
@@ -692,7 +789,8 @@ class Feature():
 
         #edit_dictance = self.get_edit_distance(tag)
 
-        return np.hstack([lsa_sim, word_share, doc2vec_sim, length, length_diff, length_diff_rate, ngram_jaccard_dis, ngram_dice_dis])
+
+        return np.hstack([lsa_sim, tfidf_char_sim, word_share, doc2vec_sim, word2vec_sim, length, length_diff, length_diff_rate, ngram_jaccard_dis, ngram_dice_dis])
 
 
 
@@ -700,4 +798,4 @@ class Feature():
 
 if __name__ == '__main__':
     feature = Feature()
-    feature.get_edit_distance('train')
+    feature.get_tfidf_sim('train','char')

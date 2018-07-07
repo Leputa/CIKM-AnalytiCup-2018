@@ -20,13 +20,12 @@ class Xgboost(BaseMlModel):
 
         self.params = {  'booster':'gbtree',
                          'max_depth':6,
-                         'eta':0.05,
+                         'eta':0.03,
                          # 'max_bin':425,
                          # 'subsample_for_bin':50000,
                          'objective':'binary:logistic',
                          # 'min_split_gain':0,
-                         # 'min_child_weight':6,
-                         # 'min_child_samples':10,
+                         #'min_child_weight':5,
                          'subsample':0.7,
                          'colsample_bytree':0.7,
                          'lambda':10,  # 控制模型复杂度的权重值的L2正则化项参数，参数越大，模型越不容易过拟合。
@@ -60,7 +59,7 @@ class Xgboost(BaseMlModel):
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
         xgb_test = xgb.DMatrix(test_data)
 
-        num_rounds = 900
+        num_rounds = 600
         watchlist = [(xgb_train, 'train')]
         model = xgb.train(self.params, xgb_train, num_rounds, watchlist)
 
@@ -72,8 +71,8 @@ class Xgboost(BaseMlModel):
 
 if __name__ == "__main__":
     model = Xgboost()
-    model.train('human_feature')
-    #model.test('human_feature')
+    #model.train('human_feature')
+    model.test('human_feature')
 
 
 

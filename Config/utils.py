@@ -130,6 +130,7 @@ class DistanceUtil(object):
 
     @staticmethod
     def edit_dist(list1, list2):
+        '''这儿我修改了一下'''
         if max(len(list1), len(list2)) == 0:
             return 0
 

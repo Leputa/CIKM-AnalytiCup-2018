@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import os
 from tqdm import tqdm
+import gc
 from tensorflow.python import debug as tf_debug
 
 import sys
@@ -30,7 +31,7 @@ class AB_CNN():
         self.sentence_length = self.preprocessor.max_length
         self.w = 4
         self.l2_reg = 0.001
-        self.di = 32                               # The number of convolution kernels
+        self.di = 32                              # The number of convolution kernels
         self.vec_dim = self.embedding.vec_dim
         self.hidden_dim = 8
 
@@ -314,6 +315,12 @@ class AB_CNN():
             gc.collect()
 
         length = len(train_left)
+        shuffle_index = np.random.permutation(length)
+        train_left = np.array(train_left)[shuffle_index]
+        train_right = np.array(train_right)[shuffle_index]
+        train_labels = np.array(train_labels)[shuffle_index]
+        train_features = train_features[shuffle_index]
+
         global_steps = tf.Variable(0, name='global_step', trainable=False)
 
         if self.clip_gradients == True:

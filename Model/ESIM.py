@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tqdm import tqdm
 import os
+import numpy as np
 
 import sys
 sys.path.append('../')
@@ -16,13 +17,13 @@ class ESIM():
         self.preprocessor = Preprocess.Preprocess()
         self.embedding = Embeddings()
 
-        self.lr = 4e-5
-        self.keep_rate = 0.8
-        self.l2_reg = 0.004
+        self.lr = 0.0001
+        self.keep_rate = 1.0
+        self.l2_reg = 0.0004
         self.sentence_length = self.preprocessor.max_length
 
         self.vec_dim = self.embedding.vec_dim
-        self.hidden_dim = 150
+        self.hidden_dim = 300
 
         self.num_classes = 2
         self.batch_size = 128
@@ -163,7 +164,6 @@ class ESIM():
         self.define_model()
 
         (train_left, train_right, train_labels) = self.preprocessor.get_es_index_padding('train')
-        length = len(train_left)
         (dev_left, dev_right, dev_labels) = self.preprocessor.get_es_index_padding('dev')
 
         if tag == 'train':
@@ -174,8 +174,15 @@ class ESIM():
             import gc
             gc.collect()
 
+        length = len(train_left)
+        shuffle_index = np.random.permutation(length)
+        train_left = np.array(train_left)[shuffle_index]
+        train_right = np.array(train_right)[shuffle_index]
+        train_labels = np.array(train_labels)[shuffle_index]
+        #train_features = train_features[shuffle_index]
+
         global_steps = tf.Variable(0, name='global_step', trainable=False)
-        self.train_op = tf.train.AdamOptimizer(self.lr, name='optimizer').minimize(self.cost, global_step=global_steps)
+        self.train_op = tf.train.AdadeltaOptimizer(self.lr, name='optimizer').minimize(self.cost, global_step=global_steps)
 
 
         with tf.Session() as sess:

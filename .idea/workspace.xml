@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/Preprocessing/Feature.py" line="498" />
+    <bookmark url="file://$PROJECT_DIR$/Preprocessing/Feature.py" line="591" />
     <bookmark url="file://$PROJECT_DIR$/Model/MatchPyramid.py" line="82" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ae3a264-8b36-41a7-ac72-9518e592d061" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/lightgbm_human_feature-summit.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/tfidf-summit_0610——0.45509.txt" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Cache/特征检查.ipynb" afterPath="$PROJECT_DIR$/Cache/特征检查.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Config/utils.py" afterPath="$PROJECT_DIR$/Config/utils.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/AB-CNN.py" afterPath="$PROJECT_DIR$/Model/AB-CNN.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/ESIM.py" afterPath="$PROJECT_DIR$/Model/ESIM.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/LightGbm.py" afterPath="$PROJECT_DIR$/Model/LightGbm.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/Xgboost.py" afterPath="$PROJECT_DIR$/Model/Xgboost.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Output/xgboost_human_feature-summit.txt" afterPath="$PROJECT_DIR$/Output/xgboost_human_feature-summit.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/Feature.py" afterPath="$PROJECT_DIR$/Preprocessing/Feature.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,12 +28,46 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Feature.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Feature.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="477">
-              <caret line="693" column="0" lean-forward="true" selection-start-line="693" selection-start-column="0" selection-end-line="693" selection-end-column="0" />
+            <state relative-caret-position="401">
+              <caret line="788" column="0" lean-forward="true" selection-start-line="788" selection-start-column="0" selection-end-line="788" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ESIM.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/ESIM.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="286">
+              <caret line="19" column="23" lean-forward="false" selection-start-line="19" selection-start-column="23" selection-end-line="19" selection-end-column="24" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tool.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Config/tool.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1540">
+              <caret line="71" column="50" lean-forward="false" selection-start-line="71" selection-start-column="50" selection-end-line="71" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AB-CNN.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3964">
+              <caret line="317" column="0" lean-forward="false" selection-start-line="317" selection-start-column="0" selection-end-line="321" selection-end-column="54" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -34,18 +75,38 @@
       <file leaf-file-name="Xgboost.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Model/Xgboost.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="37" column="43" lean-forward="false" selection-start-line="37" selection-start-column="43" selection-end-line="37" selection-end-column="43" />
+            <state relative-caret-position="463">
+              <caret line="66" column="72" lean-forward="true" selection-start-line="66" selection-start-column="72" selection-end-line="66" selection-end-column="72" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LightGbm.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Config/config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="242">
+              <caret line="11" column="88" lean-forward="false" selection-start-line="11" selection-start-column="88" selection-end-line="11" selection-end-column="88" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Config/utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="132" column="19" lean-forward="false" selection-start-line="132" selection-start-column="19" selection-end-line="132" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LightGbm.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Model/LightGbm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="344">
-              <caret line="26" column="55" lean-forward="true" selection-start-line="26" selection-start-column="55" selection-end-line="26" selection-end-column="55" />
+            <state relative-caret-position="534">
+              <caret line="101" column="33" lean-forward="true" selection-start-line="101" selection-start-column="33" selection-end-line="101" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -54,8 +115,8 @@
       <file leaf-file-name="BaseMlModel.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Model/BaseMlModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3388">
-              <caret line="154" column="33" lean-forward="false" selection-start-line="154" selection-start-column="33" selection-end-line="154" selection-end-column="33" />
+            <state relative-caret-position="218">
+              <caret line="11" column="9" lean-forward="false" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -90,6 +151,12 @@
       <find>relu</find>
       <find>edit</find>
       <find>tanh</find>
+      <find>gc</find>
+      <find>count</find>
+      <find>lsa</find>
+      <find>count</find>
+      <find>count_lda</find>
+      <find>join</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -109,20 +176,20 @@
         <option value="$PROJECT_DIR$/Config/tool.py" />
         <option value="$PROJECT_DIR$/Preprocessing/Tokenizer.py" />
         <option value="$PROJECT_DIR$/Model/FM_FTRL.py" />
-        <option value="$PROJECT_DIR$/Model/ESIM.py" />
         <option value="$PROJECT_DIR$/Preprocessing/PowerfulWord.py" />
         <option value="$PROJECT_DIR$/Model/BaseMlModel.py" />
         <option value="$PROJECT_DIR$/Model/MatchPyramid.py" />
         <option value="$PROJECT_DIR$/Model/AB-CNN.py" />
+        <option value="$PROJECT_DIR$/Model/ESIM.py" />
         <option value="$PROJECT_DIR$/Config/utils.py" />
-        <option value="$PROJECT_DIR$/Model/LightGbm.py" />
-        <option value="$PROJECT_DIR$/Model/Xgboost.py" />
         <option value="$PROJECT_DIR$/Preprocessing/Feature.py" />
+        <option value="$PROJECT_DIR$/Model/Xgboost.py" />
+        <option value="$PROJECT_DIR$/Model/LightGbm.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1764" />
+    <option name="width" value="960" />
     <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -164,6 +231,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Preprocessing" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CIKM AnalytiCup 2018" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="CIKM AnalytiCup 2018" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Paper" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -230,43 +311,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Xgboost">
-    <configuration default="false" name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Config" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CIKM AnalytiCup 2018" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Config/utils.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="AB-CNN" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Model" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CIKM AnalytiCup 2018" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/AB-CNN.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.LightGbm">
     <configuration default="false" name="Feature" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -316,6 +361,42 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="CIKM AnalytiCup 2018" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/LightGbm.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="ESIM" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CIKM AnalytiCup 2018" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/ESIM.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="AB-CNN" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CIKM AnalytiCup 2018" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/AB-CNN.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -386,18 +467,18 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.utils" />
-      <item index="1" class="java.lang.String" itemvalue="Python.AB-CNN" />
-      <item index="2" class="java.lang.String" itemvalue="Python.Feature" />
-      <item index="3" class="java.lang.String" itemvalue="Python.Xgboost" />
-      <item index="4" class="java.lang.String" itemvalue="Python.LightGbm" />
+      <item index="0" class="java.lang.String" itemvalue="Python.Feature" />
+      <item index="1" class="java.lang.String" itemvalue="Python.Xgboost" />
+      <item index="2" class="java.lang.String" itemvalue="Python.LightGbm" />
+      <item index="3" class="java.lang.String" itemvalue="Python.ESIM" />
+      <item index="4" class="java.lang.String" itemvalue="Python.AB-CNN" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.Xgboost" />
-        <item index="1" class="java.lang.String" itemvalue="Python.LightGbm" />
+        <item index="0" class="java.lang.String" itemvalue="Python.LightGbm" />
+        <item index="1" class="java.lang.String" itemvalue="Python.Xgboost" />
         <item index="2" class="java.lang.String" itemvalue="Python.Feature" />
-        <item index="3" class="java.lang.String" itemvalue="Python.utils" />
+        <item index="3" class="java.lang.String" itemvalue="Python.ESIM" />
         <item index="4" class="java.lang.String" itemvalue="Python.AB-CNN" />
       </list>
     </recent_temporary>
@@ -416,12 +497,13 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1764" height="1040" extended-state="0" />
+    <frame x="0" y="0" width="960" height="1040" extended-state="1" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18478261" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31505376" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.55698925" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -677,13 +759,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Config/tool.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1980">
-          <caret line="91" column="25" lean-forward="false" selection-start-line="91" selection-start-column="25" selection-end-line="91" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Model/Embeddings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="227">
@@ -705,13 +780,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model/ESIM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4994">
-          <caret line="20" column="26" lean-forward="false" selection-start-line="20" selection-start-column="26" selection-end-line="20" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Model/Decom.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="747">
@@ -730,15 +798,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="317">
           <caret line="220" column="23" lean-forward="false" selection-start-line="220" selection-start-column="23" selection-end-line="220" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Config/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="11" column="88" lean-forward="false" selection-start-line="11" selection-start-column="88" selection-end-line="11" selection-end-column="88" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -750,52 +809,78 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Config/utils.py">
+    <entry file="file://$PROJECT_DIR$/Config/tool.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="625">
-          <caret line="395" column="51" lean-forward="false" selection-start-line="395" selection-start-column="51" selection-end-line="395" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/LightGbm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="26" column="55" lean-forward="true" selection-start-line="26" selection-start-column="55" selection-end-line="26" selection-end-column="55" />
+        <state relative-caret-position="1540">
+          <caret line="71" column="50" lean-forward="false" selection-start-line="71" selection-start-column="50" selection-end-line="71" selection-end-column="50" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Model/BaseMlModel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3388">
-          <caret line="154" column="33" lean-forward="false" selection-start-line="154" selection-start-column="33" selection-end-line="154" selection-end-column="33" />
+        <state relative-caret-position="218">
+          <caret line="11" column="9" lean-forward="false" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/ESIM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="19" column="23" lean-forward="false" selection-start-line="19" selection-start-column="23" selection-end-line="19" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Config/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" column="88" lean-forward="false" selection-start-line="11" selection-start-column="88" selection-end-line="11" selection-end-column="88" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Config/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="132" column="19" lean-forward="false" selection-start-line="132" selection-start-column="19" selection-end-line="132" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3964">
+          <caret line="317" column="0" lean-forward="false" selection-start-line="317" selection-start-column="0" selection-end-line="321" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="401">
+          <caret line="788" column="0" lean-forward="true" selection-start-line="788" selection-start-column="0" selection-end-line="788" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Model/Xgboost.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="37" column="43" lean-forward="false" selection-start-line="37" selection-start-column="43" selection-end-line="37" selection-end-column="43" />
+        <state relative-caret-position="463">
+          <caret line="66" column="72" lean-forward="true" selection-start-line="66" selection-start-column="72" selection-end-line="66" selection-end-column="72" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
+    <entry file="file://$PROJECT_DIR$/Model/LightGbm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="477">
-          <caret line="693" column="0" lean-forward="true" selection-start-line="693" selection-start-column="0" selection-end-line="693" selection-end-column="0" />
+        <state relative-caret-position="534">
+          <caret line="101" column="33" lean-forward="true" selection-start-line="101" selection-start-column="33" selection-end-line="101" selection-end-column="33" />
           <folding />
         </state>
       </provider>
