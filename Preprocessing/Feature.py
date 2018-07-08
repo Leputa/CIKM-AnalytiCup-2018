@@ -16,7 +16,7 @@ from Preprocessing import Preprocess
 from Config import config
 from Model import Embeddings
 from Config import tool
-from Config.utils import  NgramUtil,DistanceUtil
+from Config.utils import NgramUtil,DistanceUtil
 
 
 
@@ -788,8 +788,6 @@ class Feature():
         ngram_dice_dis = self.ngram_dice_distance(tag)
 
         #edit_dictance = self.get_edit_distance(tag)
-
-
         return np.hstack([lsa_sim, tfidf_char_sim, word_share, doc2vec_sim, word2vec_sim, length, length_diff, length_diff_rate, ngram_jaccard_dis, ngram_dice_dis])
 
 

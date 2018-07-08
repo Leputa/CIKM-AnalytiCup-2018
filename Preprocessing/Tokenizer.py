@@ -110,6 +110,10 @@ class Tokenizer():
         text = re.sub(r' :\) ', " alegría ", text)
         text = re.sub(r' :o ', " sorprendieron ", text)
 
+        text = re.sub(r'cancelé', 'cancele', text)
+        text = re.sub(r'queridar', 'querida', text)
+        text = re.sub(r'ordenaré', 'ordenare', text)
+
         # 词形还原
         string = ' '.join(lemEsp.Sentence(lemEsp.parse(text, lemmata=True)).lemmata)
         word_list = []
