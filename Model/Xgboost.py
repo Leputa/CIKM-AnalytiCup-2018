@@ -5,11 +5,10 @@ from Config import config
 from Preprocessing import Preprocess
 from Preprocessing import Feature
 from Preprocessing import PowerfulWord
+from Preprocessing import GraphFeature
 from Model.BaseMlModel import BaseMlModel
 
 import xgboost as xgb
-
-
 
 class Xgboost(BaseMlModel):
 
@@ -17,6 +16,7 @@ class Xgboost(BaseMlModel):
         self.preprocessor = Preprocess.Preprocess()
         self.Feature = Feature.Feature()
         self.Powerfulwords = PowerfulWord.PowerfulWord()
+        self.Graph = GraphFeature.GraphFeature()
 
         self.params = {  'booster':'gbtree',
                          'max_depth':6,
@@ -34,7 +34,7 @@ class Xgboost(BaseMlModel):
                          'nthread':7,
                          'silent':True,
                          'gamma':0.1,
-                         'eval_metric':'auc'
+                         'eval_metric':'logloss'
                     }
         self.num_rounds = 5000
         self.early_stop_rounds = 200
@@ -71,8 +71,8 @@ class Xgboost(BaseMlModel):
 
 if __name__ == "__main__":
     model = Xgboost()
-    #model.train('human_feature')
-    model.test('human_feature')
+    model.train('human_feature')
+    #model.test('human_feature')
 
 
 

@@ -5,6 +5,7 @@ from Config import config
 from Preprocessing import Preprocess
 from Preprocessing import Feature
 from Preprocessing import PowerfulWord
+from Preprocessing import GraphFeature
 
 from scipy.sparse import hstack
 from scipy.sparse import vstack
@@ -18,6 +19,7 @@ class BaseMlModel():
         self.preprocessor = Preprocess.Preprocess()
         self.Feature = Feature.Feature()
         self.Powerfulwords = PowerfulWord.PowerfulWord()
+        self.Graph = GraphFeature.GraphFeature()
 
     def get_dov2vec_data(self):
         train_data, dev_data, test_data = self.Feature.get_doc2vec()
@@ -85,6 +87,8 @@ class BaseMlModel():
             words_train_feature = coo_matrix(self.Powerfulwords.addtional_feature('train'))
             words_dev_features = coo_matrix(self.Powerfulwords.addtional_feature('dev'))
 
+            # graph_train_feature = coo_matrix(self.Graph.add_addtional_feature('train', 'char_sim'))
+            # graph_dev_feature =coo_matrix(self.Graph.add_addtional_feature('dev', 'char_sim'))
 
             train_data = hstack([char_train_data, word_train_data, train_feature, words_train_feature])
             dev_data = hstack([char_dev_data, word_dev_data, dev_feature, words_dev_features])
@@ -148,8 +152,14 @@ class BaseMlModel():
             words_train_feature = vstack([words_train_feature, words_dev_feature])
             words_test_feature = coo_matrix(self.Powerfulwords.addtional_feature('test'))
 
-            train_data = hstack([train_data, train_feature, words_train_feature])
-            test_data = hstack([char_test_data, word_test_data, test_feature, words_test_feature])
+            graph_train_feature = coo_matrix(self.Graph.add_addtional_feature('train', 'char_sim'))
+            graph_dev_feature = coo_matrix(self.Graph.add_addtional_feature('dev', 'char_sim'))
+
+            graph_train_feature = vstack([graph_train_feature.astype('float'), graph_dev_feature.astype('float')])
+            graph_test_feature = coo_matrix(self.Graph.add_addtional_feature('test', 'char_sim'))
+
+            train_data = hstack([train_data, train_feature, words_train_feature, graph_train_feature.astype('float')])
+            test_data = hstack([char_test_data, word_test_data, test_feature, words_test_feature, graph_test_feature.astype('float')])
 
             print(train_data.shape)
             print(test_data.shape)

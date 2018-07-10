@@ -5,6 +5,7 @@ from Config import config
 from Preprocessing import Preprocess
 from Preprocessing import Feature
 from Preprocessing import PowerfulWord
+from Preprocessing import GraphFeature
 from Model.BaseMlModel import BaseMlModel
 
 import lightgbm as lgb
@@ -15,6 +16,7 @@ class LightGbm(BaseMlModel):
         self.preprocessor = Preprocess.Preprocess()
         self.Feature = Feature.Feature()
         self.Powerfulwords = PowerfulWord.PowerfulWord()
+        self.Graph = GraphFeature.GraphFeature()
 
         self.params = {
                 # 核心参数
@@ -89,10 +91,10 @@ class LightGbm(BaseMlModel):
         lgb_test = lgb.Dataset(test_data)
 
         model = lgb.train(self.params, lgb_train, valid_sets=[lgb_train],
-                          num_boost_round=2200, verbose_eval=1)
+                          num_boost_round=600, verbose_eval=1)
 
         submit = model.predict(test_data)
-        with open(config.output_prefix_path + 'lightgbm_logloss' + name +'-summit.txt', 'w') as fr:
+        with open(config.output_prefix_path + 'lightgbm' + name +'-summit.txt', 'w') as fr:
             for sub in submit:
                 fr.write(str(sub) + '\n')
 

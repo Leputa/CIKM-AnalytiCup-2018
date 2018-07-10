@@ -92,7 +92,7 @@ class Preprocess():
         path = config.TOKEN_TEST
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
-                pickle.load(pkl)
+                return pickle.load(pkl)
 
         sentence_left = []
         sentence_right = []
