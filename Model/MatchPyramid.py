@@ -33,7 +33,7 @@ class MatchPyramid():
         self.batch_size = 128
         self.n_epoch = 20
         self.eclipse = 1e-10
-        self.num_features = 11
+        self.num_features = 15
 
         self.cosine = True
         self.psize1 = 3

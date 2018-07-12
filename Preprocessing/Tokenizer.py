@@ -246,4 +246,4 @@ class Tokenizer():
 
 if __name__ == '__main__':
     tokenizer = Tokenizer()
-    print(tokenizer.es_str_clean('procesadar'))
+    print(tokenizer.es_str_clean('nunca'))

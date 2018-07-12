@@ -146,7 +146,7 @@ class GraphFeature():
                 shortest_path = -1
             else:
                 shortest_path = 100
-            if feature_tag == 'label_2' and tag =='test':
+            if tag =='test':
                 if nx.has_path(G, qid1, qid2):
                     shortest_path =  nx.dijkstra_path_length(G, qid1, qid2)
             else:

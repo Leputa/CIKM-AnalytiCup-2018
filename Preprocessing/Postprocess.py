@@ -70,7 +70,7 @@ class Postprocess():
                 if sub[i] > 0.01:
                     sub[i] = 0.01
 
-        with open(config.output_prefix_path + 'xgboost_revise.txt', 'w') as fr:
+        with open(config.output_prefix_path + 'xgboost_revise_2.txt', 'w') as fr:
             for s in sub:
                 fr.write(str(s) + '\n')
 

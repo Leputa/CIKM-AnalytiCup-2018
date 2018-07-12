@@ -11,6 +11,8 @@ import os
 import numpy as np
 from tqdm import tqdm
 import gc
+import math
+from fuzzywuzzy import fuzz
 
 from Preprocessing import Preprocess
 from Config import config
@@ -768,8 +770,294 @@ class Feature():
             pickle.dump(feature, pkl)
         return feature
 
+    def add_idf_dic(self):
+        def add_idf_dic_tag(idf, q_set, length, tag):
+            left, right = self.load_left_right(tag)
+            length += len(left)
+            for i in tqdm(range(len(left))):
+                if ' '.join(left[i]) not in q_set:
+                    q_set.add(' '.join(left[i]))
+                    for word in left[i]:
+                        idf[word] = idf.get(word, 0) + 1
+                if ' '.join(right[i]) not in q_set:
+                    q_set.add(' '.join(right[i]))
+                    for word in right[i]:
+                        idf[word] = idf.get(word, 0) + 1
+            return idf, q_set, length
+
+        path = config.cache_prefix_path + 'idf_dic.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        idf = {}
+        q_set = set()
+        length = 0
+
+        idf, q_set, length = add_idf_dic_tag(idf, q_set, length, 'train')
+        idf, q_set, length = add_idf_dic_tag(idf, q_set, length, 'dev')
+        idf, q_set, length = add_idf_dic_tag(idf, q_set, length,'test')
+
+        for word in idf:
+            idf[word] = math.log(length / (idf[word] + 1)) / math.log(2.)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump((idf, q_set), pkl)
+        return idf, q_set
+
+
+    def get_tfidf_word_share(self, tag):
+        def extract_row(q1_words, q2_words, idf):
+            q1words = {}
+            q2words = {}
+            for word in q1_words:
+                q1words[word] = q1words.get(word, 0) + 1
+            for word in q2_words:
+                q2words[word] = q2words.get(word, 0) + 1
+            sum_shared_word_in_q1 = sum([q1words[w] * idf.get(w, 0) for w in q1words if w in q2words])
+            sum_shared_word_in_q2 = sum([q2words[w] * idf.get(w, 0) for w in q2words if w in q1words])
+            sum_tol = sum([q1words[w] * idf.get(w,0) for w in q1words]) + sum([q2words[w] * idf.get(w,0) for w in q2words])
+            if 1e-6 > sum_tol:
+                return [0.]
+            else:
+                return [1.0 * (sum_shared_word_in_q1 + sum_shared_word_in_q2) / sum_tol]
+
+        print("getting idf words match share......")
+
+        path = config.cache_prefix_path + tag + '_idf_words_share.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        idf, _ = self.add_idf_dic()
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(left[i], right[i], idf))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def get_tfidf_statistics(self, tag):
+        def extract_row(q1, q2, tfidf):
+            fs = []
+            fs.append(np.sum(tfidf.transform([str(q1)]).data))
+            fs.append(np.sum(tfidf.transform([str(q2)]).data))
+            fs.append(np.mean(tfidf.transform([str(q1)]).data))
+            fs.append(np.mean(tfidf.transform([str(q2)]).data))
+            fs.append(len(tfidf.transform([str(q1)]).data))
+            fs.append(len(tfidf.transform([str(q2)]).data))
+            return fs
+
+        print("getting tfidf statistics feature......")
+        path = config.cache_prefix_path + tag + '_tfidf_statistics.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        vectorizer = self.count_tf_idf()
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            left_s = ' '.join(left[i])
+            right_s = ' '.join(right[i])
+            feature.append(extract_row(left_s, right_s, vectorizer))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def get_no_feature(self, tag):
+        # 加了这个特征居然没有任何区别，感觉哪儿有bug......
+        def extract_row(q1_words, q2_words):
+            not_cnt1 = q1_words.count(b'no')
+            not_cnt2 = q2_words.count(b'no')
+            not_cnt1 += q1_words.count(b'ni')
+            not_cnt2 += q2_words.count(b'ni')
+            not_cnt1 += q1_words.count(b'nunca')
+            not_cnt2 += q2_words.count(b'nunca')
+
+            fs = list()
+            fs.append(not_cnt1)
+            fs.append(not_cnt2)
+            if not_cnt1 > 0 and not_cnt2 > 0:
+                fs.append(1.)
+            else:
+                fs.append(0.)
+            if (not_cnt1 > 0) or (not_cnt2 > 0):
+                fs.append(1.)
+            else:
+                fs.append(0.)
+            if not_cnt2 <= 0 < not_cnt1 or not_cnt1 <= 0 < not_cnt2:
+                fs.append(1.)
+            else:
+                fs.append(0.)
+            return fs
+
+        print("getting not word feature......")
+        path = config.cache_prefix_path + tag + '_not_word.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(left[i], right[i]))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def get_fuzz_feature(self, tag):
+        def extract_row(q1_words, q2_words):
+            fs = []
+            fs.append(fuzz.QRatio(set(q1_words), set(q2_words)))
+            fs.append(fuzz.WRatio(set(q1_words), set(q2_words)))
+            fs.append(fuzz.partial_ratio(set(q1_words), set(q2_words)))
+            fs.append(fuzz.partial_token_set_ratio(set(q1_words), set(q2_words)))
+            fs.append(fuzz.partial_token_sort_ratio(set(q1_words), set(q2_words)))
+            fs.append(fuzz.token_set_ratio(set(q1_words), set(q2_words)))
+            fs.append(fuzz.token_sort_ratio(set(q1_words), set(q2_words)))
+            return fs
+
+        print("getting fuzz feature......")
+        path = config.cache_prefix_path + tag + '_fuzz.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(left[i], right[i]))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def get_longest_common_sequence(self, tag):
+        def extract_row(q1_words, q2_words):
+            len1 = len(q1_words)
+            len2 = len(q2_words)
+            dp = [[0 for j in range(len2)] for i in range(len1)]
+            for i in range(len1):
+                for j in range(len2):
+                    if q1_words[i] == q2_words[j]:
+                        dp[i][j] = dp[i - 1][j - 1] + 1
+                    else:
+                        dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+            if len1 + len2 < 1e-6:
+                return [0.]
+            else:
+                return [dp[len1 - 1][len2 - 1] * 1.0 / (len1 + len2)]
+
+        print("getting longest common sequence feature......")
+        path = config.cache_prefix_path + tag + '_common_sequence.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(left[i], right[i]))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def get_longest_common_prefix_suffix(self, tag):
+        # 这个特征好像没啥用
+        def extract_row(q1_words, q2_words):
+            len1 = len(q1_words)
+            len2 = len(q2_words)
+            if len1 + len2 < 1e-06:
+                return [0., 0.]
+
+            fs = []
+            max_prefix = 0
+            min_len = min(len1, len2)
+            for i in range(min_len):
+                if q1_words[i] == q2_words[i]:
+                    max_prefix += 1
+            fs.append(max_prefix * 1.0 / (len1 + len2))
+
+            q1_words.reverse()
+            q2_words.reverse()
+            max_prefix = 0
+            for i in range(min_len):
+                if q1_words[i] == q2_words[i]:
+                    max_prefix += 1
+            fs.append(max_prefix * 1.0 / (len1 + len2))
+            return fs
+
+        print("getting longest common prefix&suffix feature......")
+        path = config.cache_prefix_path + tag + '_common_prefix_suffix.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(left[i], right[i]))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def get_lcs_diff(self, tag):
+        # 这个特征也没用
+        def extract_row(sen1, sen2):
+            len1 = len(sen1)
+            len2 = len(sen2)
+
+            dp = [[0 for j in range(len2)] for i in range(len1)]
+            offset = 0
+            for i in range(1, len1):
+                for j in range(1, len2):
+                    if sen1[i] == sen2[j]:
+                        dp[i][j] = dp[i - 1][j - 1] + 1
+                        of = abs(j - i)
+                        offset += of
+                    else:
+                        dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+            return [offset * 1.0 / (len1 + len2)]
+
+        print("getting lsc diff feature......")
+        path = config.cache_prefix_path + tag + '_lsc_diff.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(left[i], right[i]))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+
     def addtional_feature(self, tag):
-        # ABCNN只选了这3个
+
         lsa_sim = self.get_lsa_sim(tag)
         #lda_sim = self.get_lda_sim(tag)
         tfidf_char_sim = self.get_tfidf_sim(tag, 'char')
@@ -777,8 +1065,8 @@ class Feature():
         doc2vec_sim = self.get_doc2vec_sim(tag)
         word2vec_sim = self.get_word2vec_ave_sim(tag)
 
+        # ABCNN只选了这3个
         # return np.hstack([lsa_sim, word_share, doc2vec_sim])
-
 
         length = self.get_length(tag)
         length_diff = self.get_length_diff(tag)
@@ -786,14 +1074,43 @@ class Feature():
 
         ngram_jaccard_dis = self.ngram_jaccard_coef(tag)
         ngram_dice_dis = self.ngram_dice_distance(tag)
+        # idf_word_share = self.get_tfidf_word_share(tag)
+        # tfidf_statistics = self.get_tfidf_statistics(tag)
+        # not_words_count = self.get_no_feature(tag)
+        # edit_dictance = self.get_edit_distance(tag)
+        fuzz = self.get_fuzz_feature(tag)
+        common_sequence = self.get_longest_common_sequence(tag)
+        # prefix_suffix = self.get_longest_common_prefix_suffix(tag)
+        # lsc_diff = self.get_lcs_diff(tag)
 
-        #edit_dictance = self.get_edit_distance(tag)
-        return np.hstack([lsa_sim, tfidf_char_sim, word_share, doc2vec_sim, word2vec_sim, length, length_diff, length_diff_rate, ngram_jaccard_dis, ngram_dice_dis])
-
+        return np.hstack([lsa_sim, tfidf_char_sim, word_share, doc2vec_sim, word2vec_sim, length, length_diff, length_diff_rate, \
+                          ngram_jaccard_dis, ngram_dice_dis, fuzz, common_sequence])
 
 
 
 
 if __name__ == '__main__':
     feature = Feature()
-    feature.get_tfidf_sim('train','char')
+    # feature.get_tfidf_sim('train','char')
+    # feature.get_tfidf_word_share('train')
+    # feature.get_tfidf_word_share('dev')
+    # feature.get_tfidf_word_share('test')
+    # feature.get_tfidf_statistics('train')
+    # feature.get_tfidf_statistics('dev')
+    # feature.get_tfidf_statistics('test')
+    # feature.get_no_feature('train')
+    # feature.get_no_feature('dev')
+    # feature.get_no_feature('test')
+    # feature.get_fuzz_feature('train')
+    # feature.get_fuzz_feature('dev')
+    # feature.get_fuzz_feature('test')
+    # feature.get_longest_common_sequence('train')
+    # feature.get_longest_common_sequence('dev')
+    # feature.get_longest_common_sequence('test')
+    # feature.get_longest_common_prefix_suffix('train')
+    # feature.get_longest_common_prefix_suffix('dev')
+    # feature.get_longest_common_prefix_suffix('test')
+    feature.get_lcs_diff('train')
+    feature.get_lcs_diff('dev')
+    feature.get_lcs_diff('test')
+
