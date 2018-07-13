@@ -23,7 +23,7 @@ class LightGbm(BaseMlModel):
                 'task': 'train',  # 设置是否是训练任务
                 'objective': 'binary',  # 设置目标  =='application': 'binary',
                 'boosting_type': 'gbdt',  # 设置模型
-                #'num_iterations': 5000,  # 最大循环次数
+                'num_iterations': 5000,  # 最大循环次数
                 'learning_rate': 0.05,  # 学习率
                 'num_leaves': 31,  # 设置一棵树最多有几个叶子，越大越容易过拟合
                 # 'tree_learner':'tree_learner' # 设置并行学习
@@ -65,7 +65,7 @@ class LightGbm(BaseMlModel):
                 # 'is_unbalance':True,# set this to true if training data are unbalance
 
                 # 指标参数
-                'metric': 'auc',  # logloss
+                'metric': 'binary_logloss',  # binary_logloss
         }
         self.early_stop_rounds = 200
 
@@ -101,5 +101,5 @@ class LightGbm(BaseMlModel):
 
 if __name__ == "__main__":
     model = LightGbm()
-    #model.train('human_feature')
-    model.test('human_feature')
+    model.train('human_feature')
+    #model.test('human_feature')

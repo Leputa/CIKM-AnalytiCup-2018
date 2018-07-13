@@ -34,13 +34,13 @@ class Xgboost(BaseMlModel):
                          'subsample':0.7,
                          'colsample_bytree':0.7,
                          'lambda':10,  # 控制模型复杂度的权重值的L2正则化项参数，参数越大，模型越不容易过拟合。
-                         'alpha':1,    # L1正则化
+                         'alpha':1,   # L1正则化
                          'seed':2018,
                          'nthread':7,
                          'silent':True,
                          'gamma': 0.1,
                          #'scale_pos_weight': 0.25,  #测试的时候应该是0.12
-                         'eval_metric':'auc'
+                         'eval_metric':'logloss'
                     }
         self.num_rounds = 5000
         self.early_stop_rounds = 200

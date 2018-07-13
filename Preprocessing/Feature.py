@@ -3,8 +3,7 @@ sys.path.append('../')
 
 import pickle
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn.decomposition import TruncatedSVD
-from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.decomposition import TruncatedSVD,LatentDirichletAllocation,NMF
 from sklearn.externals import joblib
 from gensim.models import Doc2Vec
 import os
@@ -12,13 +11,14 @@ import numpy as np
 from tqdm import tqdm
 import gc
 import math
+import string
 from fuzzywuzzy import fuzz
 
 from Preprocessing import Preprocess
 from Config import config
 from Model import Embeddings
 from Config import tool
-from Config.utils import NgramUtil,DistanceUtil
+from Config.utils import NgramUtil,DistanceUtil,MathUtil
 
 
 
@@ -100,6 +100,24 @@ class Feature():
         joblib.dump(vectorizer, path)
         return vectorizer
 
+    def count_nmf(self):
+        print('nmf model....')
+        path = config.cache_prefix_path + 'nmf_model.m'
+        if os.path.exists(path):
+            return joblib.load(path)
+
+        vectorizer = self.count_tf_idf()
+
+        es = self.preprocess.load_all_data()[0]
+        corpus = [" ".join(sentence) for sentence in es]
+        bow_features = vectorizer.fit_transform(corpus)
+
+        nmf = NMF(n_components=50)
+        nmf.fit(bow_features.asfptype())
+
+        joblib.dump(nmf, path)
+        return nmf
+
     def count_lsa(self):
         print('lsa model....')
         path = config.cache_prefix_path + 'lsa_model.m'
@@ -130,7 +148,7 @@ class Feature():
         corpus = [" ".join(sentence) for sentence in es]
         bow_features = vectorizer.fit_transform(corpus)
 
-        lda = LatentDirichletAllocation(n_topics=10, learning_method='batch', max_iter=30)
+        lda = LatentDirichletAllocation(n_topics=50, learning_method='batch', max_iter=5)
         lda.fit(bow_features.asfptype())
 
         joblib.dump(lda, path)
@@ -459,6 +477,39 @@ class Feature():
         return lda_sim_list
 
 
+    def get_nmf_sim(self, tag):
+
+        def extract_row(left, right):
+            return [tool.cos_sim(left, right)]
+
+        print("getting nmf sim...")
+        path = config.cache_prefix_path + tag +'_nmf_sim.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        nmf = self.count_nmf()
+        vectorizer = self.count_tf_idf()
+        left, right = self.load_left_right(tag)
+
+        left = vectorizer.transform([" ".join(sentence) for sentence in left])
+        right = vectorizer.transform([" ".join(sentence) for sentence in right])
+
+        left = nmf.transform(left)
+        right = nmf.transform(right)
+        print(left.shape)
+
+        feature = []
+        for i in tqdm(range(left.shape[0])):
+            feature.append(extract_row(left[i], right[i]))
+            gc.collect()
+        feature = np.array(feature)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+
     def get_lsa_sim(self, tag):
 
         def extract_lsa_sim(left, right):
@@ -537,7 +588,7 @@ class Feature():
 
 
     def get_length(self, tag):
-        print('getting length..')
+        print('getting length...')
 
         if tag == 'train':
             path = config.cache_prefix_path + 'length_train.pkl'
@@ -1055,12 +1106,81 @@ class Feature():
             pickle.dump(feature, pkl)
         return feature
 
+    def get_inter_pos(self, tag):
+        # 这个特征没啥用
+        def extract_row(q1, q2):
+            mode = ["mean", "std", "max", "min"]
+            pos_list = [abs(i - q1.index(o)) for i,o in enumerate(q2, start=1) if o in q1]
+            if len(pos_list) == 0:
+                pos_list = [0]
+            return MathUtil.aggregate(pos_list, mode)
+
+        print("getting intersecter position feature......")
+        path = config.cache_prefix_path + tag + '_inter_pos.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(left[i], right[i]))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+    def get_w2v_feature(self, tag):
+        # 这个特征居然没用
+        def extract_row(q1, q2, word2index, embedding_matrix):
+            common_words = set(q1).intersection(set(q2))
+            q1 = [word for word in q1 if word not in common_words]
+            q2 = [word for word in q2 if word not in common_words]
+            mode = ["mean", "std", "max", "min"]
+            sims = []
+            dists = []
+            for i in range(len(q1)):
+                for j in range(len(q2)):
+                    v1 = embedding_matrix[word2index[q1[i]]]
+                    v2 = embedding_matrix[word2index[q2[j]]]
+                    sims.append(tool.cos_sim(v1, v2))
+                    vec_diff = v1 - v2
+                    dist = np.sqrt(np.sum(vec_diff**2))
+                    dists.append(dist)
+            sims_feature = MathUtil.aggregate(sims, mode)
+            dists_feature = MathUtil.aggregate(dists, mode)
+            sims_feature.extend(dists_feature)
+            return sims_feature
+
+        print("getting w2v feature......")
+        path = config.cache_prefix_path + tag + '_w2v_sim_dis.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        embedding_matrix = self.embeddings.get_es_embedding_matrix()
+        word2index = self.preprocess.es2index('es')
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(left[i], right[i], word2index, embedding_matrix))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+
 
     def addtional_feature(self, tag):
 
         lsa_sim = self.get_lsa_sim(tag)
         #lda_sim = self.get_lda_sim(tag)
         tfidf_char_sim = self.get_tfidf_sim(tag, 'char')
+        # tfidf_word_sim = self.get_tfidf_sim(tag, 'word') 这个特征貌似也没用了
         word_share =  self.get_word_share(tag)
         doc2vec_sim = self.get_doc2vec_sim(tag)
         word2vec_sim = self.get_word2vec_ave_sim(tag)
@@ -1074,19 +1194,20 @@ class Feature():
 
         ngram_jaccard_dis = self.ngram_jaccard_coef(tag)
         ngram_dice_dis = self.ngram_dice_distance(tag)
-        # idf_word_share = self.get_tfidf_word_share(tag)
-        # tfidf_statistics = self.get_tfidf_statistics(tag)
+        # idf_word_share = self.get_tfidf_word_share(tag)      # 这两个特征线上线下不一致
+        # tfidf_statistics = self.get_tfidf_statistics(tag)    # 这两个特征线上线下不一致
         # not_words_count = self.get_no_feature(tag)
-        # edit_dictance = self.get_edit_distance(tag)
+        edit_dictance = self.get_edit_distance(tag)
         fuzz = self.get_fuzz_feature(tag)
         common_sequence = self.get_longest_common_sequence(tag)
         # prefix_suffix = self.get_longest_common_prefix_suffix(tag)
         # lsc_diff = self.get_lcs_diff(tag)
+        # inter_pos = self.get_inter_pos(tag)
+        # w2v_sim_dist = self.get_w2v_feature(tag)
+        # nmf_sim = self.get_nmf_sim(tag)
 
         return np.hstack([lsa_sim, tfidf_char_sim, word_share, doc2vec_sim, word2vec_sim, length, length_diff, length_diff_rate, \
-                          ngram_jaccard_dis, ngram_dice_dis, fuzz, common_sequence])
-
-
+                          ngram_jaccard_dis, ngram_dice_dis, fuzz, common_sequence]) #
 
 
 if __name__ == '__main__':
@@ -1110,7 +1231,15 @@ if __name__ == '__main__':
     # feature.get_longest_common_prefix_suffix('train')
     # feature.get_longest_common_prefix_suffix('dev')
     # feature.get_longest_common_prefix_suffix('test')
-    feature.get_lcs_diff('train')
-    feature.get_lcs_diff('dev')
-    feature.get_lcs_diff('test')
-
+    # feature.get_lcs_diff('train')
+    # feature.get_lcs_diff('dev')
+    # feature.get_lcs_diff('test')
+    # feature.get_inter_pos('train')
+    # feature.get_inter_pos('dev')
+    # feature.get_inter_pos('test')
+    # feature.get_w2v_feature('train')
+    # feature.get_w2v_feature('dev')
+    # feature.get_w2v_feature('test')
+    feature.get_nmf_sim('train')
+    feature.get_nmf_sim('dev')
+    feature.get_nmf_sim('test')

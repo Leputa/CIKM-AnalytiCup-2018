@@ -200,8 +200,6 @@ class PowerfulWord():
             pickle.dump(feature, pkl)
         return feature
 
-
-
     def powerful_word_one_side(self):
         # 不存在满足条件的这类词, 忽略这个特征
         def init_powerful_word_oside(pword, thresh_num, thresh_rate):
