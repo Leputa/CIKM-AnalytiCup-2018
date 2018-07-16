@@ -1195,7 +1195,7 @@ class Feature():
         ngram_jaccard_dis = self.ngram_jaccard_coef(tag)
         ngram_dice_dis = self.ngram_dice_distance(tag)
         # idf_word_share = self.get_tfidf_word_share(tag)      # 这两个特征线上线下不一致
-        # tfidf_statistics = self.get_tfidf_statistics(tag)    # 这两个特征线上线下不一致
+        tfidf_statistics = self.get_tfidf_statistics(tag)    # 这两个特征线上线下不一致
         # not_words_count = self.get_no_feature(tag)
         edit_dictance = self.get_edit_distance(tag)
         fuzz = self.get_fuzz_feature(tag)

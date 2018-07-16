@@ -65,7 +65,7 @@ class Xgboost(BaseMlModel):
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
         xgb_test = xgb.DMatrix(test_data)
 
-        num_rounds = 1800
+        num_rounds = 500
         watchlist = [(xgb_train, 'train')]
         model = xgb.train(self.params, xgb_train, num_rounds, watchlist)
 
@@ -136,8 +136,8 @@ class Xgboost(BaseMlModel):
 
 if __name__ == "__main__":
     model = Xgboost()
-    model.train('human_feature')
-    # model.test('human_feature')
+    # model.train('human_feature')
+    model.test('human_feature')
     # model.cv('human_feature')
 
 
