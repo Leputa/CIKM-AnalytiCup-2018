@@ -26,14 +26,14 @@ class AB_CNN():
 
         self.lr = 0.002
         self.batch_size = 64
-        self.n_epoch = 20
+        self.n_epoch = 8
 
         self.sentence_length = self.preprocessor.max_length
         self.w = 4
         self.l2_reg = 0.001
         self.di = 32                              # The number of convolution kernels
         self.vec_dim = self.embedding.vec_dim
-        self.hidden_dim = 8
+        self.hidden_dim = 128
 
 
         self.num_classes = 2
@@ -80,12 +80,14 @@ class AB_CNN():
 
         question_wp_1, question_ap_1, answer_wp_1, answer_ap_1 = self.CNN_layer(variable_scope='CNN-1', x1=question_expanded, x2=answer_expanded, d=self.vec_dim)
         sims = [self.cos_sim(question_ap_0, answer_ap_0), self.cos_sim(question_ap_1, answer_ap_1)]
+        # sims = [self.get_sim(question_ap_0, answer_ap_0, self.vec_dim, 'ap_0'), self.get_sim(question_ap_1, answer_ap_1, self.di, 'ap_1')]
 
         if self.num_layers > 1:
             _, question_ap_2, _, answer_ap_2 = self.CNN_layer(variable_scope="CNN-2", x1=question_wp_1, x2=answer_wp_1, d=self.di)
             self.question_test = question_ap_2
             self.answer_test = answer_ap_2
             sims.append(self.cos_sim(question_ap_2, answer_ap_2))
+            # sims.append(self.get_sim(question_ap_2, answer_ap_2, self.di, 'ap_2'))
 
         with tf.variable_scope('output_layer'):
             self.output_features = tf.stack(sims, axis=1, name='output_features')
@@ -173,6 +175,18 @@ class AB_CNN():
             answer_ap = self.all_pool(variable_scope='answer', x=answer_conv)
 
             return question_wp,question_ap,answer_wp,answer_ap
+
+    def get_sim(self, x1, x2, d, name_scope):
+        with tf.variable_scope("similarity_" + name_scope):
+            M = tf.get_variable(
+                name = 'M',
+                shape = [d, d],
+                initializer = tf.contrib.layers.xavier_initializer()
+            )
+
+            x1_trans = tf.matmul(x1, M)
+            sims = tf.reduce_sum(tf.multiply(x1_trans, x2), axis=1)
+            return sims
 
 
     def w_pool(self, variable_scope, x, attention):
@@ -355,11 +369,12 @@ class AB_CNN():
             else:
                 os.makedirs(save_path)
 
+            if length % self.batch_size == 0:
+                iters = length // self.batch_size
+            else:
+                iters = length // self.batch_size + 1
+
             for epoch in range(self.n_epoch):
-                if length % self.batch_size == 0:
-                    iters = length // self.batch_size
-                else:
-                    iters = length // self.batch_size + 1
                 for iteration in range(iters):
                     train_feed_dict = self.gen_train_dict(iteration, train_left, train_right, train_features, train_labels, True)
                     train_loss, train_acc, current_step, _ = sess.run([self.cost_non_reg, self.accuracy, global_steps, self.train_op], feed_dict = train_feed_dict)
@@ -457,7 +472,8 @@ class AB_CNN():
 if __name__ == '__main__':
     tf.set_random_seed(1)
     ABCNN = AB_CNN(model_type='ABCNN3')
+    # ABCNN.define_model()
     ABCNN.train('dev')
-    #ABCNN.test()
+    # ABCNN.test()
 
 

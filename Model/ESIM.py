@@ -182,7 +182,7 @@ class ESIM():
         #train_features = train_features[shuffle_index]
 
         global_steps = tf.Variable(0, name='global_step', trainable=False)
-        self.train_op = tf.train.AdadeltaOptimizer(self.lr, name='optimizer').minimize(self.cost, global_step=global_steps)
+        self.train_op = tf.train.AdamOptimizer(self.lr, name='optimizer').minimize(self.cost, global_step=global_steps)
 
 
         with tf.Session() as sess:

@@ -23,7 +23,7 @@ class LightGbm(BaseMlModel):
                 'task': 'train',  # 设置是否是训练任务
                 'objective': 'binary',  # 设置目标  =='application': 'binary',
                 'boosting_type': 'gbdt',  # 设置模型
-                'num_iterations': 5000,  # 最大循环次数
+                #'num_iterations': 5000,  # 最大循环次数
                 'learning_rate': 0.05,  # 学习率
                 'num_leaves': 31,  # 设置一棵树最多有几个叶子，越大越容易过拟合
                 # 'tree_learner':'tree_learner' # 设置并行学习
@@ -91,15 +91,15 @@ class LightGbm(BaseMlModel):
         lgb_test = lgb.Dataset(test_data)
 
         model = lgb.train(self.params, lgb_train, valid_sets=[lgb_train],
-                          num_boost_round=600, verbose_eval=1)
+                          num_boost_round=800, verbose_eval=1)
 
         submit = model.predict(test_data)
-        with open(config.output_prefix_path + 'lightgbm' + name +'-summit.txt', 'w') as fr:
+        with open(config.output_prefix_path + str(800) + '_lightgbm' + name +'-summit.txt', 'w') as fr:
             for sub in submit:
                 fr.write(str(sub) + '\n')
 
 
 if __name__ == "__main__":
     model = LightGbm()
-    model.train('human_feature')
-    #model.test('human_feature')
+    #model.train('human_feature')
+    model.test('human_feature')

@@ -1186,7 +1186,7 @@ class Feature():
         word2vec_sim = self.get_word2vec_ave_sim(tag)
 
         # ABCNN只选了这3个
-        # return np.hstack([lsa_sim, word_share, doc2vec_sim])
+        return np.hstack([lsa_sim, word_share, doc2vec_sim])
 
         length = self.get_length(tag)
         length_diff = self.get_length_diff(tag)

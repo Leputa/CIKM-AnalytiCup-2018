@@ -18,7 +18,7 @@ def get_subs(fileNames):
 
 
 if __name__ == '__main__':
-    fileNames = ['ABCNN3-submit_0704——0.41323.txt','xgboost_human_feature-summit——0.40305.txt']
+    fileNames = ['ABCNN3-submit——0.40833.txt','xgboost_human_feature-summit——0.40224.txt']
 
     predict_list = get_subs(fileNames)
     gc.collect()

@@ -6,10 +6,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ae3a264-8b36-41a7-ac72-9518e592d061" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/1800_xgboost_human_feature-summit.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/xgboost_human_feature-summit——0.40305.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/500_xgboost_human_feature-summit.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/900_xgboost_human_feature-summit——0.40224.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/ABCNN3-submit.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/ABCNN3-submit_0704——0.41323.txt" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/Xgboost.py" afterPath="$PROJECT_DIR$/Model/Xgboost.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/AB-CNN.py" afterPath="$PROJECT_DIR$/Model/AB-CNN.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/Blending.py" afterPath="$PROJECT_DIR$/Model/Blending.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/ESIM.py" afterPath="$PROJECT_DIR$/Model/ESIM.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/LightGbm.py" afterPath="$PROJECT_DIR$/Model/LightGbm.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/lexdecomp.py" afterPath="$PROJECT_DIR$/Model/lexdecomp.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Output/Untitled.ipynb" afterPath="$PROJECT_DIR$/Output/Untitled.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Output/blending.txt" afterPath="$PROJECT_DIR$/Output/blending.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/Feature.py" afterPath="$PROJECT_DIR$/Preprocessing/Feature.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -25,8 +33,8 @@
       <file leaf-file-name="Feature.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="26598">
-              <caret line="1209" column="81" lean-forward="false" selection-start-line="1209" selection-start-column="81" selection-end-line="1209" selection-end-column="81" />
+            <state relative-caret-position="418">
+              <caret line="1188" column="8" lean-forward="false" selection-start-line="1188" selection-start-column="8" selection-end-line="1188" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -35,8 +43,8 @@
       <file leaf-file-name="lexdecomp.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Model/lexdecomp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="64" column="0" lean-forward="true" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+            <state relative-caret-position="8283">
+              <caret line="398" column="38" lean-forward="false" selection-start-line="398" selection-start-column="38" selection-end-line="398" selection-end-column="38" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -44,21 +52,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Config/utils.py">
+      <file leaf-file-name="MatchPyramid.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/MatchPyramid.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="463">
-              <caret line="141" column="40" lean-forward="true" selection-start-line="141" selection-start-column="40" selection-end-line="141" selection-end-column="40" />
+            <state relative-caret-position="174">
+              <caret line="151" column="0" lean-forward="false" selection-start-line="151" selection-start-column="0" selection-end-line="162" selection-end-column="34" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MatchPyramid.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model/MatchPyramid.py">
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Config/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1518">
-              <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="76" selection-end-column="67" />
+            <state relative-caret-position="2948">
+              <caret line="141" column="40" lean-forward="false" selection-start-line="141" selection-start-column="40" selection-end-line="141" selection-end-column="40" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LightGbm.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/LightGbm.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="845">
+              <caret line="103" column="33" lean-forward="false" selection-start-line="103" selection-start-column="33" selection-end-line="103" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -67,21 +85,11 @@
       <file leaf-file-name="AB-CNN.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="968">
-              <caret line="44" column="8" lean-forward="false" selection-start-line="44" selection-start-column="8" selection-end-line="44" selection-end-column="28" />
+            <state relative-caret-position="99">
+              <caret line="371" column="0" lean-forward="false" selection-start-line="371" selection-start-column="0" selection-end-line="374" selection-end-column="53" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Xgboost.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model/Xgboost.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1518">
-              <caret line="69" column="38" lean-forward="false" selection-start-line="69" selection-start-column="38" selection-end-line="69" selection-end-column="38" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -96,11 +104,21 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="Blending.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Model/Blending.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="268">
+              <caret line="21" column="0" lean-forward="true" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="ESIM.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Model/ESIM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1166">
-              <caret line="58" column="34" lean-forward="false" selection-start-line="58" selection-start-column="25" selection-end-line="58" selection-end-column="34" />
+            <state relative-caret-position="213">
+              <caret line="184" column="46" lean-forward="false" selection-start-line="184" selection-start-column="46" selection-end-line="184" selection-end-column="46" />
               <folding />
             </state>
           </provider>
@@ -109,18 +127,8 @@
       <file leaf-file-name="tool.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Config/tool.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1342">
-              <caret line="62" column="39" lean-forward="false" selection-start-line="62" selection-start-column="39" selection-end-line="62" selection-end-column="39" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Decom.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model/Decom.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1232">
-              <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="61" selection-end-column="71" />
+            <state relative-caret-position="484">
+              <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -164,6 +172,8 @@
       <find>ngram_dice_distance</find>
       <find>left_mask</find>
       <find>print</find>
+      <find>self.batch</find>
+      <find>batch_nor</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -180,8 +190,6 @@
         <option value="$PROJECT_DIR$/Model/Embeddings.py" />
         <option value="$PROJECT_DIR$/Config/tool.py" />
         <option value="$PROJECT_DIR$/Model/FM_FTRL.py" />
-        <option value="$PROJECT_DIR$/Model/AB-CNN.py" />
-        <option value="$PROJECT_DIR$/Model/ESIM.py" />
         <option value="$PROJECT_DIR$/Config/utils.py" />
         <option value="$PROJECT_DIR$/Preprocessing/Preprocess.py" />
         <option value="$PROJECT_DIR$/Preprocessing/PostProprocess.py" />
@@ -191,18 +199,21 @@
         <option value="$PROJECT_DIR$/Preprocessing/Tokenizer.py" />
         <option value="$PROJECT_DIR$/Model/BaseMlModel.py" />
         <option value="$PROJECT_DIR$/Preprocessing/PowerfulWord.py" />
-        <option value="$PROJECT_DIR$/Model/LightGbm.py" />
-        <option value="$PROJECT_DIR$/Model/Blending.py" />
-        <option value="$PROJECT_DIR$/Preprocessing/Feature.py" />
         <option value="$PROJECT_DIR$/Model/Xgboost.py" />
+        <option value="$PROJECT_DIR$/Model/LightGbm.py" />
+        <option value="$PROJECT_DIR$/Model/ESIM.py" />
+        <option value="$PROJECT_DIR$/Preprocessing/Feature.py" />
+        <option value="$PROJECT_DIR$/Model/AB-CNN.py" />
         <option value="$PROJECT_DIR$/Model/lexdecomp.py" />
+        <option value="$PROJECT_DIR$/Model/Blending.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="960" />
-    <option name="width" value="960" />
-    <option name="height" value="1040" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -220,7 +231,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -306,6 +316,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -323,43 +334,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.lexdecomp">
-    <configuration default="false" name="Xgboost" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Model" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CIKM AnalytiCup 2018" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/Xgboost.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Feature" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Preprocessing" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CIKM AnalytiCup 2018" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Preprocessing/Feature.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.Blending">
     <configuration default="false" name="LightGbm" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -409,6 +384,42 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="CIKM AnalytiCup 2018" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/lexdecomp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="ESIM" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CIKM AnalytiCup 2018" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/ESIM.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="AB-CNN" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CIKM AnalytiCup 2018" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/AB-CNN.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -479,19 +490,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.Xgboost" />
-      <item index="1" class="java.lang.String" itemvalue="Python.Feature" />
-      <item index="2" class="java.lang.String" itemvalue="Python.LightGbm" />
-      <item index="3" class="java.lang.String" itemvalue="Python.Blending" />
-      <item index="4" class="java.lang.String" itemvalue="Python.lexdecomp" />
+      <item index="0" class="java.lang.String" itemvalue="Python.LightGbm" />
+      <item index="1" class="java.lang.String" itemvalue="Python.Blending" />
+      <item index="2" class="java.lang.String" itemvalue="Python.lexdecomp" />
+      <item index="3" class="java.lang.String" itemvalue="Python.ESIM" />
+      <item index="4" class="java.lang.String" itemvalue="Python.AB-CNN" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.lexdecomp" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Xgboost" />
-        <item index="2" class="java.lang.String" itemvalue="Python.Blending" />
-        <item index="3" class="java.lang.String" itemvalue="Python.LightGbm" />
-        <item index="4" class="java.lang.String" itemvalue="Python.Feature" />
+        <item index="0" class="java.lang.String" itemvalue="Python.Blending" />
+        <item index="1" class="java.lang.String" itemvalue="Python.lexdecomp" />
+        <item index="2" class="java.lang.String" itemvalue="Python.AB-CNN" />
+        <item index="3" class="java.lang.String" itemvalue="Python.ESIM" />
+        <item index="4" class="java.lang.String" itemvalue="Python.LightGbm" />
       </list>
     </recent_temporary>
   </component>
@@ -509,19 +520,19 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="960" y="0" width="960" height="1040" extended-state="1" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.003125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3451613" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16807611" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4688172" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46828753" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -785,25 +796,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model/LightGbm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1474">
-          <caret line="67" column="61" lean-forward="false" selection-start-line="67" selection-start-column="61" selection-end-line="67" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Preprocessing/PowerfulWord.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5038">
           <caret line="229" column="47" lean-forward="false" selection-start-line="229" selection-start-column="27" selection-end-line="229" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/Blending.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="23" column="16" lean-forward="false" selection-start-line="23" selection-start-column="16" selection-end-line="23" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -818,46 +814,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1232">
           <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="61" selection-end-column="71" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Config/tool.py">
+    <entry file="file://$PROJECT_DIR$/Config/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1342">
-          <caret line="62" column="39" lean-forward="false" selection-start-line="62" selection-start-column="39" selection-end-line="62" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/MatchPyramid.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1518">
-          <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="76" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/ESIM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1166">
-          <caret line="58" column="34" lean-forward="false" selection-start-line="58" selection-start-column="25" selection-end-line="58" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Config/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="10" column="44" lean-forward="false" selection-start-line="10" selection-start-column="44" selection-end-line="10" selection-end-column="68" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26598">
-          <caret line="1209" column="81" lean-forward="false" selection-start-line="1209" selection-start-column="81" selection-end-line="1209" selection-end-column="81" />
+        <state relative-caret-position="2948">
+          <caret line="141" column="40" lean-forward="false" selection-start-line="141" selection-start-column="40" selection-end-line="141" selection-end-column="40" />
           <folding />
         </state>
       </provider>
@@ -870,30 +833,78 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
+    <entry file="file://$PROJECT_DIR$/Config/tool.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="968">
-          <caret line="44" column="8" lean-forward="false" selection-start-line="44" selection-start-column="8" selection-end-line="44" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="484">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/LightGbm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="845">
+          <caret line="103" column="33" lean-forward="false" selection-start-line="103" selection-start-column="33" selection-end-line="103" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Config/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="10" column="44" lean-forward="false" selection-start-line="10" selection-start-column="44" selection-end-line="10" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/ESIM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="184" column="46" lean-forward="false" selection-start-line="184" selection-start-column="46" selection-end-line="184" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/MatchPyramid.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="151" column="0" lean-forward="false" selection-start-line="151" selection-start-column="0" selection-end-line="162" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="1188" column="8" lean-forward="false" selection-start-line="1188" selection-start-column="8" selection-end-line="1188" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Model/lexdecomp.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="64" column="0" lean-forward="true" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+        <state relative-caret-position="8283">
+          <caret line="398" column="38" lean-forward="false" selection-start-line="398" selection-start-column="38" selection-end-line="398" selection-end-column="38" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Config/utils.py">
+    <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="463">
-          <caret line="141" column="40" lean-forward="true" selection-start-line="141" selection-start-column="40" selection-end-line="141" selection-end-column="40" />
+        <state relative-caret-position="99">
+          <caret line="371" column="0" lean-forward="false" selection-start-line="371" selection-start-column="0" selection-end-line="374" selection-end-column="53" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/Blending.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="21" column="0" lean-forward="true" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
           <folding />
         </state>
       </provider>
