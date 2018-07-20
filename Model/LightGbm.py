@@ -2,10 +2,6 @@ import sys
 sys.path.append('../')
 
 from Config import config
-from Preprocessing import Preprocess
-from Preprocessing import Feature
-from Preprocessing import PowerfulWord
-from Preprocessing import GraphFeature
 from Model.BaseMlModel import BaseMlModel
 
 import lightgbm as lgb
@@ -13,11 +9,7 @@ import lightgbm as lgb
 class LightGbm(BaseMlModel):
 
     def __init__(self):
-        self.preprocessor = Preprocess.Preprocess()
-        self.Feature = Feature.Feature()
-        self.Powerfulwords = PowerfulWord.PowerfulWord()
-        self.Graph = GraphFeature.GraphFeature()
-
+        super().__init__()
         self.params = {
                 # 核心参数
                 'task': 'train',  # 设置是否是训练任务
@@ -73,7 +65,7 @@ class LightGbm(BaseMlModel):
     def train(self, tag):
         print("LightGbm training")
 
-        train_data, train_labels, dev_data, dev_labels = self.prepare_train_data(tag)
+        train_data, train_labels, dev_data, dev_labels = self.prepare_train_data(tag, 'LightGbm')
 
         lgb_train = lgb.Dataset(data = train_data, label=train_labels)
         lgb_val = lgb.Dataset(data = dev_data, label = dev_labels)
@@ -85,7 +77,7 @@ class LightGbm(BaseMlModel):
     def test(self, name):
         print("LightGbm testing...")
 
-        train_data, train_labels, test_data = self.prepare_test_data(name)
+        train_data, train_labels, test_data = self.prepare_test_data(name, 'LightGbm')
 
         lgb_train = lgb.Dataset(data=train_data, label=train_labels)
         lgb_test = lgb.Dataset(test_data)

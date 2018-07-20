@@ -1175,19 +1175,20 @@ class Feature():
 
 
 
-    def addtional_feature(self, tag):
+    def addtional_feature(self, tag, modeltype):
 
         lsa_sim = self.get_lsa_sim(tag)
-        #lda_sim = self.get_lda_sim(tag)
-        tfidf_char_sim = self.get_tfidf_sim(tag, 'char')
+        # lda_sim = self.get_lda_sim(tag)
         # tfidf_word_sim = self.get_tfidf_sim(tag, 'word') 这个特征貌似也没用了
         word_share =  self.get_word_share(tag)
         doc2vec_sim = self.get_doc2vec_sim(tag)
-        word2vec_sim = self.get_word2vec_ave_sim(tag)
 
         # ABCNN只选了这3个
-        return np.hstack([lsa_sim, word_share, doc2vec_sim])
+        if modeltype.startswith('ABCNN'):
+            return np.hstack([lsa_sim, word_share, doc2vec_sim])
 
+        word2vec_sim = self.get_word2vec_ave_sim(tag)
+        tfidf_char_sim = self.get_tfidf_sim(tag, 'char')
         length = self.get_length(tag)
         length_diff = self.get_length_diff(tag)
         length_diff_rate = self.get_length_diff_rate(tag)
@@ -1195,7 +1196,7 @@ class Feature():
         ngram_jaccard_dis = self.ngram_jaccard_coef(tag)
         ngram_dice_dis = self.ngram_dice_distance(tag)
         # idf_word_share = self.get_tfidf_word_share(tag)      # 这两个特征线上线下不一致
-        tfidf_statistics = self.get_tfidf_statistics(tag)    # 这两个特征线上线下不一致
+        # tfidf_statistics = self.get_tfidf_statistics(tag)    # 这两个特征线上线下不一致
         # not_words_count = self.get_no_feature(tag)
         edit_dictance = self.get_edit_distance(tag)
         fuzz = self.get_fuzz_feature(tag)
@@ -1206,8 +1207,9 @@ class Feature():
         # w2v_sim_dist = self.get_w2v_feature(tag)
         # nmf_sim = self.get_nmf_sim(tag)
 
-        return np.hstack([lsa_sim, tfidf_char_sim, word_share, doc2vec_sim, word2vec_sim, length, length_diff, length_diff_rate, \
-                          ngram_jaccard_dis, ngram_dice_dis, fuzz, common_sequence]) #
+        if modeltype == 'LexDecomp' or modeltype == 'Xgboost' or modeltype == 'LightGbm' or modeltype == 'FM_FTRL':
+            return np.hstack([lsa_sim, tfidf_char_sim, word_share, doc2vec_sim, word2vec_sim, length, length_diff, length_diff_rate, \
+                            ngram_jaccard_dis, ngram_dice_dis, fuzz, common_sequence]) #
 
 
 if __name__ == '__main__':

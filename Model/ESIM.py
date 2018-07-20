@@ -8,27 +8,22 @@ sys.path.append('../')
 
 from Config import config
 from Config import tool
-from Preprocessing import Preprocess
-from Model.Embeddings import Embeddings
+from Model.BaseDeepModel import BaseDeepModel
 
-class ESIM():
-
+class ESIM(BaseDeepModel):
     def __init__(self):
-        self.preprocessor = Preprocess.Preprocess()
-        self.embedding = Embeddings()
+        super().__init__()
 
+        self.model_type = 'ESIM'
         self.lr = 0.0001
-        self.keep_rate = 1.0
-        self.l2_reg = 0.0004
-        self.sentence_length = self.preprocessor.max_length
-
-        self.vec_dim = self.embedding.vec_dim
         self.hidden_dim = 300
 
-        self.num_classes = 2
         self.batch_size = 128
         self.n_epoch = 20
-        self.eclipse = 1e-9
+
+        self.keep_prob = 1.0
+        self.l2_reg = 0.0004
+
 
     def define_model(self):
         self.left_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='question')
@@ -138,8 +133,6 @@ class ESIM():
             correct = tf.nn.in_top_k(self.output, self.label, 1)
             self.accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
-
-
     def attention_with_mask(self, scores, output, axis, mask, name=None):
         '''
         求解alpha和belta
@@ -156,143 +149,6 @@ class ESIM():
                 return tf.matmul(softmax, output)
             elif name == 'beta':
                 return tf.matmul(tf.transpose(softmax, [0, 2, 1]), output)
-
-
-    def train(self, tag='dev'):
-        save_path = config.save_prefix_path + 'ESIM' + '/'
-
-        self.define_model()
-
-        (train_left, train_right, train_labels) = self.preprocessor.get_es_index_padding('train')
-        (dev_left, dev_right, dev_labels) = self.preprocessor.get_es_index_padding('dev')
-
-        if tag == 'train':
-            train_left.extend(dev_left)
-            train_right.extend(dev_right)
-            train_labels.extend(dev_labels)
-            del dev_left, dev_right, dev_labels
-            import gc
-            gc.collect()
-
-        length = len(train_left)
-        shuffle_index = np.random.permutation(length)
-        train_left = np.array(train_left)[shuffle_index]
-        train_right = np.array(train_right)[shuffle_index]
-        train_labels = np.array(train_labels)[shuffle_index]
-        #train_features = train_features[shuffle_index]
-
-        global_steps = tf.Variable(0, name='global_step', trainable=False)
-        self.train_op = tf.train.AdamOptimizer(self.lr, name='optimizer').minimize(self.cost, global_step=global_steps)
-
-
-        with tf.Session() as sess:
-            # debug
-            # sess = tf_debug.LocalCLIDebugWrapperSession(sess)
-            # sess.add_tensor_filter('has_inf_or_nan', tf_debug.has_inf_or_nan)
-
-            sess.run(tf.global_variables_initializer())
-            saver = tf.train.Saver(tf.global_variables())
-
-            if os.path.exists(save_path):
-                try:
-                    ckpt = tf.train.get_checkpoint_state(save_path)
-                    saver.restore(sess, ckpt.model_checkpoint_path)
-                except:
-                    ckpt = None
-            else:
-                os.makedirs(save_path)
-
-            for epoch in range(self.n_epoch):
-                for iteration in range(length//self.batch_size + 1):
-                    train_feed_dict = self.gen_train_dict(iteration, train_left, train_right, train_labels, True)
-                    train_loss, train_acc, current_step, _ = sess.run([self.cost_non_reg, self.accuracy, global_steps, self.train_op], feed_dict = train_feed_dict)
-                    if current_step % 64 == 0:
-                        dev_loss = 0
-                        dev_acc = 0
-                        if tag == 'dev':
-                            for iter in range(len(dev_labels)//self.batch_size + 1):
-                                dev_feed_dict = self.gen_train_dict(iter, dev_left, dev_right, dev_labels, False)
-                                dev_loss += self.cost_non_reg.eval(feed_dict = dev_feed_dict)
-                                dev_acc += self.accuracy.eval(feed_dict = dev_feed_dict)
-                            dev_loss = dev_loss/(len(dev_labels)//self.batch_size + 1)
-                            dev_acc = dev_acc/(len(dev_labels)//self.batch_size + 1)
-                        print("**********************************************************************************************************")
-                        print("Epoch {}, Iteration {}, train loss: {:.4f}, train accuracy: {:.4f}%.".format(epoch,
-                                                                                                            current_step,
-                                                                                                            train_loss,
-                                                                                                            train_acc * 100))
-                        if tag == 'dev':
-                            print("Epoch {}, Iteration {}, val loss: {:.4f}, val accuracy: {:.4f}%.".format(epoch,
-                                                                                                              current_step,
-                                                                                                              dev_loss,
-                                                                                                              dev_acc * 100))
-                            print("**********************************************************************************************************")
-                        checkpoint_path = os.path.join(save_path, 'model.ckpt')
-                        saver.save(sess, checkpoint_path, global_step = current_step)
-
-    def test(self):
-        save_path = config.save_prefix_path + self.model_type + '/'
-        assert os.path.isdir(save_path)
-
-        test_left, test_right = self.preprocessor.get_es_index_padding('test')
-        # test_left, test_right, _ = self.preprocessor.get_es_index_padding('dev')
-
-        tf.reset_default_graph()
-
-        self.define_model()
-        saver = tf.train.Saver()
-
-        init = tf.global_variables_initializer()
-        with tf.Session() as sess:
-            test_results = []
-            init.run()
-            ckpt = tf.train.get_checkpoint_state(save_path)
-            saver.restore(sess, ckpt.model_checkpoint_path)
-            # saver.restore(sess, os.path.join(save_path, 'best_model.ckpt'))
-
-            for step in tqdm(range(len(test_left)//self.batch_size + 1)):
-                test_feed_dict = self.gen_test_dict(step, test_left, test_right, False)
-                pred = sess.run(self.prediction, feed_dict = test_feed_dict)
-                test_results.extend(pred.tolist())
-
-        with open(config.output_prefix_path + self.model_type + '-submit.txt', 'w') as fr:
-            for result in test_results:
-                fr.write(str(result) + '\n')
-
-    def gen_test_dict(self, iteration, train_questions, train_answers, trainable = False):
-        start = iteration * self.batch_size
-        end = min((start + self.batch_size), len(train_questions))
-        question_batch = train_questions[start:end]
-        answer_batch = train_answers[start:end]
-
-        feed_dict = {
-            self.left_sentence: question_batch,
-            self.right_sentence: answer_batch,
-            self.trainable: trainable,
-            self.dropout_keep_prob: 1.0,
-        }
-        return feed_dict
-
-    def gen_train_dict(self, iteration, train_questions, train_answers, train_labels, trainable):
-        start = iteration * self.batch_size
-        end = min((start + self.batch_size), len(train_questions))
-        question_batch = train_questions[start:end]
-        answer_batch = train_answers[start:end]
-        label_batch = train_labels[start:end]
-
-        if trainable == True:
-            dropout_keep_prob = self.keep_rate
-        else:
-            dropout_keep_prob = 1.0
-
-        feed_dict = {
-            self.left_sentence: question_batch,
-            self.right_sentence: answer_batch,
-            self.label: label_batch,
-            self.trainable: trainable,
-            self.dropout_keep_prob: dropout_keep_prob,
-        }
-        return feed_dict
 
 if __name__ == '__main__':
     tf.set_random_seed(1)

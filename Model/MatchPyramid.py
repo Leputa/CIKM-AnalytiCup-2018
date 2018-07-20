@@ -283,47 +283,6 @@ class MatchPyramid():
             for result in test_results:
                 fr.write(str(result) + '\n')
 
-    def gen_test_dict(self, iteration, train_questions, train_answers, trainable = False):
-        start = iteration * self.batch_size
-        end = min((start + self.batch_size), len(train_questions))
-        question_batch = train_questions[start:end]
-        answer_batch = train_answers[start:end]
-
-        feed_dict = {
-            self.left_sentence: question_batch,
-            self.right_sentence: answer_batch,
-            self.trainable: trainable,
-            self.dropout_keep_prob: 1.0,
-        }
-        return feed_dict
-
-    def gen_train_dict(self, iteration, train_questions, train_answers, train_left_length, train_right_length, train_labels, train_features, trainable):
-        start = iteration * self.batch_size
-        end = min((start + self.batch_size), len(train_questions))
-        question_batch = train_questions[start:end]
-        answer_batch = train_answers[start:end]
-        label_batch = train_labels[start:end]
-        left_length_batch = train_left_length[start:end]
-        right_length_batch = train_right_length[start:end]
-        features_batch = train_features[start:end]
-
-        if trainable == True:
-            dropout_keep_prob = self.keep_prob
-        else:
-            dropout_keep_prob = 1.0
-
-        feed_dict = {
-            self.left_sentence: question_batch,
-            self.right_sentence: answer_batch,
-            self.label: label_batch,
-            self.features: features_batch,
-            self.trainable: trainable,
-            self.dropout_keep_prob: dropout_keep_prob,
-            self.dpool_index: self.dynamic_pooling_index(left_length_batch, right_length_batch, self.sentence_length, self.sentence_length)
-        }
-        return feed_dict
-
-
 
 if __name__ == '__main__':
     tf.set_random_seed(1)

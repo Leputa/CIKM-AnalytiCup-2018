@@ -2,10 +2,6 @@ import sys
 sys.path.append('../')
 
 from Config import config
-from Preprocessing import Preprocess
-from Preprocessing import Feature
-from Preprocessing import PowerfulWord
-from Preprocessing import GraphFeature
 from Model.BaseMlModel import BaseMlModel
 
 from scipy.sparse import csc_matrix
@@ -17,12 +13,8 @@ import xgboost as xgb
 class Xgboost(BaseMlModel):
 
     def __init__(self):
-        self.preprocessor = Preprocess.Preprocess()
-        self.Feature = Feature.Feature()
-        self.Powerfulwords = PowerfulWord.PowerfulWord()
-        self.Graph = GraphFeature.GraphFeature()
+        super().__init__()
         self.n_folds = 5
-
         self.params = {  'booster':'gbtree',
                          'max_depth':6,
                          'eta':0.03,
@@ -49,7 +41,7 @@ class Xgboost(BaseMlModel):
     def train(self, tag):
         print("Xgboost training")
 
-        train_data, train_labels, dev_data, dev_labels = self.prepare_train_data(tag)
+        train_data, train_labels, dev_data, dev_labels = self.prepare_train_data(tag, 'Xgboost')
 
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
         xgb_val = xgb.DMatrix(dev_data, label=dev_labels)
@@ -60,7 +52,7 @@ class Xgboost(BaseMlModel):
     def test(self, name):
         print("Xgboost testing...")
 
-        train_data, train_labels, test_data = self.prepare_test_data(name)
+        train_data, train_labels, test_data = self.prepare_test_data(name, 'Xgboost')
 
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
         xgb_test = xgb.DMatrix(test_data)
@@ -136,8 +128,8 @@ class Xgboost(BaseMlModel):
 
 if __name__ == "__main__":
     model = Xgboost()
-    # model.train('human_feature')
-    model.test('human_feature')
+    model.train('human_feature')
+    # model.test('human_feature')
     # model.cv('human_feature')
 
 

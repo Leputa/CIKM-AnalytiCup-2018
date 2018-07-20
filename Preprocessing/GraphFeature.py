@@ -355,16 +355,12 @@ class GraphFeature():
             pickle.dump(feature, pkl)
         return feature
 
-
     def add_addtional_feature(self, tag, feature_tag):
         short_path_1 = self.get_shortest_path(tag, feature_tag)
         pagerank_1 = self.get_pagerank(tag, feature_tag)
         pagerank_1 = pagerank_1.reshape((pagerank_1.shape[0], pagerank_1.shape[1]))
 
         return np.hstack([short_path_1, pagerank_1])
-
-
-
 
 
 if __name__ == "__main__":

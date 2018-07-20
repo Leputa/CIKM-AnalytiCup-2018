@@ -2,8 +2,6 @@ import sys
 sys.path.append('../')
 
 from Config import config
-from Preprocessing import Preprocess
-from Preprocessing import Feature
 from Model.BaseMlModel import BaseMlModel
 
 from sklearn.metrics import log_loss
@@ -13,14 +11,13 @@ from sklearn.metrics import roc_curve, auc, roc_auc_score
 class FM_FTRL_Model(BaseMlModel):
 
     def __init__(self):
-        self.preprocessor = Preprocess.Preprocess()
-        self.Feature = Feature.Feature()
+        super().__init__()
 
 
     def train(self, tag):
         print("FM_FTRL training")
 
-        train_data, train_labels, dev_data, dev_labels = self.prepare_train_data(tag)
+        train_data, train_labels, dev_data, dev_labels = self.prepare_train_data(tag, 'FM_FTRL')
 
         self.clf = FM_FTRL(
             alpha=0.01,  # w0和w的FTRL超参数alpha
@@ -53,7 +50,7 @@ class FM_FTRL_Model(BaseMlModel):
     def test(self, name):
         print("FM_FTRL testing...")
 
-        train_data, train_labels, test_data = self.prepare_test_data(name)
+        train_data, train_labels, test_data = self.prepare_test_data(name, 'FM_FTRL')
 
         self.clf = FM_FTRL(
             alpha=0.01,  # w0和w的FTRL超参数alpha

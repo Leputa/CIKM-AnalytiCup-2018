@@ -16,6 +16,7 @@ import gc
 class BaseMlModel():
 
     def __init__(self):
+
         self.preprocessor = Preprocess.Preprocess()
         self.Feature = Feature.Feature()
         self.Powerfulwords = PowerfulWord.PowerfulWord()
@@ -40,7 +41,7 @@ class BaseMlModel():
         return train_features, train_labels, dev_features, dev_labels, test_features
 
 
-    def prepare_train_data(self, tag):
+    def prepare_train_data(self, tag, modeltype):
 
         if tag == 'tfidf':
             char_train_data, train_labels, char_dev_data, dev_labels, _ = self.get_tfidf('char')
@@ -81,11 +82,11 @@ class BaseMlModel():
             train_data = hstack([char_train_data, word_train_data])
             dev_data = hstack([char_dev_data, word_dev_data])
 
-            train_feature = coo_matrix(self.Feature.addtional_feature('train'))
-            dev_feature = coo_matrix(self.Feature.addtional_feature('dev'))
+            train_feature = coo_matrix(self.Feature.addtional_feature('train', modeltype))
+            dev_feature = coo_matrix(self.Feature.addtional_feature('dev', modeltype))
 
-            words_train_feature = coo_matrix(self.Powerfulwords.addtional_feature('train'))
-            words_dev_features = coo_matrix(self.Powerfulwords.addtional_feature('dev'))
+            words_train_feature = coo_matrix(self.Powerfulwords.addtional_feature('train', modeltype))
+            words_dev_features = coo_matrix(self.Powerfulwords.addtional_feature('dev', modeltype))
 
             # graph_train_feature = coo_matrix(self.Graph.add_addtional_feature('train', 'char_sim'))
             # graph_dev_feature =coo_matrix(self.Graph.add_addtional_feature('dev', 'char_sim'))
@@ -96,7 +97,7 @@ class BaseMlModel():
         return train_data, train_labels, dev_data, dev_labels
 
 
-    def prepare_test_data(self, name):
+    def prepare_test_data(self, name, modeltype):
         if name == 'tfidf_word':
             train_data, train_labels, dev_data, dev_labels, test_data = self.get_tfidf('word')
             train_data = vstack([train_data, dev_data]).tocsr()
@@ -139,18 +140,18 @@ class BaseMlModel():
             train_data = vstack([hstack([char_train_data, word_train_data]), hstack([char_dev_data, word_dev_data])]).tocsr()
             train_labels.extend(dev_labels)
 
-            train_feature = coo_matrix(self.Feature.addtional_feature('train'))
-            dev_feature = coo_matrix(self.Feature.addtional_feature('dev'))
+            train_feature = coo_matrix(self.Feature.addtional_feature('train', modeltype))
+            dev_feature = coo_matrix(self.Feature.addtional_feature('dev', modeltype))
 
             train_feature = vstack([train_feature, dev_feature])
-            test_feature = coo_matrix(self.Feature.addtional_feature('test'))
+            test_feature = coo_matrix(self.Feature.addtional_feature('test', modeltype))
 
 
-            words_train_feature = coo_matrix(self.Powerfulwords.addtional_feature('train'))
-            words_dev_feature = coo_matrix(self.Powerfulwords.addtional_feature('dev'))
+            words_train_feature = coo_matrix(self.Powerfulwords.addtional_feature('train', modeltype))
+            words_dev_feature = coo_matrix(self.Powerfulwords.addtional_feature('dev', modeltype))
 
             words_train_feature = vstack([words_train_feature, words_dev_feature])
-            words_test_feature = coo_matrix(self.Powerfulwords.addtional_feature('test'))
+            words_test_feature = coo_matrix(self.Powerfulwords.addtional_feature('test', modeltype))
 
             # graph_train_feature = coo_matrix(self.Graph.add_addtional_feature('train', 'char_sim'))
             # graph_dev_feature = coo_matrix(self.Graph.add_addtional_feature('dev', 'char_sim'))

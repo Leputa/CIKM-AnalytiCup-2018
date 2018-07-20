@@ -87,8 +87,6 @@ class Embeddings():
             pickle.dump(index2vec, pkl)
         return index2vec
 
-
-
     def doc2vec(self):
         print("doc2vec...")
         path = config.cache_prefix_path + 'doc2vec.embedding'
