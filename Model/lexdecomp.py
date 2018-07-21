@@ -11,23 +11,39 @@ from Model.BaseDeepModel import BaseDeepModel
 class LexDecomp(BaseDeepModel):
     # implementation of the Answer Selection (AS) model proposed in the paper
     # Sentence Similarity Learning by Lexical Decomposition and Composition, by (Wang et al., 2016).
-    def __init__(self):
-        super().__init__()
+    def __init__(self, lang='es'):
+        super().__init__(lang)
 
         self.model_type = 'LexDecomp'
-        self.lr = 0.0005
-        self.batch_size = 64
-        self.n_epoch = 5
+        if lang == 'es':
+            self.lr = 0.001
+            self.batch_size = 64
+            self.n_epoch = 20
 
 
-        self.num_features = self.get_feature_num(self.model_type)
-        self.w = 4
-        self.filter_sizes = [2, 3, 4]
-        self.num_filters = 32
-        self.hidden_dim = 256
+            self.num_features = self.get_feature_num(self.model_type)
+            self.w = 4
+            self.filter_sizes = [2, 3, 4]
+            self.num_filters = 32
+            self.hidden_dim = 256
 
-        self.keep_prob = 0.5
-        self.l2_reg = 4e-5
+            self.keep_prob = 0.5
+            self.l2_reg = 0.001
+
+        elif lang == 'en':
+            self.lr = 0.001
+            self.batch_size = 64
+            self.n_epoch = 2
+
+            self.num_features = self.get_feature_num(self.model_type)
+            self.w = 4
+            self.filter_sizes = [2, 3, 4]
+            self.num_filters = 32
+            self.hidden_dim = 256
+
+            self.keep_prob = 0.5
+            self.l2_reg = 0.001
+
 
 
     def define_model(self):
@@ -39,7 +55,7 @@ class LexDecomp(BaseDeepModel):
         self.dropout_keep_prob = tf.placeholder(tf.float32, shape=[], name='dropout_keep_prob')
 
         with tf.name_scope('embedding'):
-            embedding_matrix = self.embedding.get_es_embedding_matrix()
+            embedding_matrix = self.embedding.get_embedding_matrix(self.lang)
             embedding_matrix = tf.Variable(embedding_matrix, trainable=True, name='embedding')
             embedding_matrix_fixed = tf.stop_gradient(embedding_matrix, name='embedding_fixed')
 
@@ -65,8 +81,8 @@ class LexDecomp(BaseDeepModel):
 
         with tf.name_scope('Composition'):
             sims = []
-            pooled_left = []
-            pooled_right = []
+            # pooled_left = []
+            # pooled_right = []
             for i, filter_size in enumerate(self.filter_sizes):
                 left_conv = self.convolution(left_decomp, 2 * self.vec_dim, filter_size, self.num_filters, 'conv_left')
                 left_pooled = self.max_pool(left_conv, filter_size, 'max_pooling_left')
@@ -78,16 +94,16 @@ class LexDecomp(BaseDeepModel):
 
                 sims.append(self.get_sim(left_pooled_flatten, right_pooled_flatten, self.num_filters, str(filter_size)))
                 #sims.append(self.get_cos_sim(left_pooled_flatten, right_pooled_flatten, str(filter_size)))
-                pooled_left.append(left_pooled_flatten)
-                pooled_right.append(right_pooled_flatten)
+                # pooled_left.append(left_pooled_flatten)
+                # pooled_right.append(right_pooled_flatten)
 
             sims = tf.concat(sims, axis=-1)
-            pooled_left = tf.concat(pooled_left, axis=-1)
-            pooled_right = tf.concat(pooled_right, axis=-1)
+            # pooled_left = tf.concat(pooled_left, axis=-1)
+            # pooled_right = tf.concat(pooled_right, axis=-1)
 
         with tf.variable_scope('output_layer'):
-            #self.output_features = sims
-            self.output_features = tf.concat([pooled_left, pooled_right, sims], axis=-1)
+            self.output_features = sims
+            # self.output_features = tf.concat([pooled_left, pooled_right, sims], axis=-1)
             self.output_features = tf.concat([self.output_features, self.features], axis=1)
             self.output_features = tf.layers.batch_normalization(self.output_features)
             self.output_features = tf.nn.dropout(self.output_features, self.dropout_keep_prob, name='hidden_output_drop')
@@ -222,7 +238,7 @@ class LexDecomp(BaseDeepModel):
 if __name__ == '__main__':
     tf.set_random_seed(1024)
     np.random.seed(1024)
-    model = LexDecomp()
+    model = LexDecomp(lang='en')
     # model.train('dev', model.model_type)
     # model.train('train', model.model_type)
     model.test(model.model_type)

@@ -41,7 +41,7 @@ class GoogleTranslation():
 
     def translate_data(self):
         data_es = self.load_data()
-        with open(config.data_prefix_path + 'test_en.txt', 'w') as fr:
+        with open(config.data_prefix_path + 'test_en.txt', 'w', encoding='utf-8') as fr:
             for sentence in tqdm(data_es):
                 s_list = sentence.strip().split('\t')
                 fr.write(self.translate(s_list[0]) + '\t' + self.translate(s_list[1]) + '\n')

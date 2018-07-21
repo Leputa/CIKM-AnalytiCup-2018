@@ -16,7 +16,8 @@ from Preprocessing.WordDict import *
 
 class Preprocess():
     def __init__(self):
-        self.max_length = 50
+        self.max_es_length = 50
+        self.max_en_length = 50
         self.tokenizer = Tokenizer()
 
     def load_train_data(self, tag='en'):
@@ -86,10 +87,13 @@ class Preprocess():
         return (en_sentence_left, en_sentence_right, es_sentence_left, es_sentence_right, labels)
 
 
-    def load_test(self):
+    def load_test(self, lang = 'es'):
         print("导入测试数据")
 
-        path = config.TOKEN_TEST
+        if lang == 'es':
+            path = config.TOKEN_TEST
+        elif lang == 'en':
+            path = config.cache_prefix_path + 'token_test_en.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -97,13 +101,22 @@ class Preprocess():
         sentence_left = []
         sentence_right = []
 
-        with open(config.TEST_FiLE, 'r', encoding='utf-8') as fr:
+        if lang == 'es':
+            file_path = config.TEST_FiLE
+        elif lang == 'en':
+            file_path = config.data_prefix_path + 'test_en.txt'
+
+        with open(file_path, 'r', encoding='utf-8') as fr:
             lines = fr.readlines()
 
             for line in lines:
                 lineList = line.split('\t')
-                tmp_left = self.tokenizer.es_str_clean(lineList[0])
-                tmp_right = self.tokenizer.es_str_clean(lineList[1])
+                if lang == 'es':
+                    tmp_left = self.tokenizer.es_str_clean(lineList[0])
+                    tmp_right = self.tokenizer.es_str_clean(lineList[1])
+                elif lang == 'en':
+                    tmp_left = self.tokenizer.en_str_clean(lineList[0])
+                    tmp_right = self.tokenizer.en_str_clean(lineList[1])
 
                 # common_list = tool.LCS(tmp_left, tmp_right)
                 # tmp_left.extend(common_list)
@@ -117,49 +130,52 @@ class Preprocess():
 
         return (sentence_left, sentence_right)
 
-
-    def es2index(self, tag='es'):
+    def es2index(self, lang='es'):
         print("建立词到索引的字典")
         word2index = WordDict()
-        path = config.cache_prefix_path + 'Es2IndexDic.pkl'
-        if os.path.exists(path):
-            return word2index.loadWord2IndexDic(tag)
 
-        _, _, train_left, train_right, _  = self.load_train_data('en')
-        _, _, dev_left, dev_right, _ = self.load_train_data('es')
-        test_left, test_right = self.load_test()
+        if lang == 'es':
+            path = config.cache_prefix_path + 'Es2IndexDic.pkl'
+        elif lang == 'en':
+            path = config.cache_prefix_path + 'En2IndexDic.pkl'
+        if os.path.exists(path):
+            return word2index.loadWord2IndexDic(lang)
+
+        if lang == 'es':
+            _, _, train_left, train_right, _  = self.load_train_data('en')
+            _, _, dev_left, dev_right, _ = self.load_train_data('es')
+        elif lang == 'en':
+            train_left, train_right, _, _, _ = self.load_train_data('en')
+            dev_left, dev_right, _, _, _ = self.load_train_data('es')
+
+        test_left, test_right = self.load_test(lang)
 
         for i in range(len(train_left)):
             for word in train_left[i]:
-                word2index.add_word(word, tag)
+                word2index.add_word(word, lang)
             for word in train_right[i]:
-                word2index.add_word(word, tag)
+                word2index.add_word(word, lang)
 
         for i in range(len(dev_left)):
             for word in dev_left[i]:
-                word2index.add_word(word, tag)
+                word2index.add_word(word, lang)
             for word in dev_right[i]:
-                word2index.add_word(word, tag)
+                word2index.add_word(word, lang)
 
         for i in range(len(test_left)):
             for word in test_left[i]:
-                word2index.add_word(word, tag)
+                word2index.add_word(word, lang)
             for word in test_right[i]:
-                word2index.add_word(word, tag)
+                word2index.add_word(word, lang)
 
-        word2index.saveWord2IndexDic(tag)
+        word2index.saveWord2IndexDic(lang)
         return word2index.Es2IndexDic
 
 
-    def get_es_index_data(self, tag):
+    def get_index_data(self, tag):
         print("将语料转化为索引表示")
 
-        if tag == 'train':
-            path = config.cache_prefix_path + 'index_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'index_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'index_test.pkl'
+        path = config.cache_prefix_path + tag + '_index.pkl'
 
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
@@ -170,99 +186,111 @@ class Preprocess():
             'dev': 'es'
         }
 
-
         if tag == 'train' or tag == 'dev':
-            _, _, left_sentence, right_sentence, labels = self.load_train_data(dic[tag])
+            left_en, right_en, left_es, right_es, labels = self.load_train_data(dic[tag])
         if tag == 'test':
-            left_sentence, right_sentence = self.load_test()
+            left_es, right_es = self.load_test('es')
+            left_en, right_en = self.load_test('en')
 
-        word2index = self.es2index()
+        es_word2index = self.es2index('es')
+        en_word2index = self.es2index('en')
 
-        left_index = []
-        right_index = []
+        es_left_index, es_right_index = [], []
+        en_left_index, en_right_index = [], []
 
-        for i in range(len(left_sentence)):
-            left_index.append([word2index.get(word, 1) for word in left_sentence[i]])
-            right_index.append([word2index.get(word, 1) for word in right_sentence[i]])
+        for i in range(len(left_es)):
+            es_left_index.append([es_word2index.get(word, 1) for word in left_es[i]])
+            es_right_index.append([es_word2index.get(word, 1) for word in right_es[i]])
+
+        for i in range(len(left_en)):
+            en_left_index.append([en_word2index.get(word, 1) for word in left_en[i]])
+            en_right_index.append([en_word2index.get(word, 1) for word in right_en[i]])
 
         if tag == 'train' or tag == 'dev':
             with open(path, 'wb') as pkl:
-                pickle.dump((left_index, right_index, labels), pkl)
-            return (left_index, right_index, labels)
+                pickle.dump((en_left_index, en_right_index, es_left_index, es_right_index, labels), pkl)
+            return  en_left_index, en_right_index, es_left_index, es_right_index, labels
 
-        if tag == 'test':
-            with open(path, 'wb') as pkl:
-                pickle.dump((left_index, right_index), pkl)
-            return (left_index, right_index)
-
-    def get_es_index_padding(self, tag):
-        print("padding")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'train_index_padding.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'dev_index_padding.pkl'
         elif tag == 'test':
-            path = config.cache_prefix_path + 'test_index_padding.pkl'
+            with open(path, 'wb') as pkl:
+                pickle.dump((en_left_index, en_right_index, es_left_index, es_right_index), pkl)
+            return en_left_index, en_right_index, es_left_index, es_right_index
+
+
+    def get_index_padding(self, tag):
+        print("padding")
+        path = config.cache_prefix_path + tag + '_index_padding.pkl'
 
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
 
         if tag == 'train' or tag == 'dev':
-            left_index, right_index, labels = self.get_es_index_data(tag)
+            en_left_index, en_right_index, es_left_index, es_right_index, labels = self.get_index_data(tag)
         if tag == 'test':
-            left_index, right_index = self.get_es_index_data(tag)
+            en_left_index, en_right_index, es_left_index, es_right_index = self.get_index_data(tag)
 
-        left_index_padding = copy.deepcopy(left_index)
-        right_index_padding = copy.deepcopy(right_index)
+        en_left_index_padding = copy.deepcopy(en_left_index)
+        en_right_index_padding = copy.deepcopy(en_right_index)
+        es_left_index_padding = copy.deepcopy(es_left_index)
+        es_right_index_padding = copy.deepcopy(es_right_index)
 
-        for i in range(len(left_index)):
-            if len(left_index[i]) < self.max_length:
-                left_index_padding[i] += [0] * (self.max_length - len(left_index_padding[i]))
+        for i in range(len(en_left_index)):
+            if len(en_left_index[i]) < self.max_en_length:
+                en_left_index_padding[i] += [0] * (self.max_en_length - len(en_left_index_padding[i]))
             else:
-                left_index_padding[i] = left_index_padding[i][:self.max_length]
+                en_left_index_padding[i] = en_left_index_padding[i][:self.max_en_length]
 
-            if len(right_index[i]) < self.max_length:
-                right_index_padding[i] += [0] * (self.max_length - len(right_index_padding[i]))
+            if len(en_right_index[i]) < self.max_en_length:
+                en_right_index_padding[i] += [0] * (self.max_en_length - len(en_right_index_padding[i]))
             else:
-                right_index_padding[i] = right_index_padding[i][:self.max_length]
+                en_right_index_padding[i] = en_right_index_padding[i][:self.max_en_length]
+
+        for i in range(len(es_left_index)):
+            if len(es_left_index[i]) < self.max_es_length:
+                es_left_index_padding[i] += [0] * (self.max_es_length - len(es_left_index_padding[i]))
+            else:
+                es_left_index_padding[i] = es_left_index_padding[i][:self.max_es_length]
+
+            if len(es_right_index[i]) < self.max_es_length:
+                es_right_index_padding[i] += [0] * (self.max_es_length - len(es_right_index_padding[i]))
+            else:
+                es_right_index_padding[i] = es_right_index_padding[i][:self.max_es_length]
 
         if tag == 'train' or tag == 'dev':
             with open(path, 'wb') as pkl:
-                pickle.dump((left_index_padding, right_index_padding, labels), pkl)
-            return (left_index_padding, right_index_padding, labels)
+                pickle.dump((en_left_index_padding, en_right_index_padding, es_left_index_padding, es_right_index_padding, labels), pkl)
+            return (en_left_index_padding, en_right_index_padding, es_left_index_padding, es_right_index_padding, labels)
         if tag == 'test':
             with open(path, 'wb') as pkl:
-                pickle.dump((left_index_padding, right_index_padding), pkl)
-            return (left_index_padding, right_index_padding)
+                pickle.dump((en_left_index_padding, en_right_index_padding, es_left_index_padding, es_right_index_padding), pkl)
+            return (en_left_index_padding, en_right_index_padding, es_left_index_padding, es_right_index_padding)
 
 
     def get_length(self, tag):
         print("get length")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'train_length.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'dev_length.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'test_length.pkl'
-
+        path = config.cache_prefix_path + tag + '_length.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
 
         if tag == 'train':
-            _, _, sentence_left, sentence_right, _ = self.load_train_data('en')
+            en_sentence_left, en_sentence_right, es_sentence_left, es_sentence_right, _ = self.load_train_data('en')
         elif tag == 'dev':
-            _, _, sentence_left, sentence_right, _ = self.load_train_data('es')
+            en_sentence_left, en_sentence_right, es_sentence_left, es_sentence_right, _ = self.load_train_data('es')
         elif tag == 'test':
-            sentence_left, sentence_right = self.load_test()
+            es_sentence_left, es_sentence_right = self.load_test()
+            en_sentence_left, en_sentence_right = self.load_test('en')
 
-        left_length = [min(len(sentence), self.max_length) for sentence in sentence_left]
-        right_length = [min(len(sentence), self.max_length) for sentence in sentence_right]
+        en_left_length = [min(len(sentence), self.max_en_length) for sentence in en_sentence_left]
+        en_right_length = [min(len(sentence), self.max_en_length) for sentence in en_sentence_right]
+
+        es_left_length = [min(len(sentence), self.max_es_length) for sentence in es_sentence_left]
+        es_right_length = [min(len(sentence), self.max_es_length) for sentence in es_sentence_right]
 
         with open(path, 'wb') as pkl:
-            pickle.dump((left_length, right_length), pkl)
-        return (left_length, right_length)
+            pickle.dump((en_left_length, en_right_length, es_left_length, es_right_length), pkl)
+        return (en_left_length, en_right_length, es_left_length, es_right_length)
 
 
     def load_translation_data(self):
@@ -301,12 +329,16 @@ class Preprocess():
         en_left_train, en_right_train, es_left_train, es_right_train, _ = self.load_train_data('en')
         en_left_dev, en_right_dev, es_left_dev, es_right_dev, _ = self.load_train_data('es')
         es_left_test, es_right_test = self.load_test()
+        en_left_test, en_right_test = self.load_test('en')
+
         es_trans, en_trans = self.load_translation_data()
 
         en.extend(en_left_train)
         en.extend(en_right_train)
         en.extend(en_left_dev)
         en.extend(en_right_dev)
+        en.extend(en_left_test)
+        en.extend(en_right_test)
         en.extend(en_trans)
 
         es.extend(es_left_train)
@@ -324,20 +356,7 @@ class Preprocess():
     def swap_data(self, tag1, tag2):
         print('Swapping data')
 
-        if tag1 == 'train':
-            if tag2 == 'token':
-                path = config.cache_prefix_path + 'train_token_swap.pkl'
-            elif tag2 == 'index':
-                path = config.cache_prefix_path + 'train_index_swap.pkl'
-            elif tag2 == 'padding':
-                path = config.cache_prefix_path + 'train_padding_swap.pkl'
-        elif tag1 == 'dev':
-            if tag2 == 'token':
-                path = config.cache_prefix_path + 'dev_token_swap.pkl'
-            elif tag2 == 'index':
-                path = config.cache_prefix_path + 'dev_index_swap.pkl'
-            elif tag2 == 'padding':
-                path = config.cache_prefix_path + 'dev_padding_swap.pkl'
+        path = config.cache_prefix_path + tag1 + '_' + tag2 + '_swap.pkl'
 
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
@@ -349,35 +368,32 @@ class Preprocess():
         }
 
         if tag2 == 'token':
-            _, _, left, right, labels = self.load_train_data(dic[tag1])
+            en_left, en_right, es_left, es_right, labels = self.load_train_data(dic[tag1])
         elif tag2 == 'index':
-            left, right, labels = self.get_es_index_data(tag1)
+            en_left, en_right, es_left, es_right, labels = self.get_index_data(tag1)
         elif tag2 == 'padding':
-            left, right, labels = self.get_es_index_padding(tag1)
+            en_left, en_right, es_left, es_right, labels = self.get_index_padding(tag1)
 
         with open(path, 'wb') as pkl:
-            pickle.dump((right, left, labels), pkl)
+            pickle.dump((en_right, en_left, es_right, es_left, labels), pkl)
 
-        return (right, left, labels)
-
-
+        return (en_right, en_left, es_right, es_left, labels)
 
 
 if __name__ == '__main__':
     p = Preprocess()
 
-    p.load_train_data('en')
-    p.load_train_data('es')
-    p.load_test()
-    p.es2index()
-    p.get_es_index_data('train')
-    p.get_es_index_data('dev')
-    p.get_es_index_data('test')
-    p.get_es_index_padding('train')
-    p.get_es_index_padding('dev')
-    p.get_es_index_padding('test')
+    p.load_test('en')
+    p.es2index('en')
+    p.get_index_data('train')
+    p.get_index_data('dev')
+    p.get_index_data('test')
+    p.get_index_padding('train')
+    p.get_index_padding('dev')
+    p.get_index_padding('test')
+    p.swap_data('train', 'padding')
+    p.swap_data('dev', 'padding')
+    p.load_all_data()
     p.get_length('train')
     p.get_length('dev')
     p.get_length('test')
-    p.load_translation_data()
-    p.load_all_data()

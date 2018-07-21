@@ -1184,7 +1184,7 @@ class Feature():
         doc2vec_sim = self.get_doc2vec_sim(tag)
 
         # ABCNN只选了这3个
-        if modeltype.startswith('ABCNN'):
+        if modeltype.startswith('ABCNN') or modeltype == 'LexDecomp':
             return np.hstack([lsa_sim, word_share, doc2vec_sim])
 
         word2vec_sim = self.get_word2vec_ave_sim(tag)
@@ -1207,7 +1207,7 @@ class Feature():
         # w2v_sim_dist = self.get_w2v_feature(tag)
         # nmf_sim = self.get_nmf_sim(tag)
 
-        if modeltype == 'LexDecomp' or modeltype == 'Xgboost' or modeltype == 'LightGbm' or modeltype == 'FM_FTRL':
+        if modeltype == 'Xgboost' or modeltype == 'LightGbm' or modeltype == 'FM_FTRL':
             return np.hstack([lsa_sim, tfidf_char_sim, word_share, doc2vec_sim, word2vec_sim, length, length_diff, length_diff_rate, \
                             ngram_jaccard_dis, ngram_dice_dis, fuzz, common_sequence]) #
 

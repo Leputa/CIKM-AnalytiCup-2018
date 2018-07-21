@@ -11,21 +11,36 @@ from Model.BaseDeepModel import BaseDeepModel
 
 class AB_CNN(BaseDeepModel):
 
-    def __init__(self, model_type="ABCNN3", clip_gradients=False):
-        super().__init__()
+    def __init__(self, model_type="ABCNN3", lang = 'es'):
+        super().__init__(lang)
         self.model_type = model_type
 
-        self.lr = 0.002
-        self.batch_size = 64
-        self.n_epoch = 4
+        if self.lang == 'es':
+            self.lr = 0.002
+            self.batch_size = 64
+            self.n_epoch = 20
 
-        self.w = 4
-        self.l2_reg = 0.001
-        self.di = 32                              # The number of convolution kernels
-        self.hidden_dim = 128
-        self.keep_prob = 0.5
+            self.w = 4
+            self.l2_reg = 0.001
+            self.di = 32                              # The number of convolution kernels
+            self.hidden_dim = 8
+            self.keep_prob = 0.5
 
-        self.num_layers = 2
+            self.num_layers = 2
+
+        elif self.lang == 'en':
+            self.lr = 0.002
+            self.batch_size = 64
+            self.n_epoch = 4
+
+            self.w = 4
+            self.l2_reg = 0.001
+            self.di = 32  # The number of convolution kernels
+            self.hidden_dim = 8
+            self.keep_prob = 0.5
+
+            self.num_layers = 2
+
         self.num_features = self.get_feature_num(model_type)
 
         # self.vocab_size = 6119
@@ -39,7 +54,7 @@ class AB_CNN(BaseDeepModel):
         self.dropout_keep_prob = tf.placeholder(tf.float32, shape=[], name='dropout_keep_prob')
 
         with tf.name_scope('embedding'):
-            embedding_matrix = self.embedding.get_es_embedding_matrix()
+            embedding_matrix = self.embedding.get_embedding_matrix(self.lang)
             embedding_matrix = tf.Variable(embedding_matrix, trainable=True, name='embedding')
             # embedding_matrix = tf.get_variable('embedding', [self.vocab_size, self.vec_dim], dtype=tf.float32)
             embedding_matrix_fixed = tf.stop_gradient(embedding_matrix, name='embedding_fixed')
@@ -281,10 +296,10 @@ class AB_CNN(BaseDeepModel):
 
 if __name__ == '__main__':
     tf.set_random_seed(1)
-    ABCNN = AB_CNN(model_type='ABCNN3')
+    ABCNN = AB_CNN(model_type='ABCNN3', lang='en')
     # ABCNN.define_model()
-    ABCNN.train('dev', ABCNN.model_type)
     # ABCNN.train('train', ABCNN.model_type)
-    # ABCNN.test(ABCNN.model_type)
+    # ABCNN.train('train', ABCNN.model_type)
+    ABCNN.test(ABCNN.model_type)
 
 

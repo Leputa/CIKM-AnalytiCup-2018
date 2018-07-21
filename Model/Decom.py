@@ -13,19 +13,30 @@ class Decomposable_Attention_Model(BaseDeepModel):
     sim: 0.35
     concat-mlp: 0.37
     '''
-    def __init__(self, clip_gradients=False):
-        super().__init__()
+    def __init__(self, lang = 'es',clip_gradients=False):
+        super().__init__(lang)
+        if lang == 'es':
+            self.lr = 3e-5
+            self.keep_prob = 0.5
+            self.atten_keep_prob = 0.8
+            self.l2_reg = 0.004
+            self.atten_l2_reg = 0.0
 
-        self.lr = 3e-5
-        self.keep_prob = 0.5
-        self.atten_keep_prob = 0.8
-        self.l2_reg = 0.004
-        self.atten_l2_reg = 0.0
+            self.hidden_dim = 300
 
-        self.hidden_dim = 300
+            self.batch_size = 64
+            self.n_epoch = 50
+        elif lang == 'en':
+            self.lr = 3e-5
+            self.keep_prob = 0.5
+            self.atten_keep_prob = 0.8
+            self.l2_reg = 0.004
+            self.atten_l2_reg = 0.0
 
-        self.batch_size = 64
-        self.n_epoch = 50
+            self.hidden_dim = 300
+
+            self.batch_size = 64
+            self.n_epoch = 50
 
 
     def define_model(self):
@@ -38,7 +49,7 @@ class Decomposable_Attention_Model(BaseDeepModel):
 
         # Input Encoding
         with tf.name_scope('embedding'):
-            embedding_matrix = self.embedding.get_es_embedding_matrix()
+            embedding_matrix = self.embedding.get_embedding_matrix(self.lang)
             embedding_matrix = tf.Variable(embedding_matrix, trainable=True, name='embedding')
             embedding_matrix_fixed = tf.stop_gradient(embedding_matrix, name='embedding_fixed')
 

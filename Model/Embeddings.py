@@ -19,28 +19,36 @@ class Embeddings():
         self.vec_dim = 300
         self.preprocessor = Preprocess.Preprocess()
 
-    def word2vec(self, word_emb, word, scale, vec_dim):
+    def word2vec(self, word_emb, word, scale, vec_dim, lang):
         unknown_word = np.random.uniform(-scale,scale,vec_dim)
-        if word.endswith('adar') :
-            if word[:-1] in word_emb:
-                res = word_emb[word[:-1]]
-                flag = 0
-            elif word[:-1]+'do' in word_emb:
-                res = word_emb[word[:-1]+'do']
-                flag = 0
-            elif word[:-1]+'ds' in word_emb:
-                res = word_emb[word[:-1]+'ds']
-                flag = 0
-            elif word[:-1]+'os' in word_emb:
-                res = word_emb[word[:-1]+'os']
-                flag = 0
-            elif word[:-1]+'o' in word_emb:
-                res = word_emb[word[:-1]+'ds']
-                flag = 0
-            elif word[:-1]+'s' in word_emb:
-                res = word_emb[word[:-1]+'ds']
-                flag = 0
-        else:
+        if lang == 'es':
+            if word.endswith('adar'):
+                if word[:-1] in word_emb:
+                    res = word_emb[word[:-1]]
+                    flag = 0
+                elif word[:-1]+'do' in word_emb:
+                    res = word_emb[word[:-1]+'do']
+                    flag = 0
+                elif word[:-1]+'ds' in word_emb:
+                    res = word_emb[word[:-1]+'ds']
+                    flag = 0
+                elif word[:-1]+'os' in word_emb:
+                    res = word_emb[word[:-1]+'os']
+                    flag = 0
+                elif word[:-1]+'o' in word_emb:
+                    res = word_emb[word[:-1]+'ds']
+                    flag = 0
+                elif word[:-1]+'s' in word_emb:
+                    res = word_emb[word[:-1]+'ds']
+                    flag = 0
+            else:
+                if word in word_emb:
+                    res = word_emb[word]
+                    flag = 0
+                else:
+                    res = unknown_word
+                    flag = 1
+        if lang == 'en':
             if word in word_emb:
                 res = word_emb[word]
                 flag = 0
@@ -49,16 +57,20 @@ class Embeddings():
                 flag = 1
         return res,flag
 
-    def get_es_embedding_matrix(self):
-        print("ES Embedding!")
+    def get_embedding_matrix(self, lang='es'):
+        print("Embedding!")
 
-        path = config.cache_prefix_path + "es_index2vec.pkl"
+        path = config.cache_prefix_path + lang + "_index2vec.pkl"
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
 
-        word_emb = KeyedVectors.load_word2vec_format(config.ES_EMBEDDING_MATRIX, encoding='utf-8')
-        word2index = self.preprocessor.es2index()
+        if lang == 'es':
+            word_emb = KeyedVectors.load_word2vec_format(config.ES_EMBEDDING_MATRIX, encoding='utf-8')
+        elif lang == 'en':
+            word_emb = KeyedVectors.load_word2vec_format(config.EN_EMBEDDING_MATRIX, encoding='utf-8')
+
+        word2index = self.preprocessor.es2index(lang)
 
 
         vocal_size = len(word2index)
@@ -70,7 +82,7 @@ class Embeddings():
             index = word2index[word]
             if index <= 3:
                 continue
-            vec, flag = self.word2vec(word_emb, word, self.scale, self.vec_dim)
+            vec, flag = self.word2vec(word_emb, word, self.scale, self.vec_dim, lang)
             index2vec[index] = vec
             if flag == 1:
                 unk_count += 1
@@ -80,7 +92,7 @@ class Embeddings():
         print("unknown words count: ", unk_count)
         print("index2vec size: ", len(index2vec))
 
-        with open(config.cache_prefix_path + 'unk_words.pkl', 'wb')  as pkl:
+        with open(config.cache_prefix_path + lang +'_unk_words.pkl', 'wb')  as pkl:
             pickle.dump(unk_words, pkl)
 
         with open(path, 'wb') as pkl:
@@ -123,6 +135,7 @@ class Embeddings():
 
 if __name__ == '__main__':
     embedding = Embeddings()
-    embedding.get_es_embedding_matrix()
-    embedding.doc2vec()
+    #embedding.get_embedding_matrix('en')
+    embedding.get_embedding_matrix('es')
+    # embedding.doc2vec()
 

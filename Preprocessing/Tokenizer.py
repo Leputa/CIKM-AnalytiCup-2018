@@ -138,6 +138,15 @@ class Tokenizer():
         text = re.sub(r"(\d+)k ", lambda m: m.group(1) + '000 ', text)  # e.g. 4k => 4000
         text = re.sub(r"\$(\d+)", lambda m: m.group(1) + ' dollar ', text)
         text = re.sub(r"(\d+)\$", lambda m: m.group(1) + ' dollar ', text)
+        text = re.sub(r"(\d+)cm ", lambda m: m.group(1) + ' cm ', text)
+        text = re.sub(r"(\d+)h ", lambda m: m.group(1) + ' hour ', text)
+        text = re.sub(r"(\d+)hr ", lambda m: m.group(1) + ' hour ', text)
+        text = re.sub(r"(\d+)hrs ", lambda m: m.group(1) + ' hour ', text)
+        text = re.sub(r"(\d+)day ", lambda m: m.group(1) + ' day ', text)
+        text = re.sub(r"(\d+)days ", lambda m: m.group(1) + ' day ', text)
+        text = re.sub(r"(\d+)week ", lambda m: m.group(1) + ' week ', text)
+        text = re.sub(r"(\d+)weeks ", lambda m: m.group(1) + ' week ', text)
+        text = re.sub(r"(\d+)% ", lambda m: m.group(1) + ' percent ', text)
 
         # acronym
         text = re.sub(r"can\'t", "can not", text)
@@ -162,6 +171,7 @@ class Tokenizer():
         text = re.sub(r" e\-mail ", " email ", text)
         text = re.sub(r",000", '000', text)
         text = re.sub(r"\'s", " ", text)
+        text = re.sub(r"didn’t", "do not", text)
 
         # spelling correction
         text = re.sub(r"ph\.d", "phd", text)
@@ -176,7 +186,6 @@ class Tokenizer():
         text = re.sub(r" fb ", " facebook ", text)
         text = re.sub(r"facebooks", " facebook ", text)
         text = re.sub(r"facebooking", " facebook ", text)
-        text = re.sub(r"insidefacebook", "inside facebook", text)
         text = re.sub(r"donald trump", "trump", text)
         text = re.sub(r"the big bang", "big-bang", text)
         text = re.sub(r"the european union", "eu", text)
@@ -237,6 +246,46 @@ class Tokenizer():
         text = re.sub(r"\+", " plus ", text)
         text = re.sub(r"₹", " rs ", text)  # 测试！
         text = re.sub(r"\$", " dollar ", text)
+
+        # other
+        text = re.sub(r"dusputa", " dispute ", text)
+        text = re.sub(r"disputa", " dispute ", text)
+        text = re.sub(r"ispute", " dispute ", text)
+        text = re.sub(r"rewiews", " review ", text)
+        text = re.sub(r"elemnt", " element ", text)
+        text = re.sub(r"trademanager", " trade manager ", text)
+        text = re.sub(r"whait", " what ", text)
+        text = re.sub(r"digits}", " digit ", text)
+        text = re.sub(r"late_", " late ", text)
+        text = re.sub(r"eñ", " en ", text)
+        text = re.sub(r"telephene", " telephone ", text)
+        text = re.sub(r"mp4", " media player ", text)
+        text = re.sub(r"cokies", " cookie ", text)
+        text = re.sub(r"amnazo", " amazon ", text)
+        text = re.sub(r"moneycard", " money card ", text)
+        text = re.sub(r"prodcutes", " product ", text)
+        text = re.sub(r"prudcto", " product ", text)
+        text = re.sub(r"adjustos", " adjust ", text)
+        text = re.sub(r"matercard", " mastercard ", text)
+        text = re.sub(r"3d", " three dimension ", text)
+
+        # ordinal numeral
+        text = re.sub(r"1st", " first ", text)
+        text = re.sub(r"2nd", " second ", text)
+        text = re.sub(r"3rd", " third ", text)
+        text = re.sub(r"4th", " fourth ", text)
+        text = re.sub(r"5th", " fifth ", text)
+        text = re.sub(r"6th", " sixth ", text)
+        text = re.sub(r"7th", " seventh ", text)
+        text = re.sub(r"8th", " eighth ", text)
+        text = re.sub(r"9th", " ninth ", text)
+        text = re.sub(r"10th", " tenth ", text)
+        text = re.sub(r"11th", " eleventh ", text)
+        text = re.sub(r"12th", " twelfth ", text)
+        text = re.sub(r"20th", " twentieth ", text)
+        text = re.sub(r"29th", " twenty-ninth ", text)
+
+
 
         word_list = text.strip().lower().split(" ")
         words = [word for word in word_list if word not in self.punc]

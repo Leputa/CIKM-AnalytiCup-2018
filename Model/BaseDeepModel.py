@@ -15,17 +15,21 @@ from Preprocessing import PowerfulWord
 from Preprocessing import GraphFeature
 
 class BaseDeepModel():
-    def __init__(self):
+    def __init__(self, lang):
         self.preprocessor = Preprocess.Preprocess()
         self.embedding = Embeddings()
         self.Feature = Feature.Feature()
         self.Powerfulwords = PowerfulWord.PowerfulWord()
         self.Graph = GraphFeature.GraphFeature()
+        self.lang = lang
 
+        if lang == 'es':
+            self.sentence_length = self.preprocessor.max_es_length
+        elif lang == 'en':
+            self.sentence_length = self.preprocessor.max_en_length
 
         self.num_classes = 2
         self.eclipse = 1e-10
-        self.sentence_length = self.preprocessor.max_length
         self.vec_dim = self.embedding.vec_dim
 
         self.clip_gradients = False
@@ -75,15 +79,20 @@ class BaseDeepModel():
 
     def get_feature(self, tag, modeltype):
         statistic_feature = self.Feature.addtional_feature(tag, modeltype)
-        if modeltype.startswith('ABCNN'):
+        if modeltype.startswith('ABCNN') or modeltype == 'LexDecomp':
             return statistic_feature
-        if modeltype == 'LexDecomp':
-            powerwords_feature = self.Powerfulwords.addtional_feature(tag, modeltype)
-            return np.hstack([statistic_feature, powerwords_feature])
 
-    def prepare_data(self, tag, modeltype):
-        (train_left, train_right, train_labels) = self.preprocessor.get_es_index_padding('train')
-        (train_left_swap, train_right_swap, train_labels_swap) = self.preprocessor.swap_data('train', 'padding')
+    def prepare_data(self, tag, modeltype, lang):
+        if lang == 'es':
+            (_, _, train_left, train_right, train_labels) = self.preprocessor.get_index_padding('train')
+            (_, _, train_left_swap, train_right_swap, train_labels_swap) = self.preprocessor.swap_data('train', 'padding')
+            (_, _, dev_left, dev_right, dev_labels) = self.preprocessor.get_index_padding('dev')
+        elif lang == 'en':
+            (train_left, train_right, _, _, train_labels) = self.preprocessor.get_index_padding('train')
+            (train_left_swap, train_right_swap, _, _, train_labels_swap) = self.preprocessor.swap_data('train', 'padding')
+            (dev_left, dev_right, _, _, dev_labels) = self.preprocessor.get_index_padding('dev')
+
+
         train_left.extend(train_left_swap)
         train_right.extend(train_right_swap)
         train_labels.extend(train_labels_swap)
@@ -91,11 +100,13 @@ class BaseDeepModel():
         train_features = self.get_feature('train', modeltype)
         train_features = np.vstack([train_features, train_features])
 
-        (dev_left, dev_right, dev_labels) = self.preprocessor.get_es_index_padding('dev')
         dev_features = self.get_feature('dev', modeltype)
 
         if tag == 'train':
-            (dev_left_swap, dev_right_swap, dev_labels_swap) = self.preprocessor.swap_data('dev', 'padding')
+            if lang == 'es':
+                (_, _, dev_left_swap, dev_right_swap, dev_labels_swap) = self.preprocessor.swap_data('dev', 'padding')
+            elif lang == 'en':
+                (dev_left_swap, dev_right_swap, _, _, dev_labels_swap) = self.preprocessor.swap_data('dev', 'padding')
             dev_left.extend(dev_left_swap)
             dev_right.extend(dev_right_swap)
             dev_labels.extend(dev_labels_swap)
@@ -122,14 +133,14 @@ class BaseDeepModel():
     def train(self, tag, model_type):
         print("starting training......")
 
-        save_path = config.save_prefix_path + model_type + '/'
+        save_path = config.save_prefix_path + self.lang + '_' + model_type + '/'
 
         self.define_model()
 
         if tag == 'train':
-            (train_left, train_right, train_labels, train_features), length = self.prepare_data(tag, model_type)
+            (train_left, train_right, train_labels, train_features), length = self.prepare_data(tag, model_type, self.lang)
         elif tag == 'dev':
-            (train_left, train_right, train_labels, train_features), (dev_left, dev_right, dev_labels, dev_features), length = self.prepare_data(tag, model_type)
+            (train_left, train_right, train_labels, train_features), (dev_left, dev_right, dev_labels, dev_features), length = self.prepare_data(tag, model_type, self.lang)
 
         global_steps = tf.Variable(0, name='global_step', trainable=False)
 
@@ -199,10 +210,13 @@ class BaseDeepModel():
                         saver.save(sess, checkpoint_path, global_step = current_step)
 
     def test(self, modeltype):
-        save_path = config.save_prefix_path + modeltype + '/'
+        save_path = config.save_prefix_path + self.lang + '_' + modeltype + '/'
         assert os.path.isdir(save_path)
 
-        test_left, test_right = self.preprocessor.get_es_index_padding('test')
+        if self.lang == 'es':
+            _, _, test_left, test_right = self.preprocessor.get_index_padding('test')
+        elif self.lang == 'en':
+            test_left, test_right, _, _ = self.preprocessor.get_index_padding('test')
         test_features = self.get_feature('test', modeltype)
 
         tf.reset_default_graph()
@@ -222,6 +236,6 @@ class BaseDeepModel():
                 pred = sess.run(self.prediction, feed_dict = test_feed_dict)
                 test_results.extend(pred.tolist())
 
-        with open(config.output_prefix_path + modeltype + '-submit.txt', 'w') as fr:
+        with open(config.output_prefix_path + self.lang + '_' + modeltype + '-submit.txt', 'w') as fr:
             for result in test_results:
                 fr.write(str(result) + '\n')
