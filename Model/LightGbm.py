@@ -5,6 +5,11 @@ from Config import config
 from Model.BaseMlModel import BaseMlModel
 
 import lightgbm as lgb
+import numpy as np
+from scipy.sparse import csc_matrix
+from sklearn.model_selection import KFold
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import log_loss
 
 class LightGbm(BaseMlModel):
 
@@ -60,6 +65,8 @@ class LightGbm(BaseMlModel):
                 'metric': 'binary_logloss',  # binary_logloss
         }
         self.early_stop_rounds = 200
+        self.test_num_rounds = 800
+        self.n_folds = 10
 
 
     def train(self, tag):
@@ -71,7 +78,9 @@ class LightGbm(BaseMlModel):
         lgb_val = lgb.Dataset(data = dev_data, label = dev_labels)
 
         gbm = lgb.train(self.params, lgb_train,
-                        valid_sets=[lgb_train, lgb_val], early_stopping_rounds=self.early_stop_rounds,
+                        valid_sets=[lgb_train, lgb_val],
+                        num_boost_round = 5000,
+                        early_stopping_rounds=self.early_stop_rounds,
                         verbose_eval=1)
 
     def test(self, name):
@@ -90,8 +99,61 @@ class LightGbm(BaseMlModel):
             for sub in submit:
                 fr.write(str(sub) + '\n')
 
+    def cv(self, name):
+        print("交叉验证......")
+        train_data, train_labels, test_data = self.prepare_test_data(name, 'LightGbm')
+        folds = KFold(n_splits=self.n_folds, random_state=2, shuffle=True)
+
+        auc = 0
+        logloss = 0
+
+        oof = np.zeros(train_data.shape[0])
+        sub = np.zeros(test_data.shape[0])
+        lgb_test = lgb.Dataset(test_data)
+
+        train_data = csc_matrix(train_data)     #coo_matrix不能分片
+        train_labels = np.array(train_labels)
+        lgb_train = lgb.Dataset(train_data, label=train_labels)
+
+        for n_fold, (trn_idx, val_idx) in enumerate(folds.split(train_data, train_labels)):
+            watchlist = [
+                lgb_train.subset(trn_idx),
+                lgb_train.subset(val_idx)
+            ]
+            model = lgb.train(
+                params = self.params,
+                train_set = watchlist[0],
+                valid_sets = watchlist,
+                num_boost_round=self.test_num_rounds,
+                verbose_eval = 0,
+
+            )
+            oof[val_idx] = model.predict(train_data[val_idx])
+            tmp_auc = roc_auc_score(train_labels[val_idx], oof[val_idx])
+            tmp_logloss = log_loss(train_labels[val_idx], oof[val_idx])
+            auc += tmp_auc
+            logloss += tmp_logloss
+
+            print("\t Fold %d : %.6f auc and %.6f logloss" % (n_fold + 1, tmp_auc, tmp_logloss))
+
+            sub += model.predict(test_data)
+
+        sub /= self.n_folds
+        auc /= self.n_folds
+
+        print('Averaging auc %.6f and logloss %.6f' % (auc, logloss))
+
+        with open(config.output_prefix_path + 'lightgbm_oof.txt', 'w') as fr:
+            for i in range(len(oof)):
+                fr.write(str(oof[i]) + '\n')
+
+        with open(config.output_prefix_path + 'lightgbm_cv_sub.txt', 'w') as fr:
+            for i in range(len(sub)):
+                fr.write(str(sub[i]) + '\n')
+
 
 if __name__ == "__main__":
     model = LightGbm()
-    #model.train('human_feature')
-    model.test('human_feature')
+    model.train('human_feature')
+    # model.test('human_feature')
+    # model.cv('human_feature')

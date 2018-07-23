@@ -23,7 +23,7 @@ class AB_CNN(BaseDeepModel):
             self.w = 4
             self.l2_reg = 0.001
             self.di = 32                              # The number of convolution kernels
-            self.hidden_dim = 8
+            self.hidden_dim = 256
             self.keep_prob = 0.5
 
             self.num_layers = 2
@@ -296,10 +296,10 @@ class AB_CNN(BaseDeepModel):
 
 if __name__ == '__main__':
     tf.set_random_seed(1)
-    ABCNN = AB_CNN(model_type='ABCNN3', lang='en')
-    # ABCNN.define_model()
+    ABCNN = AB_CNN(model_type='ABCNN3', lang='es')
+    # ABCNN.train('dev', ABCNN.model_type)
     # ABCNN.train('train', ABCNN.model_type)
-    # ABCNN.train('train', ABCNN.model_type)
-    ABCNN.test(ABCNN.model_type)
+    # ABCNN.test(ABCNN.model_type)
+    ABCNN.cv(ABCNN.model_type, 4)
 
 

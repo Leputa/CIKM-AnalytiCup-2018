@@ -237,18 +237,18 @@ class Feature():
                 return pickle.load(pkl)
 
 
-        embedding_matrix = self.embeddings.get_es_embedding_matrix()
+        embedding_matrix = self.embeddings.get_embedding_matrix('es')
 
         # train
-        train_left, train_right, train_labels = self.preprocess.get_es_index_data('train')
+        _, _, train_left, train_right, train_labels = self.preprocess.get_index_data('es')
         train_features = np.hstack([self.deal_average_word2vec(train_left, train_right, embedding_matrix)])
 
         #dev
-        dev_left, dev_right, dev_labels = self.preprocess.get_es_index_data('dev')
+        dev_left, dev_right, dev_labels = self.preprocess.get_index_data('dev')
         dev_features = np.hstack([self.deal_average_word2vec(dev_left, dev_right, embedding_matrix)])
 
         # test
-        test_left, test_right = self.preprocess.get_es_index_data('test')
+        _, _, test_left, test_right = self.preprocess.get_index_data('test')
         test_features = np.hstack([self.deal_average_word2vec(test_left, test_right, embedding_matrix)])
 
         with open(path, 'wb') as pkl:
@@ -420,11 +420,11 @@ class Feature():
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
 
-        embedding_matrix = self.embeddings.get_es_embedding_matrix()
+        embedding_matrix = self.embeddings.get_embedding_matrix('es')
         if tag == 'train' or tag == 'dev':
-            left, right, _ = self.preprocess.get_es_index_data(tag)
+            left, right, _ = self.preprocess.get_index_data(tag)
         elif tag == 'test':
-            left, right = self.preprocess.get_es_index_data(tag)
+            _, _, left, right = self.preprocess.get_index_data(tag)
         left, right = self.deal_average_word2vec(left, right, embedding_matrix)
 
         feature = []

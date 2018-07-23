@@ -7,6 +7,7 @@ from Model.BaseMlModel import BaseMlModel
 from scipy.sparse import csc_matrix
 from sklearn.model_selection import KFold
 from sklearn.metrics import roc_auc_score
+from sklearn.metrics import log_loss
 import numpy as np
 import xgboost as xgb
 
@@ -14,7 +15,7 @@ class Xgboost(BaseMlModel):
 
     def __init__(self):
         super().__init__()
-        self.n_folds = 5
+        self.n_folds = 10
         self.params = {  'booster':'gbtree',
                          'max_depth':6,
                          'eta':0.03,
@@ -35,6 +36,7 @@ class Xgboost(BaseMlModel):
                          'eval_metric':'logloss'
                     }
         self.num_rounds = 5000
+        self.test_num_rounds = 900
         self.early_stop_rounds = 200
 
 
@@ -57,7 +59,7 @@ class Xgboost(BaseMlModel):
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
         xgb_test = xgb.DMatrix(test_data)
 
-        num_rounds = 500
+        num_rounds = 900
         watchlist = [(xgb_train, 'train')]
         model = xgb.train(self.params, xgb_train, num_rounds, watchlist)
 
@@ -68,11 +70,11 @@ class Xgboost(BaseMlModel):
 
     def cv(self, name):
         print("交叉验证......")
-        train_data, train_labels, test_data = self.prepare_test_data(name)
+        train_data, train_labels, test_data = self.prepare_test_data(name, 'Xgboost')
         folds = KFold(n_splits=self.n_folds, random_state=2018, shuffle=True)
 
         auc = 0
-        iter = 0
+        logloss = 0
 
         oof = np.zeros(train_data.shape[0])
         sub = np.zeros(test_data.shape[0])
@@ -96,29 +98,33 @@ class Xgboost(BaseMlModel):
             model = xgb.train(
                 self.params,
                 dtrain,
-                num_boost_round = self.num_rounds,
+                num_boost_round = self.test_num_rounds,
                 evals = watchlist,
-                early_stopping_rounds = self.early_stop_rounds,
-                verbose_eval = 100,
+                verbose_eval = False,
             )
-            oof[val_idx] = model.predict(dvalid, ntree_limit=model.best_iteration)
+            oof[val_idx] = model.predict(dvalid)
             tmp_auc = roc_auc_score(v_labels, oof[val_idx])
+            tmp_loss = log_loss(v_labels, oof[val_idx])
             auc += tmp_auc
+            logloss += tmp_loss
 
-            print("\t Fold %d : %.6f in %3d rounds" % (n_fold + 1, tmp_auc, model.best_iteration))
-            sub += model.predict(dtest, ntree_limit=model.best_iteration)
+            print("\t Fold %d : %.6f auc and %.6f logloss" % (n_fold + 1, tmp_auc, tmp_loss))
+            sub += model.predict(dtest)
 
         sub /= self.n_folds
-        iter /= self.n_folds
-        print('平均迭代次数： ' + str(iter))
+        auc /= self.n_folds
+        logloss /= self.n_folds
 
-        with open(config.output_prefix_path + 'xgboost_oof.txt') as fr:
+        print('Averaging auc %.6f and logloss %.6f' % (auc, logloss))
+
+
+        with open(config.output_prefix_path + 'xgboost_oof.txt', 'w') as fr:
             for i in range(len(oof)):
-                fr.write(str(oof[i]) + '/n')
+                fr.write(str(oof[i]) + '\n')
 
-        with open(config.output_prefix_path + 'xgboost_cv_sub.txt') as fr:
+        with open(config.output_prefix_path + 'xgboost_cv_sub.txt', 'w') as fr:
             for i in range(len(sub)):
-                fr.write(str(sub[i]) + '/n')
+                fr.write(str(sub[i]) + '\n')
 
 
 
@@ -128,9 +134,9 @@ class Xgboost(BaseMlModel):
 
 if __name__ == "__main__":
     model = Xgboost()
-    model.train('human_feature')
+    # model.train('human_feature')
     # model.test('human_feature')
-    # model.cv('human_feature')
+    model.cv('human_feature')
 
 
 
