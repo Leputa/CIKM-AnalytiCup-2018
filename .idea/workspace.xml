@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/Preprocessing/Feature.py" line="644" />
+    <bookmark url="file://$PROJECT_DIR$/Preprocessing/Feature.py" line="643" />
     <bookmark url="file://$PROJECT_DIR$/Model/MatchPyramid.py" line="82" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ae3a264-8b36-41a7-ac72-9518e592d061" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/es_LexDecomp-submit.txt" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Cache/特征检查.ipynb" afterPath="$PROJECT_DIR$/Cache/特征检查.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/BaseDeepModel.py" afterPath="$PROJECT_DIR$/Model/BaseDeepModel.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/Xgboost.py" afterPath="$PROJECT_DIR$/Model/Xgboost.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Output/结果对比.ipynb" afterPath="$PROJECT_DIR$/Output/结果对比.ipynb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/Feature.py" afterPath="$PROJECT_DIR$/Preprocessing/Feature.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/Postprocess.py" afterPath="$PROJECT_DIR$/Preprocessing/Postprocess.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/Tokenizer.py" afterPath="$PROJECT_DIR$/Preprocessing/Tokenizer.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,8 +23,8 @@
       <file leaf-file-name="Feature.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
-              <caret line="1282" column="84" lean-forward="false" selection-start-line="1282" selection-start-column="84" selection-end-line="1282" selection-end-column="84" />
+            <state relative-caret-position="-66">
+              <caret line="96" column="13" lean-forward="true" selection-start-line="96" selection-start-column="13" selection-end-line="96" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -39,30 +33,28 @@
       <file leaf-file-name="PowerfulWord.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/PowerfulWord.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="348">
+            <state relative-caret-position="666">
               <caret line="230" column="114" lean-forward="false" selection-start-line="230" selection-start-column="114" selection-end-line="230" selection-end-column="114" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BaseDeepModel.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model/BaseDeepModel.py">
+      <file leaf-file-name="BaseMlModel.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/BaseMlModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1248">
-              <caret line="279" column="19" lean-forward="false" selection-start-line="279" selection-start-column="19" selection-end-line="279" selection-end-column="19" />
-              <folding>
-                <element signature="e#0#23#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="264">
+              <caret line="120" column="0" lean-forward="true" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Tokenizer.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Tokenizer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Preprocessing/Tokenizer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="538">
-              <caret line="297" column="62" lean-forward="false" selection-start-line="297" selection-start-column="62" selection-end-line="297" selection-end-column="62" />
+            <state relative-caret-position="792">
+              <caret line="110" column="55" lean-forward="true" selection-start-line="110" selection-start-column="55" selection-end-line="110" selection-end-column="55" />
               <folding />
             </state>
           </provider>
@@ -71,8 +63,108 @@
       <file leaf-file-name="Preprocess.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/Preprocess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3655">
-              <caret line="244" column="17" lean-forward="false" selection-start-line="244" selection-start-column="17" selection-end-line="244" selection-end-column="17" />
+            <state relative-caret-position="2454">
+              <caret line="311" column="63" lean-forward="true" selection-start-line="311" selection-start-column="63" selection-end-line="311" selection-end-column="63" />
+              <folding>
+                <marker date="1532444209544" expanded="true" signature="260:14307" ph="..." />
+                <marker date="1532444209544" expanded="true" signature="12887:13436" ph="..." />
+                <marker date="1532444209544" expanded="true" signature="13474:14307" ph="..." />
+                <marker date="1532444209544" expanded="true" signature="13614:13696" ph="..." />
+                <marker date="1532444209544" expanded="true" signature="13713:13772" ph="..." />
+                <marker date="1532444209544" expanded="true" signature="14336:14751" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GraphFeature.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Preprocessing/GraphFeature.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3925">
+              <caret line="362" column="52" lean-forward="true" selection-start-line="362" selection-start-column="52" selection-end-line="362" selection-end-column="52" />
+              <folding>
+                <marker date="1532444209540" expanded="true" signature="276:13364" ph="..." />
+                <marker date="1532444209540" expanded="true" signature="13105:13364" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Config/utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="177">
+              <caret line="143" column="44" lean-forward="true" selection-start-line="143" selection-start-column="44" selection-end-line="143" selection-end-column="44" />
+              <folding>
+                <marker date="1532444209516" expanded="true" signature="3102:6382" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="3200:3203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1532444209516" expanded="true" signature="3651:3755" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="3921:4150" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="4209:4362" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="4422:4623" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="4682:4835" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="4895:5096" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="5167:5572" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="5295:5379" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="5623:5886" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="5734:5869" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="5933:6132" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="6176:6382" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="6409:12152" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="6434:6447" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="6491:6672" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="6500:6616" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1532444209516" expanded="true" signature="6736:7285" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="6745:6886" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1532444209516" expanded="true" signature="6962:7176" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="7018:7176" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="7063:7176" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="7190:7266" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="7350:8012" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="7359:7495" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1532444209516" expanded="true" signature="7571:7886" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="7627:7886" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="7673:7886" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="7723:7886" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="7900:7993" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="8070:8582" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="8079:8228" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1532444209516" expanded="true" signature="8304:8460" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="8474:8563" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="8626:8667" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="8723:9279" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="8732:8925" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1532444209516" expanded="true" signature="9001:9170" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="9057:9170" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="9184:9260" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="9336:9962" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="9345:9533" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1532444209516" expanded="true" signature="9609:9842" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="9665:9842" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="9711:9842" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="9856:9943" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="10020:10753" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="10029:10254" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1532444209516" expanded="true" signature="10330:10631" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="10386:10631" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="10432:10631" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="10482:10631" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="10645:10734" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="10819:11737" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="10828:10869" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1532444209516" expanded="true" signature="11212:11402" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="11429:11737" ph="..." />
+                <marker date="1532444209516" expanded="true" signature="11803:12152" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GoogleTranslation.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Preprocessing/GoogleTranslation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="682">
+              <caret line="43" column="44" lean-forward="false" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -81,38 +173,8 @@
       <file leaf-file-name="Xgboost.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Model/Xgboost.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="21" column="41" lean-forward="false" selection-start-line="21" selection-start-column="41" selection-end-line="21" selection-end-column="41" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Postprocess.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Preprocessing/Postprocess.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="511">
-              <caret line="100" column="39" lean-forward="true" selection-start-line="100" selection-start-column="39" selection-end-line="100" selection-end-column="39" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LightGbm.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model/LightGbm.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="22" column="50" lean-forward="false" selection-start-line="22" selection-start-column="50" selection-end-line="22" selection-end-column="50" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Config/config.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="10" column="44" lean-forward="false" selection-start-line="10" selection-start-column="44" selection-end-line="10" selection-end-column="68" />
+            <state relative-caret-position="462">
+              <caret line="27" column="13" lean-forward="false" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -189,10 +251,10 @@
         <option value="$PROJECT_DIR$/Model/AB-CNN.py" />
         <option value="$PROJECT_DIR$/Model/LightGbm.py" />
         <option value="$PROJECT_DIR$/Model/BaseDeepModel.py" />
-        <option value="$PROJECT_DIR$/Preprocessing/Tokenizer.py" />
-        <option value="$PROJECT_DIR$/Preprocessing/Feature.py" />
         <option value="$PROJECT_DIR$/Model/Xgboost.py" />
         <option value="$PROJECT_DIR$/Preprocessing/Postprocess.py" />
+        <option value="$PROJECT_DIR$/Preprocessing/Feature.py" />
+        <option value="$PROJECT_DIR$/Preprocessing/Tokenizer.py" />
       </list>
     </option>
   </component>
@@ -216,6 +278,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -273,7 +336,6 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -291,7 +353,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Postprocess">
+  <component name="RunManager" selected="Python.Xgboost">
     <configuration default="false" name="Xgboost" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -455,8 +517,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.Postprocess" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Xgboost" />
+        <item index="0" class="java.lang.String" itemvalue="Python.Xgboost" />
+        <item index="1" class="java.lang.String" itemvalue="Python.Postprocess" />
         <item index="2" class="java.lang.String" itemvalue="Python.Feature" />
         <item index="3" class="java.lang.String" itemvalue="Python.Tokenizer" />
         <item index="4" class="java.lang.String" itemvalue="Python.LightGbm" />
@@ -479,24 +541,35 @@
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="960" height="1040" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15148304" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.056144066" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24731183" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32580644" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46828753" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24731183" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15148304" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46828753" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -701,8 +774,69 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Config/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2948">
-          <caret line="141" column="40" lean-forward="false" selection-start-line="141" selection-start-column="40" selection-end-line="141" selection-end-column="40" />
+        <state relative-caret-position="177">
+          <caret line="143" column="44" lean-forward="true" selection-start-line="143" selection-start-column="44" selection-end-line="143" selection-end-column="44" />
+          <folding>
+            <marker date="1532444209516" expanded="true" signature="3102:6382" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="3200:3203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1532444209516" expanded="true" signature="3651:3755" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="3921:4150" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="4209:4362" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="4422:4623" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="4682:4835" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="4895:5096" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="5167:5572" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="5295:5379" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="5623:5886" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="5734:5869" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="5933:6132" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="6176:6382" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="6409:12152" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="6434:6447" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="6491:6672" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="6500:6616" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1532444209516" expanded="true" signature="6736:7285" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="6745:6886" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1532444209516" expanded="true" signature="6962:7176" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="7018:7176" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="7063:7176" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="7190:7266" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="7350:8012" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="7359:7495" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1532444209516" expanded="true" signature="7571:7886" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="7627:7886" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="7673:7886" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="7723:7886" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="7900:7993" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="8070:8582" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="8079:8228" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1532444209516" expanded="true" signature="8304:8460" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="8474:8563" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="8626:8667" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="8723:9279" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="8732:8925" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1532444209516" expanded="true" signature="9001:9170" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="9057:9170" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="9184:9260" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="9336:9962" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="9345:9533" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1532444209516" expanded="true" signature="9609:9842" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="9665:9842" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="9711:9842" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="9856:9943" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="10020:10753" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="10029:10254" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1532444209516" expanded="true" signature="10330:10631" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="10386:10631" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="10432:10631" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="10482:10631" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="10645:10734" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="10819:11737" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="10828:10869" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1532444209516" expanded="true" signature="11212:11402" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="11429:11737" ph="..." />
+            <marker date="1532444209516" expanded="true" signature="11803:12152" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -739,8 +873,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Preprocessing/GraphFeature.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1175">
-          <caret line="356" column="0" lean-forward="false" selection-start-line="356" selection-start-column="0" selection-end-line="356" selection-end-column="0" />
+        <state relative-caret-position="3925">
+          <caret line="362" column="52" lean-forward="true" selection-start-line="362" selection-start-column="52" selection-end-line="362" selection-end-column="52" />
+          <folding>
+            <marker date="1532444209540" expanded="true" signature="276:13364" ph="..." />
+            <marker date="1532444209540" expanded="true" signature="13105:13364" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -753,8 +891,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Preprocessing/GoogleTranslation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="946">
+        <state relative-caret-position="682">
           <caret line="43" column="44" lean-forward="false" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -772,19 +911,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model/BaseMlModel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2845">
-          <caret line="12" column="41" lean-forward="false" selection-start-line="12" selection-start-column="41" selection-end-line="12" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Model/Embeddings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="675">
           <caret line="138" column="38" lean-forward="false" selection-start-line="138" selection-start-column="38" selection-end-line="138" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -817,15 +947,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="484">
           <caret line="22" column="50" lean-forward="false" selection-start-line="22" selection-start-column="50" selection-end-line="22" selection-end-column="50" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Preprocessing/Preprocess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3655">
-          <caret line="244" column="17" lean-forward="false" selection-start-line="244" selection-start-column="17" selection-end-line="244" selection-end-column="17" />
-          <folding />
+        <state relative-caret-position="2454">
+          <caret line="311" column="63" lean-forward="true" selection-start-line="311" selection-start-column="63" selection-end-line="311" selection-end-column="63" />
+          <folding>
+            <marker date="1532444209544" expanded="true" signature="260:14307" ph="..." />
+            <marker date="1532444209544" expanded="true" signature="12887:13436" ph="..." />
+            <marker date="1532444209544" expanded="true" signature="13474:14307" ph="..." />
+            <marker date="1532444209544" expanded="true" signature="13614:13696" ph="..." />
+            <marker date="1532444209544" expanded="true" signature="13713:13772" ph="..." />
+            <marker date="1532444209544" expanded="true" signature="14336:14751" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -839,42 +975,49 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Preprocessing/Postprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="511">
+          <caret line="100" column="39" lean-forward="true" selection-start-line="100" selection-start-column="39" selection-end-line="100" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/Xgboost.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="27" column="13" lean-forward="false" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Preprocessing/PowerfulWord.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
+        <state relative-caret-position="666">
           <caret line="230" column="114" lean-forward="false" selection-start-line="230" selection-start-column="114" selection-end-line="230" selection-end-column="114" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/Tokenizer.py">
+    <entry file="file://$PROJECT_DIR$/Model/BaseMlModel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="538">
-          <caret line="297" column="62" lean-forward="false" selection-start-line="297" selection-start-column="62" selection-end-line="297" selection-end-column="62" />
+        <state relative-caret-position="264">
+          <caret line="120" column="0" lean-forward="true" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="1282" column="84" lean-forward="false" selection-start-line="1282" selection-start-column="84" selection-end-line="1282" selection-end-column="84" />
+        <state relative-caret-position="-66">
+          <caret line="96" column="13" lean-forward="true" selection-start-line="96" selection-start-column="13" selection-end-line="96" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model/Xgboost.py">
+    <entry file="file://$PROJECT_DIR$/Preprocessing/Tokenizer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="21" column="41" lean-forward="false" selection-start-line="21" selection-start-column="41" selection-end-line="21" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/Postprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="511">
-          <caret line="100" column="39" lean-forward="true" selection-start-line="100" selection-start-column="39" selection-end-line="100" selection-end-column="39" />
+        <state relative-caret-position="792">
+          <caret line="110" column="55" lean-forward="true" selection-start-line="110" selection-start-column="55" selection-end-line="110" selection-end-column="55" />
           <folding />
         </state>
       </provider>

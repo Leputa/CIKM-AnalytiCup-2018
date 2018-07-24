@@ -236,7 +236,6 @@ class Feature():
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
 
-
         embedding_matrix = self.embeddings.get_embedding_matrix('es')
 
         # train
@@ -856,6 +855,37 @@ class Feature():
             pickle.dump((idf, q_set), pkl)
         return idf, q_set
 
+    def get_idf_dis(self, tag):
+        def extract_row(sen1, sen2, idf):
+            words = {}
+            for word in (sen1 + sen2):
+                if word not in words:
+                    words[word] = len(words) - 1
+            sen_vec_1 = [0 for i in range(len(words))]
+            sen_vec_2 = [0 for i in range(len(words))]
+            for word in sen1:
+                sen_vec_1[words[word]] = idf.get(word, 0)
+            for word in sen2:
+                sen_vec_2[words[word]] = idf.get(word, 0)
+            return [tool.cos_sim(np.array(sen_vec_1), np.array(sen_vec_2))]
+
+        print('getting tfidf distance......')
+        path = config.cache_prefix_path + tag + '_idf_dis.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        idf, _ = self.add_idf_dic()
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(left[i], right[i], idf))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
 
     def get_tfidf_word_share(self, tag):
         def extract_row(q1_words, q2_words, idf):
@@ -1223,6 +1253,10 @@ class Feature():
 
         print("getting same subgraph feature")
         path = config.cache_prefix_path + tag + "_subgraph.pkl"
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
         graph_result = [[['impuesto']],
                         [['cómo'], ['reporto', 'enviar', 'informar', 'reportar', 'informo'], ['proveedor']],
                         [['hacer', 'cómo'], ['pedido']], [['bancaria']],
@@ -1276,7 +1310,7 @@ class Feature():
         # inter_pos = self.get_inter_pos(tag)
         # w2v_sim_dist = self.get_w2v_feature(tag)
         # nmf_sim = self.get_nmf_sim(tag)
-        sub_graph = self.get_same_subgraph_feature(tag)
+        # sub_graph = self.get_same_subgraph_feature(tag)
 
         if modeltype == 'Xgboost' or modeltype == 'LightGbm' or modeltype == 'FM_FTRL':
             return np.hstack([lsa_sim, tfidf_char_sim, word_share, doc2vec_sim, word2vec_sim, length, length_diff, length_diff_rate, \
