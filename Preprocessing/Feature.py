@@ -1174,6 +1174,76 @@ class Feature():
         return feature
 
 
+    def get_same_subgraph_feature(self, tag):
+        def sentenceInSetByPeopelGraphResult(sen, graph_result):
+            for sub_graph in graph_result:
+                flag = 0
+                for ansSection in sub_graph:
+                    for orWord in sub_graph:
+                        if orWord in sen:
+                            flag += 1
+                            break
+                if flag == len(sub_graph):
+                    return True
+            return False
+
+        def bothSentencesInSameSubGraph(graph_result, sen1, sen2):
+            if sentenceInSetByPeopelGraphResult(sen1, graph_result) and sentenceInSetByPeopelGraphResult(sen2, graph_result):
+                return True
+            return False
+
+        def singleSentencesInSameSubGraph(graph_result, sen1, sen2):
+            if (sentenceInSetByPeopelGraphResult(sen1, graph_result) and not sentenceInSetByPeopelGraphResult(sen2, graph_result)) or (
+                not sentenceInSetByPeopelGraphResult(sen1, graph_result) and sentenceInSetByPeopelGraphResult(sen2, graph_result)):
+                return True
+            return False
+
+        def noneSentencesInSameSubGraph(graph_result, sen1, sen2):
+            if sentenceInSetByPeopelGraphResult(sen1, graph_result) or sentenceInSetByPeopelGraphResult(sen2, graph_result):
+                return False
+            return True
+
+        def extract_row(graph_result, sen1, sen2):
+            bothInSameSubGraph = 0
+            singleInSameSubGraph = 0
+            noneInSameSubGraph = 0
+
+            if bothSentencesInSameSubGraph(graph_result, sen1, sen2):
+                bothInSameSubGraph = 1
+            if singleSentencesInSameSubGraph(graph_result, sen1, sen2):
+                singleInSameSubGraph = 1
+            if noneSentencesInSameSubGraph(graph_result, sen1, sen2):
+                noneInSameSubGraph = 1
+            fs = []
+            fs.append(bothInSameSubGraph)
+            fs.append(singleInSameSubGraph)
+            fs.append(noneInSameSubGraph)
+            return fs
+
+
+        print("getting same subgraph feature")
+        path = config.cache_prefix_path + tag + "_subgraph.pkl"
+        graph_result = [[['impuesto']],
+                        [['cómo'], ['reporto', 'enviar', 'informar', 'reportar', 'informo'], ['proveedor']],
+                        [['hacer', 'cómo'], ['pedido']], [['bancaria']],
+                        [['Quiero'], ['pagar']], [['no', 'ni', 'nunca'], ['pedido']], [['Donde'], ['cupones']],
+                        [['número'], ['teléfono']], [['recibir'], ['pedido']],
+                        [['recibir', 'recibir'], ['no', 'ni', 'nunca']], [['confiable'], ['vendedor', 'proveedor']],
+                        [['protección'], ['comprador', 'compra']], [['mi'], ['preguntar']]]
+
+        left, right = self.load_left_right(tag)
+        feature = []
+
+        for i in tqdm(range(len(left))):
+            feature.append(extract_row(graph_result, left[i], right[i]))
+
+        feature = np.array(feature)
+        with open(path, 'wb') as pkl:
+            pickle.dump(feature, pkl)
+        return feature
+
+
+
 
     def addtional_feature(self, tag, modeltype):
 
@@ -1206,6 +1276,7 @@ class Feature():
         # inter_pos = self.get_inter_pos(tag)
         # w2v_sim_dist = self.get_w2v_feature(tag)
         # nmf_sim = self.get_nmf_sim(tag)
+        sub_graph = self.get_same_subgraph_feature(tag)
 
         if modeltype == 'Xgboost' or modeltype == 'LightGbm' or modeltype == 'FM_FTRL':
             return np.hstack([lsa_sim, tfidf_char_sim, word_share, doc2vec_sim, word2vec_sim, length, length_diff, length_diff_rate, \
@@ -1242,6 +1313,9 @@ if __name__ == '__main__':
     # feature.get_w2v_feature('train')
     # feature.get_w2v_feature('dev')
     # feature.get_w2v_feature('test')
-    feature.get_nmf_sim('train')
-    feature.get_nmf_sim('dev')
-    feature.get_nmf_sim('test')
+    # feature.get_nmf_sim('train')
+    # feature.get_nmf_sim('dev')
+    # feature.get_nmf_sim('test')
+    feature.get_same_subgraph_feature('train')
+    feature.get_same_subgraph_feature('dev')
+    feature.get_same_subgraph_feature('test')

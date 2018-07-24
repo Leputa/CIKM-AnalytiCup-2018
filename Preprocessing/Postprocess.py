@@ -76,10 +76,37 @@ class Postprocess():
 
         print('ending...')
 
+    def rescale(self, filename):
+        def adj(x, te, tr):
+            a = te / tr
+            b = (1 - te) / (1 - tr)
+            return a * x / (a * x + b * (1 - x))
+
+        print("rescale......")
+        sub = []
+        with open(config.output_prefix_path + filename, 'r') as fr:
+            lines = fr.readlines()
+            for line in lines:
+                sub.append(float(line.strip()))
+
+        if filename ==  'ABCNN3-submit——0.40833.txt':
+            sub_rescale = [adj(s, 0.12, 0.27) for s in sub]
+        elif filename == 'xgboost_human_feature-summit——0.40224.txt':
+            sub_rescale = [adj(s, 0.12, 0.235) for s in sub]
+        elif filename == 'LexDecomp-submit——0.41079.txt':
+            sub_rescale = [adj(s, 0.12, 0.247) for s in sub]
+
+        with open(config.output_prefix_path + filename.split('-')[0] + '-rescale.txt', 'w') as fr:
+            for s in sub_rescale:
+                fr.write(str(s) + '\n')
+
+
+
 
 
 
 if __name__ == '__main__':
     postprocess = Postprocess()
-    postprocess.graph_revise(config.output_prefix_path + 'xgboost_human_feature-summit——0.40857.txt')
+    #postprocess.graph_revise(config.output_prefix_path + 'xgboost_human_feature-summit——0.40857.txt')
     #postprocess.assert_zero('dev')
+    postprocess.rescale('xgboost_human_feature-summit——0.40224.txt')

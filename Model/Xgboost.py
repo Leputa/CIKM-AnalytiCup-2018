@@ -23,7 +23,7 @@ class Xgboost(BaseMlModel):
                          # 'subsample_for_bin':50000,
                          'objective':'binary:logistic',
                          # 'min_split_gain':0,
-                         #'min_child_weight':5,
+                         # 'min_child_weight':5,
                          'subsample':0.7,
                          'colsample_bytree':0.7,
                          'lambda':10,  # 控制模型复杂度的权重值的L2正则化项参数，参数越大，模型越不容易过拟合。
@@ -134,9 +134,9 @@ class Xgboost(BaseMlModel):
 
 if __name__ == "__main__":
     model = Xgboost()
-    # model.train('human_feature')
+    model.train('human_feature')
     # model.test('human_feature')
-    model.cv('human_feature')
+    # model.cv('human_feature')
 
 
 

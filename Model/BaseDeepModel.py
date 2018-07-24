@@ -249,6 +249,7 @@ class BaseDeepModel():
                 fr.write(str(result) + '\n')
 
 
+    # cv后结果反而下降了，奇怪
     def cv(self, model_type, n_epoch):
         print("starting training......")
 
