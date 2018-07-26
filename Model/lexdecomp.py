@@ -16,10 +16,9 @@ class LexDecomp(BaseDeepModel):
 
         self.model_type = 'LexDecomp'
         if lang == 'es':
-            self.lr = 0.001
+            self.lr = 0.0008
             self.batch_size = 64
-            self.n_epoch = 2
-
+            self.n_epoch = 15
 
             self.num_features = self.get_feature_num(self.model_type)
             self.w = 4
@@ -239,9 +238,9 @@ if __name__ == '__main__':
     tf.set_random_seed(1024)
     np.random.seed(1024)
     model = LexDecomp(lang='es')
-    # model.train('dev', model.model_type)
-    model.train('train', model.model_type)
-    model.test(model.model_type)
+    model.train('dev', model.model_type)
+    # model.train('train', model.model_type)
+    # model.test(model.model_type)
     # model.cv(model.model_type, 3)
 
 

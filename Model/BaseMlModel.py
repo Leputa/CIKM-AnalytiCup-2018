@@ -89,11 +89,11 @@ class BaseMlModel():
             words_train_feature = coo_matrix(self.Powerfulwords.addtional_feature('train', modeltype))
             words_dev_features = coo_matrix(self.Powerfulwords.addtional_feature('dev', modeltype))
 
-            # graph_train_feature = coo_matrix(self.Graph.add_addtional_feature('train', 'char_sim'))
-            # graph_dev_feature =coo_matrix(self.Graph.add_addtional_feature('dev', 'char_sim'))
+            graph_train_feature = coo_matrix(self.Graph.add_addtional_feature('train', 'char_sim'))
+            graph_dev_feature =coo_matrix(self.Graph.add_addtional_feature('dev', 'char_sim'))
 
-            train_data = hstack([char_train_data, word_train_data, train_feature, words_train_feature])
-            dev_data = hstack([char_dev_data, word_dev_data, dev_feature, words_dev_features])
+            train_data = hstack([char_train_data, word_train_data, train_feature, words_train_feature, graph_train_feature.astype('float')])
+            dev_data = hstack([char_dev_data, word_dev_data, dev_feature, words_dev_features, graph_dev_feature.astype('float')])
 
         return train_data, train_labels, dev_data, dev_labels
 
@@ -154,14 +154,14 @@ class BaseMlModel():
             words_train_feature = vstack([words_train_feature, words_dev_feature])
             words_test_feature = coo_matrix(self.Powerfulwords.addtional_feature('test', modeltype))
 
-            # graph_train_feature = coo_matrix(self.Graph.add_addtional_feature('train', 'char_sim'))
-            # graph_dev_feature = coo_matrix(self.Graph.add_addtional_feature('dev', 'char_sim'))
-            #
-            # graph_train_feature = vstack([graph_train_feature.astype('float'), graph_dev_feature.astype('float')])
-            # graph_test_feature = coo_matrix(self.Graph.add_addtional_feature('test', 'char_sim'))
+            graph_train_feature = coo_matrix(self.Graph.add_addtional_feature('train', 'char_sim'))
+            graph_dev_feature = coo_matrix(self.Graph.add_addtional_feature('dev', 'char_sim'))
 
-            train_data = hstack([train_data, train_feature, words_train_feature]) # graph_train_feature.astype('float')
-            test_data = hstack([char_test_data, word_test_data, test_feature, words_test_feature]) #graph_test_feature.astype('float')
+            graph_train_feature = vstack([graph_train_feature.astype('float'), graph_dev_feature.astype('float')])
+            graph_test_feature = coo_matrix(self.Graph.add_addtional_feature('test', 'char_sim')).astype('float')
+
+            train_data = hstack([train_data, train_feature, words_train_feature, graph_train_feature])
+            test_data = hstack([char_test_data, word_test_data, test_feature, words_test_feature, graph_test_feature])
 
             del char_train_data, char_dev_data, dev_labels, char_test_data, word_train_data, word_test_data, word_dev_data
 

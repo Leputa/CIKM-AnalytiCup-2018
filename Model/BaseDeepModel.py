@@ -122,11 +122,6 @@ class BaseDeepModel():
             train_features = np.vstack([train_features, dev_features])
 
         length = len(train_left)
-        # shuffle_index = np.random.permutation(length)
-        # train_left = np.array(train_left)[shuffle_index]
-        # train_right = np.array(train_right)[shuffle_index]
-        # train_labels = np.array(train_labels)[shuffle_index]
-        # train_features = train_features[shuffle_index]
         train_left = np.array(train_left)
         train_right = np.array(train_right)
         train_labels = np.array(train_labels)
@@ -149,6 +144,12 @@ class BaseDeepModel():
             (train_left, train_right, train_labels, train_features), length = self.prepare_data(tag, model_type, self.lang)
         elif tag == 'dev':
             (train_left, train_right, train_labels, train_features), (dev_left, dev_right, dev_labels, dev_features), length = self.prepare_data(tag, model_type, self.lang)
+
+        shuffle_index = np.random.permutation(length)
+        train_left = np.array(train_left)[shuffle_index]
+        train_right = np.array(train_right)[shuffle_index]
+        train_labels = np.array(train_labels)[shuffle_index]
+        train_features = train_features[shuffle_index]
 
         global_steps = tf.Variable(0, name='global_step', trainable=False)
 

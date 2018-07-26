@@ -33,10 +33,10 @@ class Xgboost(BaseMlModel):
                          'silent':True,
                          'gamma': 0.1,
                          #'scale_pos_weight': 0.25,  #测试的时候应该是0.12
-                         'eval_metric':'logloss'
+                         'eval_metric':'auc'
                     }
         self.num_rounds = 5000
-        self.test_num_rounds = 900
+        self.test_num_rounds = 800
         self.early_stop_rounds = 200
 
 
@@ -59,12 +59,11 @@ class Xgboost(BaseMlModel):
         xgb_train = xgb.DMatrix(train_data, label=train_labels)
         xgb_test = xgb.DMatrix(test_data)
 
-        num_rounds = 900
         watchlist = [(xgb_train, 'train')]
-        model = xgb.train(self.params, xgb_train, num_rounds, watchlist)
+        model = xgb.train(self.params, xgb_train, self.test_num_rounds, watchlist)
 
         submit = model.predict(xgb_test)
-        with open(config.output_prefix_path + str(num_rounds) + '_xgboost_' +name +'-summit.txt', 'w') as fr:
+        with open(config.output_prefix_path + str(self.test_num_rounds) + '_xgboost_' +name +'-summit.txt', 'w') as fr:
             for sub in submit:
                 fr.write(str(sub) + '\n')
 
@@ -134,8 +133,8 @@ class Xgboost(BaseMlModel):
 
 if __name__ == "__main__":
     model = Xgboost()
-    model.train('human_feature')
-    # model.test('human_feature')
+    # model.train('human_feature')
+    model.test('human_feature')
     # model.cv('human_feature')
 
 

@@ -59,7 +59,8 @@ class Tokenizer():
         text = re.sub(r"(\d+)% ", lambda m: m.group(1) + ' por ciento ', text)
         text = re.sub(r"(\d+)cm ", lambda m: m.group(1) + ' cm ', text)
         text = re.sub(r"(\d+)€ ", lambda m: m.group(1) + ' euro ', text)
-        text = re.sub('(\d+)anos', lambda m: m.group(1) + u' anos ', text)
+        text = re.sub('(\d+)anos', lambda m: m.group(1) + ' anos ', text)
+        text = re.sub('(\d+)usd', lambda m: m.group(1) + ' usd ', text)
 
         # digit
         text = re.sub(r" 0 ", " cero ", text)
@@ -104,8 +105,6 @@ class Tokenizer():
         text = re.sub('(\d+)-(\d+)-(\d+)', 'fecha', text)
         text = re.sub('-', ' ', text)
         text = re.sub('e-mail|@', ' email ', text)
-        text = re.sub(r" e \- mail ", " email ", text)
-        text = re.sub(r" e\-mail ", " email ", text)
         text = re.sub(r" imail ", " email ", text)
         text = re.sub(r" 3d ", " tridimensional ", text)
         text = re.sub(r" mp4 ", " el jugadores ", text)
@@ -288,8 +287,6 @@ class Tokenizer():
         text = re.sub(r"12th", " twelfth ", text)
         text = re.sub(r"20th", " twentieth ", text)
         text = re.sub(r"29th", " twenty-ninth ", text)
-
-
 
         word_list = text.strip().lower().split(" ")
         words = [word for word in word_list if word not in self.punc]

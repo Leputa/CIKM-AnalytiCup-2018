@@ -11,23 +11,24 @@ class WordDict():
         self.En2IndexDic = {}
         self.Es2IndexDic = {}
 
-        self.special_word = ['<Padding>','<UNKNOWN>', '<DIGITS>', '<ID>']
+        self.special_word = ['<Padding>','<UNKNOWN>', '<DIGITS>', 'id']
         for i, word in enumerate(self.special_word):
             self.En2IndexDic[word] = i
             self.Es2IndexDic[word] = i
 
     def add_word(self, word, tag):
-        if word.isdigit() and len(word) < 10:
+        if word.isdigit() and len(word) < 8:
             if tag == 'es':
                 self.Es2IndexDic[word] = 2
             elif tag == 'en':
                 self.En2IndexDic[word] = 2
 
-        elif any(ch in string.digits for ch in word)==True and len(word)>=10:
+        elif any(ch in string.digits for ch in word)==True and len(word) >= 8:
             if tag == 'es':
                 self.Es2IndexDic[word] = 3
             elif tag == 'en':
                 self.En2IndexDic[word] = 3
+
         else:
             if tag == 'es':
                 if self.Es2IndexDic.get(word) == None:
