@@ -295,8 +295,8 @@ class AB_CNN(BaseDeepModel):
 
 
 if __name__ == '__main__':
-    np.random.seed(1)
-    tf.set_random_seed(1)
+    np.random.seed(2018)
+    tf.set_random_seed(2018)
     ABCNN = AB_CNN(model_type='ABCNN3', lang='es')
     ABCNN.train('dev', ABCNN.model_type)
     # ABCNN.train('train', ABCNN.model_type)

@@ -59,8 +59,8 @@ class Tokenizer():
         text = re.sub(r"(\d+)% ", lambda m: m.group(1) + ' por ciento ', text)
         text = re.sub(r"(\d+)cm ", lambda m: m.group(1) + ' cm ', text)
         text = re.sub(r"(\d+)€ ", lambda m: m.group(1) + ' euro ', text)
-        text = re.sub('(\d+)anos', lambda m: m.group(1) + ' anos ', text)
-        text = re.sub('(\d+)usd', lambda m: m.group(1) + ' usd ', text)
+        text = re.sub(r'(\d+)anos', lambda m: m.group(1) + ' anos ', text)
+        text = re.sub(r'(\d+)usd', lambda m: m.group(1) + ' usd ', text)
 
         # digit
         text = re.sub(r" 0 ", " cero ", text)

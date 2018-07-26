@@ -311,6 +311,87 @@ class Preprocess():
             pickle.dump((es, en), pkl)
         return (es, en)
 
+    def load_replace_translation_data(self):
+        print("loading replace translation data")
+
+        path = config.cache_prefix_path + 'replace_translation_token.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        es, en = self.load_translation_data()
+        all_unigram_cnt = self.generate_unigram()
+        all_bigram_cnt = self.generate_bigram()
+        lack_words_set = self.get_lack_words_set()
+        word_candidate_dic = self.get_candidate_words()
+
+        for i in tqdm(range(len(es))):
+            s = es[i]
+            s = ['/s'] + s + ['/s']
+            for j in range(1, len(s)-1):
+                if s[j] in lack_words_set:
+                    cand_words = word_candidate_dic.get(s[j])
+                    if cand_words == None:
+                        continue
+                    elif len(cand_words) == 1:
+                        s[j] = cand_words[0]
+                    else:
+                        maxlike_word = None
+                        max_proba = 0
+                        for cw in cand_words:
+                            bigram_word1 = s[j] + '_' + cw
+                            bigram_word2 = cw + '_' + s[j]
+                            proba = (all_bigram_cnt.get(bigram_word1, 0) + 1) * (all_bigram_cnt.get(bigram_word2, 0) + 1)
+                            if proba > max_proba:
+                                max_proba = proba
+                                maxlike_word = cw
+                            if proba == max_proba:
+                                if all_unigram_cnt[cw] > all_unigram_cnt[maxlike_word]:
+                                    maxlike_word = cw
+                        s[j] = maxlike_word
+            es[i] = s[1:-1]
+
+        with open(path, 'wb') as pkl:
+            pickle.dump((es, en), pkl)
+
+        return es
+
+    def load_all_replace_data(self):
+        print('loading all replace spanish&english')
+
+        path = config.cache_prefix_path + 'replace_all_token.pkl'
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl:
+                return pickle.load(pkl)
+
+        en = []
+        es = []
+
+        en_left_train, en_right_train, es_left_train, es_right_train, _ = self.replace_words('train')
+        en_left_dev, en_right_dev, es_left_dev, es_right_dev, _ = self.replace_words('dev')
+        en_left_test, en_right_test, es_left_test, es_right_test = self.replace_words('test')
+
+        es_trans, en_trans = self.load_replace_translation_data()
+
+        en.extend(en_left_train)
+        en.extend(en_right_train)
+        en.extend(en_left_dev)
+        en.extend(en_right_dev)
+        en.extend(en_left_test)
+        en.extend(en_right_test)
+        en.extend(en_trans)
+
+        es.extend(es_left_train)
+        es.extend(es_right_train)
+        es.extend(es_left_dev)
+        es.extend(es_right_dev)
+        es.extend(es_left_test)
+        es.extend(es_right_test)
+        es.extend(es_trans)
+
+        with open(path, 'wb') as pkl:
+            pickle.dump((es, en), pkl)
+        return es, en
 
     def load_all_data(self):
         print('loading all spanish&english')
@@ -579,6 +660,8 @@ if __name__ == '__main__':
     # p.get_length('train')
     # p.get_length('dev')
     # p.get_length('test')
-    p.replace_words('train')
-    p.replace_words('dev')
-    p.replace_words('test')
+    # p.replace_words('train')
+    # p.replace_words('dev')
+    # p.replace_words('test')
+    p.load_replace_translation_data()
+    p.load_all_replace_data()

@@ -6,8 +6,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ae3a264-8b36-41a7-ac72-9518e592d061" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/Feature.py" afterPath="$PROJECT_DIR$/Preprocessing/Feature.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/AB-CNN.py" afterPath="$PROJECT_DIR$/Model/AB-CNN.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/Preprocess.py" afterPath="$PROJECT_DIR$/Preprocessing/Preprocess.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/Tokenizer.py" afterPath="$PROJECT_DIR$/Preprocessing/Tokenizer.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,9 +23,21 @@
       <file leaf-file-name="Feature.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-66">
-              <caret line="96" column="13" lean-forward="true" selection-start-line="96" selection-start-column="13" selection-end-line="96" selection-end-column="13" />
+            <state relative-caret-position="22">
+              <caret line="96" column="13" lean-forward="false" selection-start-line="96" selection-start-column="13" selection-end-line="96" selection-end-column="13" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AB-CNN.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="115">
+              <caret line="280" column="34" lean-forward="false" selection-start-line="280" selection-start-column="34" selection-end-line="280" selection-end-column="34" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -33,7 +45,7 @@
       <file leaf-file-name="PowerfulWord.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/PowerfulWord.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="666">
+            <state relative-caret-position="5060">
               <caret line="230" column="114" lean-forward="false" selection-start-line="230" selection-start-column="114" selection-end-line="230" selection-end-column="114" />
               <folding />
             </state>
@@ -43,36 +55,39 @@
       <file leaf-file-name="BaseMlModel.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Model/BaseMlModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="120" column="0" lean-forward="true" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
+            <state relative-caret-position="2640">
+              <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Tokenizer.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Tokenizer.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/Tokenizer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="792">
-              <caret line="110" column="55" lean-forward="true" selection-start-line="110" selection-start-column="55" selection-end-line="110" selection-end-column="55" />
+            <state relative-caret-position="528">
+              <caret line="71" column="45" lean-forward="false" selection-start-line="71" selection-start-column="45" selection-end-line="71" selection-end-column="45" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Preprocess.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="lexdecomp.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/lexdecomp.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4862">
+              <caret line="224" column="32" lean-forward="false" selection-start-line="224" selection-start-column="32" selection-end-line="224" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Preprocess.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Preprocessing/Preprocess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2454">
-              <caret line="311" column="63" lean-forward="true" selection-start-line="311" selection-start-column="63" selection-end-line="311" selection-end-column="63" />
-              <folding>
-                <marker date="1532444209544" expanded="true" signature="260:14307" ph="..." />
-                <marker date="1532444209544" expanded="true" signature="12887:13436" ph="..." />
-                <marker date="1532444209544" expanded="true" signature="13474:14307" ph="..." />
-                <marker date="1532444209544" expanded="true" signature="13614:13696" ph="..." />
-                <marker date="1532444209544" expanded="true" signature="13713:13772" ph="..." />
-                <marker date="1532444209544" expanded="true" signature="14336:14751" ph="..." />
-              </folding>
+            <state relative-caret-position="343">
+              <caret line="377" column="30" lean-forward="true" selection-start-line="377" selection-start-column="30" selection-end-line="377" selection-end-column="30" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -80,82 +95,9 @@
       <file leaf-file-name="GraphFeature.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/GraphFeature.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3925">
-              <caret line="362" column="52" lean-forward="true" selection-start-line="362" selection-start-column="52" selection-end-line="362" selection-end-column="52" />
-              <folding>
-                <marker date="1532444209540" expanded="true" signature="276:13364" ph="..." />
-                <marker date="1532444209540" expanded="true" signature="13105:13364" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Config/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="143" column="44" lean-forward="true" selection-start-line="143" selection-start-column="44" selection-end-line="143" selection-end-column="44" />
-              <folding>
-                <marker date="1532444209516" expanded="true" signature="3102:6382" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="3200:3203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1532444209516" expanded="true" signature="3651:3755" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="3921:4150" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="4209:4362" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="4422:4623" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="4682:4835" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="4895:5096" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="5167:5572" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="5295:5379" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="5623:5886" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="5734:5869" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="5933:6132" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="6176:6382" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="6409:12152" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="6434:6447" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="6491:6672" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="6500:6616" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1532444209516" expanded="true" signature="6736:7285" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="6745:6886" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1532444209516" expanded="true" signature="6962:7176" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="7018:7176" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="7063:7176" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="7190:7266" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="7350:8012" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="7359:7495" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1532444209516" expanded="true" signature="7571:7886" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="7627:7886" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="7673:7886" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="7723:7886" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="7900:7993" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="8070:8582" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="8079:8228" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1532444209516" expanded="true" signature="8304:8460" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="8474:8563" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="8626:8667" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="8723:9279" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="8732:8925" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1532444209516" expanded="true" signature="9001:9170" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="9057:9170" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="9184:9260" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="9336:9962" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="9345:9533" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1532444209516" expanded="true" signature="9609:9842" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="9665:9842" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="9711:9842" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="9856:9943" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="10020:10753" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="10029:10254" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1532444209516" expanded="true" signature="10330:10631" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="10386:10631" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="10432:10631" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="10482:10631" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="10645:10734" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="10819:11737" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="10828:10869" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1532444209516" expanded="true" signature="11212:11402" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="11429:11737" ph="..." />
-                <marker date="1532444209516" expanded="true" signature="11803:12152" ph="..." />
-              </folding>
+            <state relative-caret-position="7964">
+              <caret line="362" column="52" lean-forward="false" selection-start-line="362" selection-start-column="52" selection-end-line="362" selection-end-column="52" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -163,7 +105,7 @@
       <file leaf-file-name="GoogleTranslation.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/GoogleTranslation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="682">
+            <state relative-caret-position="946">
               <caret line="43" column="44" lean-forward="false" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
               <folding />
             </state>
@@ -244,22 +186,22 @@
         <option value="$PROJECT_DIR$/Model/Blending.py" />
         <option value="$PROJECT_DIR$/Preprocessing/GoogleTranslation.py" />
         <option value="$PROJECT_DIR$/Model/Embeddings.py" />
-        <option value="$PROJECT_DIR$/Preprocessing/Preprocess.py" />
         <option value="$PROJECT_DIR$/Model/Decom.py" />
         <option value="$PROJECT_DIR$/Model/BaseMlModel.py" />
         <option value="$PROJECT_DIR$/Model/lexdecomp.py" />
-        <option value="$PROJECT_DIR$/Model/AB-CNN.py" />
         <option value="$PROJECT_DIR$/Model/LightGbm.py" />
         <option value="$PROJECT_DIR$/Model/BaseDeepModel.py" />
         <option value="$PROJECT_DIR$/Model/Xgboost.py" />
         <option value="$PROJECT_DIR$/Preprocessing/Postprocess.py" />
         <option value="$PROJECT_DIR$/Preprocessing/Feature.py" />
+        <option value="$PROJECT_DIR$/Model/AB-CNN.py" />
         <option value="$PROJECT_DIR$/Preprocessing/Tokenizer.py" />
+        <option value="$PROJECT_DIR$/Preprocessing/Preprocess.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="960" />
+    <option name="width" value="1506" />
     <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -279,6 +221,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -335,7 +278,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -353,7 +295,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Xgboost">
+  <component name="RunManager" selected="Python.Preprocess">
     <configuration default="false" name="Xgboost" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -372,60 +314,6 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="LightGbm" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Model" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CIKM AnalytiCup 2018" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/LightGbm.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Tokenizer" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Preprocessing" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CIKM AnalytiCup 2018" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Preprocessing/Tokenizer.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Feature" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Preprocessing" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CIKM AnalytiCup 2018" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Preprocessing/Feature.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
     <configuration default="false" name="Postprocess" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -439,6 +327,60 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="CIKM AnalytiCup 2018" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Preprocessing/Postprocess.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="AB-CNN" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CIKM AnalytiCup 2018" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/AB-CNN.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="lexdecomp" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CIKM AnalytiCup 2018" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/lexdecomp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Preprocess" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Preprocessing" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CIKM AnalytiCup 2018" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Preprocessing/Preprocess.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -510,18 +452,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.Xgboost" />
-      <item index="1" class="java.lang.String" itemvalue="Python.LightGbm" />
-      <item index="2" class="java.lang.String" itemvalue="Python.Tokenizer" />
-      <item index="3" class="java.lang.String" itemvalue="Python.Feature" />
-      <item index="4" class="java.lang.String" itemvalue="Python.Postprocess" />
+      <item index="1" class="java.lang.String" itemvalue="Python.Postprocess" />
+      <item index="2" class="java.lang.String" itemvalue="Python.AB-CNN" />
+      <item index="3" class="java.lang.String" itemvalue="Python.lexdecomp" />
+      <item index="4" class="java.lang.String" itemvalue="Python.Preprocess" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.Xgboost" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Postprocess" />
-        <item index="2" class="java.lang.String" itemvalue="Python.Feature" />
-        <item index="3" class="java.lang.String" itemvalue="Python.Tokenizer" />
-        <item index="4" class="java.lang.String" itemvalue="Python.LightGbm" />
+        <item index="0" class="java.lang.String" itemvalue="Python.Preprocess" />
+        <item index="1" class="java.lang.String" itemvalue="Python.lexdecomp" />
+        <item index="2" class="java.lang.String" itemvalue="Python.AB-CNN" />
+        <item index="3" class="java.lang.String" itemvalue="Python.Xgboost" />
+        <item index="4" class="java.lang.String" itemvalue="Python.Postprocess" />
       </list>
     </recent_temporary>
   </component>
@@ -539,37 +481,26 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="960" height="1040" extended-state="0" />
+    <frame x="0" y="0" width="1506" height="1040" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.056144066" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.03691275" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20645161" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32580644" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46828753" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24731183" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15148304" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46828753" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -774,68 +705,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Config/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="143" column="44" lean-forward="true" selection-start-line="143" selection-start-column="44" selection-end-line="143" selection-end-column="44" />
+        <state relative-caret-position="2992">
+          <caret line="143" column="44" lean-forward="false" selection-start-line="143" selection-start-column="44" selection-end-line="143" selection-end-column="44" />
           <folding>
-            <marker date="1532444209516" expanded="true" signature="3102:6382" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="3200:3203" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1532444209516" expanded="true" signature="3651:3755" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="3921:4150" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="4209:4362" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="4422:4623" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="4682:4835" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="4895:5096" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="5167:5572" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="5295:5379" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="5623:5886" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="5734:5869" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="5933:6132" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="6176:6382" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="6409:12152" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="6434:6447" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="6491:6672" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="6500:6616" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1532444209516" expanded="true" signature="6736:7285" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="6745:6886" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1532444209516" expanded="true" signature="6962:7176" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="7018:7176" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="7063:7176" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="7190:7266" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="7350:8012" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="7359:7495" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1532444209516" expanded="true" signature="7571:7886" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="7627:7886" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="7673:7886" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="7723:7886" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="7900:7993" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="8070:8582" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="8079:8228" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1532444209516" expanded="true" signature="8304:8460" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="8474:8563" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="8626:8667" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="8723:9279" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="8732:8925" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1532444209516" expanded="true" signature="9001:9170" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="9057:9170" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="9184:9260" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="9336:9962" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="9345:9533" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1532444209516" expanded="true" signature="9609:9842" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="9665:9842" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="9711:9842" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="9856:9943" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="10020:10753" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="10029:10254" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1532444209516" expanded="true" signature="10330:10631" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="10386:10631" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="10432:10631" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="10482:10631" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="10645:10734" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="10819:11737" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="10828:10869" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1532444209516" expanded="true" signature="11212:11402" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="11429:11737" ph="..." />
-            <marker date="1532444209516" expanded="true" signature="11803:12152" ph="..." />
+            <marker date="1532616758703" expanded="true" signature="3102:3652" ph="..." />
+            <marker date="1532616758703" expanded="true" signature="3191:3652" ph="..." />
+            <marker date="1532616758703" expanded="true" signature="3517:3652" ph="..." />
+            <marker date="1532616758703" expanded="true" signature="3562:3652" ph="..." />
           </folding>
         </state>
       </provider>
@@ -873,12 +749,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Preprocessing/GraphFeature.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3925">
-          <caret line="362" column="52" lean-forward="true" selection-start-line="362" selection-start-column="52" selection-end-line="362" selection-end-column="52" />
-          <folding>
-            <marker date="1532444209540" expanded="true" signature="276:13364" ph="..." />
-            <marker date="1532444209540" expanded="true" signature="13105:13364" ph="..." />
-          </folding>
+        <state relative-caret-position="7964">
+          <caret line="362" column="52" lean-forward="false" selection-start-line="362" selection-start-column="52" selection-end-line="362" selection-end-column="52" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -891,7 +764,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Preprocessing/GoogleTranslation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
+        <state relative-caret-position="946">
           <caret line="43" column="44" lean-forward="false" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
           <folding />
         </state>
@@ -918,16 +791,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="301" column="34" lean-forward="false" selection-start-line="301" selection-start-column="34" selection-end-line="301" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Config/config.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
@@ -936,32 +799,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model/lexdecomp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3161">
-          <caret line="242" column="4" lean-forward="false" selection-start-line="242" selection-start-column="4" selection-end-line="242" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Model/LightGbm.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="484">
           <caret line="22" column="50" lean-forward="false" selection-start-line="22" selection-start-column="50" selection-end-line="22" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/Preprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2454">
-          <caret line="311" column="63" lean-forward="true" selection-start-line="311" selection-start-column="63" selection-end-line="311" selection-end-column="63" />
-          <folding>
-            <marker date="1532444209544" expanded="true" signature="260:14307" ph="..." />
-            <marker date="1532444209544" expanded="true" signature="12887:13436" ph="..." />
-            <marker date="1532444209544" expanded="true" signature="13474:14307" ph="..." />
-            <marker date="1532444209544" expanded="true" signature="13614:13696" ph="..." />
-            <marker date="1532444209544" expanded="true" signature="13713:13772" ph="..." />
-            <marker date="1532444209544" expanded="true" signature="14336:14751" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -982,6 +823,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Preprocessing/PowerfulWord.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5060">
+          <caret line="230" column="114" lean-forward="false" selection-start-line="230" selection-start-column="114" selection-end-line="230" selection-end-column="114" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/BaseMlModel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2640">
+          <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Model/Xgboost.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="462">
@@ -990,34 +847,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/PowerfulWord.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="666">
-          <caret line="230" column="114" lean-forward="false" selection-start-line="230" selection-start-column="114" selection-end-line="230" selection-end-column="114" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/BaseMlModel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="120" column="0" lean-forward="true" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-66">
-          <caret line="96" column="13" lean-forward="true" selection-start-line="96" selection-start-column="13" selection-end-line="96" selection-end-column="13" />
+        <state relative-caret-position="22">
+          <caret line="96" column="13" lean-forward="false" selection-start-line="96" selection-start-column="13" selection-end-line="96" selection-end-column="13" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="280" column="34" lean-forward="false" selection-start-line="280" selection-start-column="34" selection-end-line="280" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Preprocessing/Tokenizer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="792">
-          <caret line="110" column="55" lean-forward="true" selection-start-line="110" selection-start-column="55" selection-end-line="110" selection-end-column="55" />
+        <state relative-caret-position="528">
+          <caret line="71" column="45" lean-forward="false" selection-start-line="71" selection-start-column="45" selection-end-line="71" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/lexdecomp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4862">
+          <caret line="224" column="32" lean-forward="false" selection-start-line="224" selection-start-column="32" selection-end-line="224" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Preprocessing/Preprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="343">
+          <caret line="377" column="30" lean-forward="true" selection-start-line="377" selection-start-column="30" selection-end-line="377" selection-end-column="30" />
           <folding />
         </state>
       </provider>
