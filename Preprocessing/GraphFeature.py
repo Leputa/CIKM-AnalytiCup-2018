@@ -13,6 +13,7 @@ from tqdm import tqdm
 import numpy as np
 
 class GraphFeature():
+    # 图特征会导致线上线下分布不一致，最终未采用
     def __init__(self):
         self.preprocess = Preprocess.Preprocess()
         self.Feature = Feature.Feature()

@@ -18,7 +18,7 @@ class AB_CNN(BaseDeepModel):
         if self.lang == 'es':
             self.lr = 0.002
             self.batch_size = 64
-            self.n_epoch = 20
+            self.n_epoch = 4
 
             self.w = 4
             self.l2_reg = 0.001
@@ -298,9 +298,9 @@ if __name__ == '__main__':
     np.random.seed(2018)
     tf.set_random_seed(2018)
     ABCNN = AB_CNN(model_type='ABCNN3', lang='es')
-    ABCNN.train('dev', ABCNN.model_type)
-    # ABCNN.train('train', ABCNN.model_type)
-    # ABCNN.test(ABCNN.model_type)
+    # ABCNN.train('dev', ABCNN.model_type)
+    ABCNN.train('train', ABCNN.model_type)
+    ABCNN.test(ABCNN.model_type)
     # ABCNN.cv(ABCNN.model_type, 4)
 
 

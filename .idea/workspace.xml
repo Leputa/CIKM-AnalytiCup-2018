@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/Preprocessing/Feature.py" line="643" />
+    <bookmark url="file://$PROJECT_DIR$/Preprocessing/Feature.py" line="632" />
     <bookmark url="file://$PROJECT_DIR$/Model/MatchPyramid.py" line="82" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ae3a264-8b36-41a7-ac72-9518e592d061" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/600_xgboost_human_feature-summit.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/800_xgboost_human_feature-summit.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/xgboost_cv_sub.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Output/xgboost_human_feature-rescale.txt" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/AB-CNN.py" afterPath="$PROJECT_DIR$/Model/AB-CNN.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/Preprocess.py" afterPath="$PROJECT_DIR$/Preprocessing/Preprocess.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/Tokenizer.py" afterPath="$PROJECT_DIR$/Preprocessing/Tokenizer.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/BaseMlModel.py" afterPath="$PROJECT_DIR$/Model/BaseMlModel.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/Blending.py" afterPath="$PROJECT_DIR$/Model/Blending.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model/Xgboost.py" afterPath="$PROJECT_DIR$/Model/Xgboost.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Output/4_cv_es_ABCNN3-submit.txt" afterPath="$PROJECT_DIR$/Output/4_cv_es_ABCNN3-submit.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Output/blending.txt" afterPath="$PROJECT_DIR$/Output/blending.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/Feature.py" afterPath="$PROJECT_DIR$/Preprocessing/Feature.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/GoogleTranslation.py" afterPath="$PROJECT_DIR$/Preprocessing/GoogleTranslation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Preprocessing/GraphFeature.py" afterPath="$PROJECT_DIR$/Preprocessing/GraphFeature.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,18 +34,18 @@
       <file leaf-file-name="Feature.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22">
-              <caret line="96" column="13" lean-forward="false" selection-start-line="96" selection-start-column="13" selection-end-line="96" selection-end-column="13" />
+            <state relative-caret-position="594">
+              <caret line="412" column="18" lean-forward="false" selection-start-line="412" selection-start-column="18" selection-end-line="412" selection-end-column="18" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AB-CNN.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
+      <file leaf-file-name="BaseDeepModel.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/BaseDeepModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="115">
-              <caret line="280" column="34" lean-forward="false" selection-start-line="280" selection-start-column="34" selection-end-line="280" selection-end-column="34" />
+            <state relative-caret-position="397">
+              <caret line="336" column="27" lean-forward="false" selection-start-line="336" selection-start-column="16" selection-end-line="336" selection-end-column="27" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -42,31 +53,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PowerfulWord.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Preprocessing/PowerfulWord.py">
+      <file leaf-file-name="AB-CNN.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5060">
-              <caret line="230" column="114" lean-forward="false" selection-start-line="230" selection-start-column="114" selection-end-line="230" selection-end-column="114" />
-              <folding />
+            <state relative-caret-position="-22">
+              <caret line="20" column="28" lean-forward="false" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BaseMlModel.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Model/BaseMlModel.py">
+      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Config/config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2640">
-              <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Tokenizer.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Preprocessing/Tokenizer.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="71" column="45" lean-forward="false" selection-start-line="71" selection-start-column="45" selection-end-line="71" selection-end-column="45" />
+            <state relative-caret-position="220">
+              <caret line="10" column="44" lean-forward="false" selection-start-line="10" selection-start-column="44" selection-end-line="10" selection-end-column="68" />
               <folding />
             </state>
           </provider>
@@ -75,38 +78,40 @@
       <file leaf-file-name="lexdecomp.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Model/lexdecomp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4862">
+            <state relative-caret-position="64">
               <caret line="224" column="32" lean-forward="false" selection-start-line="224" selection-start-column="32" selection-end-line="224" selection-end-column="32" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Preprocess.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="LightGbm.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/LightGbm.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2444">
+              <caret line="22" column="50" lean-forward="false" selection-start-line="22" selection-start-column="50" selection-end-line="22" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MatchPyramid.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/MatchPyramid.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="460">
+              <caret line="285" column="0" lean-forward="false" selection-start-line="285" selection-start-column="0" selection-end-line="285" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Preprocess.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Preprocessing/Preprocess.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="343">
-              <caret line="377" column="30" lean-forward="true" selection-start-line="377" selection-start-column="30" selection-end-line="377" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GraphFeature.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Preprocessing/GraphFeature.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7964">
-              <caret line="362" column="52" lean-forward="false" selection-start-line="362" selection-start-column="52" selection-end-line="362" selection-end-column="52" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GoogleTranslation.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Preprocessing/GoogleTranslation.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="946">
-              <caret line="43" column="44" lean-forward="false" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
+            <state relative-caret-position="2121">
+              <caret line="589" column="34" lean-forward="false" selection-start-line="589" selection-start-column="15" selection-end-line="589" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -115,8 +120,18 @@
       <file leaf-file-name="Xgboost.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Model/Xgboost.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="462">
-              <caret line="27" column="13" lean-forward="false" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
+            <state relative-caret-position="470">
+              <caret line="38" column="32" lean-forward="false" selection-start-line="38" selection-start-column="32" selection-end-line="38" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FM_FTRL.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Model/FM_FTRL.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1176">
+              <caret line="3" column="25" lean-forward="false" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -133,9 +148,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>exp</find>
-      <find>train</find>
-      <find>keep_rate</find>
       <find>50</find>
       <find>tqdm</find>
       <find>cos_sim</find>
@@ -163,6 +175,9 @@
       <find>batch_nor</find>
       <find>np</find>
       <find>hidden_dim</find>
+      <find>load_train_data</find>
+      <find>replacing words....</find>
+      <find>load_</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -181,27 +196,28 @@
         <option value="$PROJECT_DIR$/Model/MatchPyramid.py" />
         <option value="$PROJECT_DIR$/Preprocessing/PowerfulWord.py" />
         <option value="$PROJECT_DIR$/Model/FM_FTRL.py" />
-        <option value="$PROJECT_DIR$/Preprocessing/GraphFeature.py" />
         <option value="$PROJECT_DIR$/Model/ESIM.py" />
-        <option value="$PROJECT_DIR$/Model/Blending.py" />
-        <option value="$PROJECT_DIR$/Preprocessing/GoogleTranslation.py" />
         <option value="$PROJECT_DIR$/Model/Embeddings.py" />
         <option value="$PROJECT_DIR$/Model/Decom.py" />
-        <option value="$PROJECT_DIR$/Model/BaseMlModel.py" />
         <option value="$PROJECT_DIR$/Model/lexdecomp.py" />
         <option value="$PROJECT_DIR$/Model/LightGbm.py" />
         <option value="$PROJECT_DIR$/Model/BaseDeepModel.py" />
-        <option value="$PROJECT_DIR$/Model/Xgboost.py" />
         <option value="$PROJECT_DIR$/Preprocessing/Postprocess.py" />
-        <option value="$PROJECT_DIR$/Preprocessing/Feature.py" />
-        <option value="$PROJECT_DIR$/Model/AB-CNN.py" />
         <option value="$PROJECT_DIR$/Preprocessing/Tokenizer.py" />
         <option value="$PROJECT_DIR$/Preprocessing/Preprocess.py" />
+        <option value="$PROJECT_DIR$/Model/Blending.py" />
+        <option value="$PROJECT_DIR$/Preprocessing/GraphFeature.py" />
+        <option value="$PROJECT_DIR$/Model/BaseMlModel.py" />
+        <option value="$PROJECT_DIR$/Preprocessing/GoogleTranslation.py" />
+        <option value="$PROJECT_DIR$/Preprocessing/Feature.py" />
+        <option value="$PROJECT_DIR$/Model/Xgboost.py" />
+        <option value="$PROJECT_DIR$/Model/AB-CNN.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1506" />
+    <option name="x" value="960" />
+    <option name="width" value="960" />
     <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -220,7 +236,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -278,6 +293,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -295,7 +311,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Preprocess">
+  <component name="RunManager" selected="Python.AB-CNN">
     <configuration default="false" name="Xgboost" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -309,24 +325,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="CIKM AnalytiCup 2018" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/Xgboost.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Postprocess" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Preprocessing" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CIKM AnalytiCup 2018" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Preprocessing/Postprocess.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -381,6 +379,24 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="CIKM AnalytiCup 2018" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Preprocessing/Preprocess.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Blending" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Model" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CIKM AnalytiCup 2018" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Model/Blending.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -452,18 +468,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.Xgboost" />
-      <item index="1" class="java.lang.String" itemvalue="Python.Postprocess" />
-      <item index="2" class="java.lang.String" itemvalue="Python.AB-CNN" />
-      <item index="3" class="java.lang.String" itemvalue="Python.lexdecomp" />
-      <item index="4" class="java.lang.String" itemvalue="Python.Preprocess" />
+      <item index="1" class="java.lang.String" itemvalue="Python.AB-CNN" />
+      <item index="2" class="java.lang.String" itemvalue="Python.lexdecomp" />
+      <item index="3" class="java.lang.String" itemvalue="Python.Preprocess" />
+      <item index="4" class="java.lang.String" itemvalue="Python.Blending" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.Preprocess" />
-        <item index="1" class="java.lang.String" itemvalue="Python.lexdecomp" />
-        <item index="2" class="java.lang.String" itemvalue="Python.AB-CNN" />
-        <item index="3" class="java.lang.String" itemvalue="Python.Xgboost" />
-        <item index="4" class="java.lang.String" itemvalue="Python.Postprocess" />
+        <item index="0" class="java.lang.String" itemvalue="Python.AB-CNN" />
+        <item index="1" class="java.lang.String" itemvalue="Python.Xgboost" />
+        <item index="2" class="java.lang.String" itemvalue="Python.Blending" />
+        <item index="3" class="java.lang.String" itemvalue="Python.Preprocess" />
+        <item index="4" class="java.lang.String" itemvalue="Python.lexdecomp" />
       </list>
     </recent_temporary>
   </component>
@@ -481,18 +497,19 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1506" height="1040" extended-state="0" />
+    <frame x="960" y="0" width="960" height="1040" extended-state="1" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.03691275" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.44279662" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20645161" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.04408602" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46828753" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46828753" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -530,9 +547,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Model/AB-CNN.py</url>
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Model/MatchPyramid.py</url>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
@@ -549,13 +563,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Model/Embeddings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="880">
-          <caret line="44" column="31" lean-forward="false" selection-start-line="44" selection-start-column="31" selection-end-line="44" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Config/config.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="462">
@@ -703,29 +710,145 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Config/utils.py">
+    <entry file="file://$PROJECT_DIR$/Preprocessing/GoogleTranslation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2992">
-          <caret line="143" column="44" lean-forward="false" selection-start-line="143" selection-start-column="44" selection-end-line="143" selection-end-column="44" />
-          <folding>
-            <marker date="1532616758703" expanded="true" signature="3102:3652" ph="..." />
-            <marker date="1532616758703" expanded="true" signature="3191:3652" ph="..." />
-            <marker date="1532616758703" expanded="true" signature="3517:3652" ph="..." />
-            <marker date="1532616758703" expanded="true" signature="3562:3652" ph="..." />
-          </folding>
+        <state relative-caret-position="144">
+          <caret line="34" column="29" lean-forward="false" selection-start-line="34" selection-start-column="29" selection-end-line="34" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Preprocessing/GraphFeature.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7260">
+          <caret line="15" column="22" lean-forward="true" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Preprocessing/Postprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="100" column="39" lean-forward="true" selection-start-line="100" selection-start-column="39" selection-end-line="100" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Preprocessing/PowerfulWord.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="230" column="114" lean-forward="false" selection-start-line="230" selection-start-column="114" selection-end-line="230" selection-end-column="114" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Preprocessing/Tokenizer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4454">
+          <caret line="71" column="45" lean-forward="false" selection-start-line="71" selection-start-column="45" selection-end-line="71" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Preprocessing/WordDict.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-582">
+          <caret line="25" column="74" lean-forward="false" selection-start-line="25" selection-start-column="74" selection-end-line="25" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Config/contractions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2554">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Config/tool.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
+        <state relative-caret-position="-1146">
           <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Config/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5018">
+          <caret line="143" column="44" lean-forward="false" selection-start-line="143" selection-start-column="44" selection-end-line="143" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/BaseMlModel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="163" column="98" lean-forward="false" selection-start-line="163" selection-start-column="98" selection-end-line="163" selection-end-column="98" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/Blending.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="31" column="38" lean-forward="false" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/Decom.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2774">
+          <caret line="51" column="76" lean-forward="false" selection-start-line="51" selection-start-column="76" selection-end-line="51" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/Embeddings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="496">
+          <caret line="138" column="38" lean-forward="false" selection-start-line="138" selection-start-column="38" selection-end-line="138" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/ESIM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2664">
+          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/FM_FTRL.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1176">
+          <caret line="3" column="25" lean-forward="false" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/lexdecomp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="224" column="32" lean-forward="false" selection-start-line="224" selection-start-column="32" selection-end-line="224" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Model/LightGbm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2444">
+          <caret line="22" column="50" lean-forward="false" selection-start-line="22" selection-start-column="50" selection-end-line="22" selection-end-column="50" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Model/MatchPyramid.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="711">
+        <state relative-caret-position="460">
           <caret line="285" column="0" lean-forward="false" selection-start-line="285" selection-start-column="0" selection-end-line="285" selection-end-column="0" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
@@ -733,61 +856,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model/ESIM.py">
+    <entry file="file://$PROJECT_DIR$/Preprocessing/Preprocess.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/Blending.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="28" column="76" lean-forward="false" selection-start-line="28" selection-start-column="76" selection-end-line="28" selection-end-column="76" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/GraphFeature.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7964">
-          <caret line="362" column="52" lean-forward="false" selection-start-line="362" selection-start-column="52" selection-end-line="362" selection-end-column="52" />
+        <state relative-caret-position="2121">
+          <caret line="589" column="34" lean-forward="false" selection-start-line="589" selection-start-column="15" selection-end-line="589" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model/FM_FTRL.py">
+    <entry file="file://$PROJECT_DIR$/Model/Xgboost.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-981">
-          <caret line="3" column="25" lean-forward="false" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/GoogleTranslation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="946">
-          <caret line="43" column="44" lean-forward="false" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
+        <state relative-caret-position="470">
+          <caret line="38" column="32" lean-forward="false" selection-start-line="38" selection-start-column="32" selection-end-line="38" selection-end-column="32" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/Decom.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="858">
-          <caret line="51" column="76" lean-forward="false" selection-start-line="51" selection-start-column="76" selection-end-line="51" selection-end-column="76" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/WordDict.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="25" column="74" lean-forward="false" selection-start-line="25" selection-start-column="74" selection-end-line="25" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/Embeddings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="138" column="38" lean-forward="false" selection-start-line="138" selection-start-column="38" selection-end-line="138" selection-end-column="38" />
         </state>
       </provider>
     </entry>
@@ -799,93 +880,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Model/LightGbm.py">
+    <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="22" column="50" lean-forward="false" selection-start-line="22" selection-start-column="50" selection-end-line="22" selection-end-column="50" />
+        <state relative-caret-position="594">
+          <caret line="412" column="18" lean-forward="false" selection-start-line="412" selection-start-column="18" selection-end-line="412" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Model/BaseDeepModel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1248">
-          <caret line="279" column="19" lean-forward="false" selection-start-line="279" selection-start-column="19" selection-end-line="279" selection-end-column="19" />
+        <state relative-caret-position="397">
+          <caret line="336" column="27" lean-forward="false" selection-start-line="336" selection-start-column="16" selection-end-line="336" selection-end-column="27" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/Postprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="511">
-          <caret line="100" column="39" lean-forward="true" selection-start-line="100" selection-start-column="39" selection-end-line="100" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/PowerfulWord.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5060">
-          <caret line="230" column="114" lean-forward="false" selection-start-line="230" selection-start-column="114" selection-end-line="230" selection-end-column="114" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/BaseMlModel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2640">
-          <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/Xgboost.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="27" column="13" lean-forward="false" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/Feature.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="96" column="13" lean-forward="false" selection-start-line="96" selection-start-column="13" selection-end-line="96" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Model/AB-CNN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="280" column="34" lean-forward="false" selection-start-line="280" selection-start-column="34" selection-end-line="280" selection-end-column="34" />
+        <state relative-caret-position="-22">
+          <caret line="20" column="28" lean-forward="false" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/Tokenizer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="71" column="45" lean-forward="false" selection-start-line="71" selection-start-column="45" selection-end-line="71" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Model/lexdecomp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4862">
-          <caret line="224" column="32" lean-forward="false" selection-start-line="224" selection-start-column="32" selection-end-line="224" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocessing/Preprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="343">
-          <caret line="377" column="30" lean-forward="true" selection-start-line="377" selection-start-column="30" selection-end-line="377" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>

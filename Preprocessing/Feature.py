@@ -76,7 +76,7 @@ class Feature():
         if os.path.exists(path):
             return joblib.load(path)
 
-        es = self.preprocess.load_all_data()[0]
+        es = self.preprocess.load_replace_translation_data()[0]
         # es = self.del_stop_words(es)
 
         corpus = [" ".join(sentence) for sentence in es]
@@ -108,7 +108,7 @@ class Feature():
 
         vectorizer = self.count_tf_idf()
 
-        es = self.preprocess.load_all_data()[0]
+        es = self.preprocess.load_replace_translation_data()[0]
         corpus = [" ".join(sentence) for sentence in es]
         bow_features = vectorizer.fit_transform(corpus)
 
@@ -126,7 +126,7 @@ class Feature():
 
         vectorizer = self.count_tf_idf()
 
-        es = self.preprocess.load_all_data()[0]
+        es = self.preprocess.load_replace_translation_data()[0]
         corpus = [" ".join(sentence) for sentence in es]
         bow_features = vectorizer.fit_transform(corpus)
 
@@ -144,7 +144,7 @@ class Feature():
 
         vectorizer = self.count_tf_idf()
 
-        es = self.preprocess.load_all_data()[0]
+        es = self.preprocess.load_replace_translation_data()[0]
         corpus = [" ".join(sentence) for sentence in es]
         bow_features = vectorizer.fit_transform(corpus)
 
@@ -170,19 +170,19 @@ class Feature():
         vectorizer = self.count_tf_idf(tag)
 
         # train
-        _, _, train_left, train_right, train_labels = self.preprocess.load_train_data('en')
+        _, _, train_left, train_right, train_labels = self.preprocess.replace_words('train')
         # train_left, train_right, train_labels = self.clean_stop_words(train_left, train_right, train_labels, 'train')
         train_data = [" ".join(train_left[i]) + " . " + " ".join(train_right[i]) for i in range(len(train_left))]
         train_features = vectorizer.transform(train_data)
 
         # dev
-        _, _, dev_left, dev_right, dev_labels = self.preprocess.load_train_data('es')
+        _, _, dev_left, dev_right, dev_labels = self.preprocess.replace_words('dev')
         # dev_left, dev_right, dev_labels = self.clean_stop_words(dev_left, dev_right, dev_labels, 'dev')
         dev_data = [" ".join(dev_left[i]) + " . " + " ".join(dev_right[i]) for i in range(len(dev_left))]
         dev_features = vectorizer.transform(dev_data)
 
         # test
-        test_left, test_right = self.preprocess.load_test()
+        _, _, test_left, test_right = self.preprocess.replace_words('test')
         # test_left, test_right, _ = self.clean_stop_words(test_left, test_right, [], 'test')
         # assert  len(test_left) == 5000
         test_data = [" ".join(test_left[i]) + " . " + " ".join(test_right[i]) for i in range(len(test_left))]
@@ -303,14 +303,10 @@ class Feature():
 
     ### statistics feature
     def load_left_right(self, tag):
-        dic = {
-            'train':'en',
-            'dev': 'es'
-        }
         if tag == 'train' or tag == 'dev':
-            _, _, left, right, _ = self.preprocess.load_train_data(dic[tag])
+            _, _, left, right, _ = self.preprocess.replace_words(tag)
         elif tag == 'test':
-            left, right = self.preprocess.load_test()
+            _, _, left, right = self.preprocess.replace_words(tag)
 
         return left, right
 
@@ -346,15 +342,8 @@ class Feature():
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
-        dic = {
-            'train':'en',
-            'dev': 'es'
-        }
 
-        if tag == 'train' or tag == 'dev':
-            _, _, left, right, _ = self.preprocess.load_train_data(dic[tag])
-        elif tag == 'test':
-            left, right = self.preprocess.load_test()
+        left, right = self.load_left_right(tag)
 
         share_words_list = []
         for i in tqdm(range(len(left))):
@@ -421,7 +410,7 @@ class Feature():
 
         embedding_matrix = self.embeddings.get_embedding_matrix('es')
         if tag == 'train' or tag == 'dev':
-            left, right, _ = self.preprocess.get_index_data(tag)
+            _, _, left, right, _ = self.preprocess.get_index_data(tag)
         elif tag == 'test':
             _, _, left, right = self.preprocess.get_index_data(tag)
         left, right = self.deal_average_word2vec(left, right, embedding_matrix)

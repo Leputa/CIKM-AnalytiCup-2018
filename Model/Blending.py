@@ -32,7 +32,7 @@ if __name__ == '__main__':
     # predictions /= len(predict_list)
 
     # predictions = predict_list[0] * 0.33 + predict_list[1] * 0.4 + predict_list[2] * 0.27
-    predictctions = predict_list[0] * 0.47 + predict_list[1] * 0.53
+    predictions = predict_list[0] * 0.47 + predict_list[1] * 0.53
 
     with open(config.output_prefix_path + 'blending.txt', 'w') as fr:
         for sub in predictions:

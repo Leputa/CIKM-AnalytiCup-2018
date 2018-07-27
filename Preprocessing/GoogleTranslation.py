@@ -12,6 +12,8 @@ from Config import config
 
 
 class GoogleTranslation():
+    # 在尝试翻译模型之前先调用Google翻译接口做实验
+    # 发现线下有所提高， 但线上差距过大，最终放弃
     def load_data(self):
         data = []
         with open(config.TEST_FiLE, 'r', encoding='utf-8') as fr:
