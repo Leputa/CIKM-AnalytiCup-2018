@@ -72,13 +72,15 @@ class AB_CNN(BaseDeepModel):
             question_expanded = tf.expand_dims(question_inputs, -1)
             answer_expanded = tf.expand_dims(answer_inputs, -1)
 
+
         with tf.name_scope('all_pooling'):
             question_ap_0 = self.all_pool(variable_scope='input-question', x=question_expanded)
             answer_ap_0 = self.all_pool(variable_scope='input-answer', x=answer_expanded)
 
         question_wp_1, question_ap_1, answer_wp_1, answer_ap_1 = self.CNN_layer(variable_scope='CNN-1', x1=question_expanded, x2=answer_expanded, d=self.vec_dim)
         sims = [self.cos_sim(question_ap_0, answer_ap_0), self.cos_sim(question_ap_1, answer_ap_1)]
-        # sims = [self.get_sim(question_ap_0, answer_ap_0, self.vec_dim, 'ap_0'), self.get_sim(question_ap_1, answer_ap_1, self.di, 'ap_1')]
+        # sims.append(self.get_sim(question_ap_0, answer_ap_0, self.vec_dim, 'ap_0'))
+        # sims.append(self.get_sim(question_ap_1, answer_ap_1, self.di, 'ap_1'))
 
         if self.num_layers > 1:
             _, question_ap_2, _, answer_ap_2 = self.CNN_layer(variable_scope="CNN-2", x1=question_wp_1, x2=answer_wp_1, d=self.di)
@@ -90,7 +92,6 @@ class AB_CNN(BaseDeepModel):
         with tf.variable_scope('output_layer'):
             self.output_features = tf.stack(sims, axis=1, name='output_features')
             self.output_features = tf.concat([self.output_features, self.features], axis=1)
-
 
             self.output_features = tf.layers.batch_normalization(self.output_features)
             self.output_features = tf.nn.dropout(self.output_features, self.dropout_keep_prob, name='hidden_output_drop')
@@ -296,11 +297,11 @@ class AB_CNN(BaseDeepModel):
 
 if __name__ == '__main__':
     np.random.seed(2018)
-    tf.set_random_seed(2018)
+    # tf.set_random_seed(2018)
     ABCNN = AB_CNN(model_type='ABCNN3', lang='es')
     # ABCNN.train('dev', ABCNN.model_type)
-    ABCNN.train('train', ABCNN.model_type)
-    ABCNN.test(ABCNN.model_type)
-    # ABCNN.cv(ABCNN.model_type, 4)
+    # ABCNN.train('train', ABCNN.model_type)
+    # ABCNN.test(ABCNN.model_type)
+    ABCNN.cv(ABCNN.model_type, 4)
 
 

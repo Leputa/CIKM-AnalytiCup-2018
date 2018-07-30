@@ -79,12 +79,15 @@ class BaseDeepModel():
         return feed_dict
 
     def get_feature_num(self, modeltype):
-        return self.get_feature('test', modeltype).shape[1]
+        return self.get_feature('test_b', modeltype).shape[1]
 
     def get_feature(self, tag, modeltype):
         statistic_feature = self.Feature.addtional_feature(tag, modeltype)
-        if modeltype.startswith('ABCNN') or modeltype == 'LexDecomp':
+        words_feature = self.Powerfulwords.addtional_feature(tag, modeltype)
+        if modeltype.startswith('ABCNN'):
             return statistic_feature
+        if modeltype == 'LexDecomp':
+            return np.hstack([statistic_feature, words_feature])
 
     def prepare_data(self, tag, modeltype, lang):
         if lang == 'es':
@@ -222,11 +225,9 @@ class BaseDeepModel():
         save_path = config.save_prefix_path + self.lang + '_' + modeltype + '/'
         assert os.path.isdir(save_path)
 
-        if self.lang == 'es':
-            _, _, test_left, test_right = self.preprocessor.get_index_padding('test')
-        elif self.lang == 'en':
-            test_left, test_right, _, _ = self.preprocessor.get_index_padding('test')
-        test_features = self.get_feature('test', modeltype)
+        test_left, test_right = self.preprocessor.get_index_padding('test_b')
+
+        test_features = self.get_feature('test_b', modeltype)
 
         tf.reset_default_graph()
         self.define_model()
@@ -259,11 +260,8 @@ class BaseDeepModel():
             os.makedirs(save_dir)
 
         (train_left, train_right, train_labels, train_features), length = self.prepare_data('train', model_type, self.lang)
-        if self.lang == 'es':
-            _, _, test_left, test_right = self.preprocessor.get_index_padding('test')
-        elif self.lang == 'en':
-            test_left, test_right, _, _ = self.preprocessor.get_index_padding('test')
-        test_features = self.get_feature('test', model_type)
+        test_left, test_right = self.preprocessor.get_index_padding('test_b')
+        test_features = self.get_feature('test_b', model_type)
 
         oof = np.zeros(train_left.shape[0])
         sub = np.zeros(len(test_left))
@@ -338,7 +336,6 @@ class BaseDeepModel():
 
                 print('\t Fold %d : %.6f auc and %.6f logloss' % (n_fold + 1, tmp_auc, tmp_logloss))
                 oof[val_idx] = dev
-
 
                 test_results = []
                 for step in tqdm(range(len(test_left) // self.batch_size + 1)):

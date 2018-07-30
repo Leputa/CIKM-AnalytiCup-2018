@@ -16,9 +16,9 @@ class LexDecomp(BaseDeepModel):
 
         self.model_type = 'LexDecomp'
         if lang == 'es':
-            self.lr = 0.0008
+            self.lr = 0.0009
             self.batch_size = 64
-            self.n_epoch = 15
+            self.n_epoch = 20
 
             self.num_features = self.get_feature_num(self.model_type)
             self.w = 4
@@ -65,6 +65,7 @@ class LexDecomp(BaseDeepModel):
                                     lambda: tf.nn.embedding_lookup(embedding_matrix, self.right_sentence),
                                     lambda: tf.nn.embedding_lookup(embedding_matrix_fixed, self.right_sentence))
 
+
         with tf.name_scope('sematic_matching'):
             A = self.make_word_sim(left_inputs, right_inputs)
             # A = A * self.make_attention_mat(left_inputs, right_inputs)
@@ -92,7 +93,7 @@ class LexDecomp(BaseDeepModel):
                 right_pooled_flatten = tf.reshape(right_pooled, [-1, self.num_filters], name='right_pooled_flatten')
 
                 sims.append(self.get_sim(left_pooled_flatten, right_pooled_flatten, self.num_filters, str(filter_size)))
-                #sims.append(self.get_cos_sim(left_pooled_flatten, right_pooled_flatten, str(filter_size)))
+                sims.append(self.get_cos_sim(left_pooled_flatten, right_pooled_flatten, str(filter_size)))
                 # pooled_left.append(left_pooled_flatten)
                 # pooled_right.append(right_pooled_flatten)
 
@@ -238,9 +239,9 @@ if __name__ == '__main__':
     tf.set_random_seed(1024)
     np.random.seed(1024)
     model = LexDecomp(lang='es')
-    model.train('dev', model.model_type)
+    # model.train('dev', model.model_type)
     # model.train('train', model.model_type)
     # model.test(model.model_type)
-    # model.cv(model.model_type, 3)
+    model.cv(model.model_type, 3)
 
 

@@ -34,12 +34,14 @@ class Tokenizer():
         # acronym
         text = re.sub(r"can\'t", "can not", text)
         text = re.sub(r"can′t", "can not", text)
+        text = re.sub(r"didn’t", "do not", text)
 
         # punctuation
         text = re.sub(r"\[([^\]]+)\]", " ", text)
         text = re.sub(r"\(([^\)]+)\)", " ", text)
         text = re.sub(r"\.", " . ", text)
         text = re.sub(r",", " , ", text)
+        text = re.sub(r"、", " 、 ", text)
         text = re.sub(r"!", " ! ", text)
         text = re.sub(r"/", " / ", text)
         text = re.sub(r"¿", " ¿ ", text)
@@ -58,9 +60,17 @@ class Tokenizer():
         text = re.sub(r"(\d+)h ", lambda m: m.group(1) + ' hora ', text)
         text = re.sub(r"(\d+)% ", lambda m: m.group(1) + ' por ciento ', text)
         text = re.sub(r"(\d+)cm ", lambda m: m.group(1) + ' cm ', text)
+        text = re.sub(r"(\d+)km ", lambda m: m.group(1) + ' km ', text)
+        text = re.sub(r"(\d+)dias ", lambda m: m.group(1) + ' dias ', text)
         text = re.sub(r"(\d+)€ ", lambda m: m.group(1) + ' euro ', text)
         text = re.sub(r'(\d+)anos', lambda m: m.group(1) + ' anos ', text)
         text = re.sub(r'(\d+)usd', lambda m: m.group(1) + ' usd ', text)
+        text = re.sub(r'(\d+)mese', lambda m: m.group(1) + ' mese ', text)
+
+
+        # time
+        text = re.sub(r'(0?[0-9]|1[0-9]|2[0-3]):(0?[0-9]|[1-5][0-9])', 'tiempo', text)
+        text = re.sub(r'tiempo(\d+)', ' tiempo ', text)
 
         # digit
         text = re.sub(r" 0 ", " cero ", text)
@@ -92,6 +102,7 @@ class Tokenizer():
         text = re.sub(r" 1000 ", " mil ", text)
 
         text = re.sub(r" 2nd ", " segundo ", text)
+        text = re.sub(r" 4th ", " cuarto ", text)
 
         text = re.sub(r" 2016 ", " año pasado ", text)
         text = re.sub(r" 2017 ", " este año ", text)
@@ -108,7 +119,15 @@ class Tokenizer():
         text = re.sub(r" imail ", " email ", text)
         text = re.sub(r" 3d ", " tridimensional ", text)
         text = re.sub(r" mp4 ", " el jugadores ", text)
+        text = re.sub(r" mp3 ", " el jugadores ", text)
+
         text = re.sub(r" trademanager ", " alibaba ", text)
+        text = re.sub(r" aliplay ", " alibaba ", text)
+        text = re.sub(r" alinpay ", " alibaba ", text)
+        text = re.sub(r" allipay ", " alibaba ", text)
+        text = re.sub(r" cainiao ", " alibaba ", text)
+
+
         text = re.sub(r" hmmmmm ", " bueno ", text)
         text = re.sub(r' :\) ', " alegría ", text)
         text = re.sub(r' :o ', " sorprendieron ", text)
@@ -116,6 +135,7 @@ class Tokenizer():
         text = re.sub(r'cancelé', 'cancele', text)
         text = re.sub(r'queridar', 'querida', text)
         text = re.sub(r'ordenaré', 'ordenare', text)
+        text = re.sub(r'favorrrrr', 'favor', text)
 
         # 词形还原
         string = ' '.join(lemEsp.Sentence(lemEsp.parse(text, lemmata=True)).lemmata)
@@ -296,4 +316,4 @@ class Tokenizer():
 
 if __name__ == '__main__':
     tokenizer = Tokenizer()
-    print(tokenizer.es_str_clean('pregunta comprador compra mi'))
+    print(tokenizer.es_str_clean('2:40'))

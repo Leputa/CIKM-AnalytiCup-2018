@@ -145,14 +145,14 @@ class BaseMlModel():
             dev_feature = coo_matrix(self.Feature.addtional_feature('dev', modeltype))
 
             train_feature = vstack([train_feature, dev_feature])
-            test_feature = coo_matrix(self.Feature.addtional_feature('test', modeltype))
+            test_feature = coo_matrix(self.Feature.addtional_feature('test_b', modeltype))
 
 
             words_train_feature = coo_matrix(self.Powerfulwords.addtional_feature('train', modeltype))
             words_dev_feature = coo_matrix(self.Powerfulwords.addtional_feature('dev', modeltype))
 
             words_train_feature = vstack([words_train_feature, words_dev_feature])
-            words_test_feature = coo_matrix(self.Powerfulwords.addtional_feature('test', modeltype))
+            words_test_feature = coo_matrix(self.Powerfulwords.addtional_feature('test_b', modeltype))
 
             # graph_train_feature = coo_matrix(self.Graph.add_addtional_feature('train', 'char_sim'))
             # graph_dev_feature = coo_matrix(self.Graph.add_addtional_feature('dev', 'char_sim'))

@@ -110,7 +110,7 @@ class Embeddings():
                 dic = pickle.load(pkl)
             return model, dic
 
-        es = self.preprocessor.load_all_data()[0]
+        es = self.preprocessor.load_all_replace_data()[0]
 
         corpus = []
         for i, text in enumerate(es):
@@ -135,7 +135,7 @@ class Embeddings():
 
 if __name__ == '__main__':
     embedding = Embeddings()
-    #embedding.get_embedding_matrix('en')
-    embedding.get_embedding_matrix('es')
-    # embedding.doc2vec()
+    # embedding.get_embedding_matrix('en')
+    # embedding.get_embedding_matrix('es')
+    embedding.doc2vec()
 

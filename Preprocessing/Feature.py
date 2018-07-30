@@ -182,9 +182,9 @@ class Feature():
         dev_features = vectorizer.transform(dev_data)
 
         # test
-        _, _, test_left, test_right = self.preprocess.replace_words('test')
+        test_left, test_right = self.preprocess.replace_words('test_b')
         # test_left, test_right, _ = self.clean_stop_words(test_left, test_right, [], 'test')
-        # assert  len(test_left) == 5000
+        assert  len(test_left) == 10000
         test_data = [" ".join(test_left[i]) + " . " + " ".join(test_right[i]) for i in range(len(test_left))]
         test_features = vectorizer.transform(test_data)
 
@@ -219,8 +219,8 @@ class Feature():
         dev_vec = np.hstack([dev_left_vector, dev_right_vector])
 
         # test
-        test_left_vector = self.getVecs(model, 42800, 47800, dic, self.embeddings.vec_dim)
-        test_right_vector = self.getVecs(model, 47800, 52800, dic, self.embeddings.vec_dim)
+        test_left_vector = self.getVecs(model, 52800, 62800, dic, self.embeddings.vec_dim)
+        test_right_vector = self.getVecs(model, 62800, 72800, dic, self.embeddings.vec_dim)
         test_vec = np.hstack([test_left_vector, test_right_vector])
 
         with open(path, 'wb') as pkl:
@@ -247,7 +247,7 @@ class Feature():
         dev_features = np.hstack([self.deal_average_word2vec(dev_left, dev_right, embedding_matrix)])
 
         # test
-        _, _, test_left, test_right = self.preprocess.get_index_data('test')
+        test_left, test_right = self.preprocess.get_index_data('test_b')
         test_features = np.hstack([self.deal_average_word2vec(test_left, test_right, embedding_matrix)])
 
         with open(path, 'wb') as pkl:
@@ -305,8 +305,8 @@ class Feature():
     def load_left_right(self, tag):
         if tag == 'train' or tag == 'dev':
             _, _, left, right, _ = self.preprocess.replace_words(tag)
-        elif tag == 'test':
-            _, _, left, right = self.preprocess.replace_words(tag)
+        elif tag == 'test_a' or tag == 'test_b':
+            left, right = self.preprocess.replace_words(tag)
 
         return left, right
 
@@ -332,12 +332,7 @@ class Feature():
 
         print('getting share words...')
 
-        if tag == 'train':
-            path = config.cache_prefix_path + 'share_words_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'share_words_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'share_words_test.pkl'
+        path = config.cache_prefix_path + tag + 'share_words.pkl'
 
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
@@ -365,12 +360,7 @@ class Feature():
             return [tool.cos_sim(left, right)]
 
         print("getting tfidf share...")
-        if tag1 == 'train':
-            path = config.cache_prefix_path + tag2 +'_tfidf_sim_train.pkl'
-        elif tag1 == 'dev':
-            path = config.cache_prefix_path + tag2 + '_tfidf_sim_dev.pkl'
-        elif tag1 == 'test':
-            path = config.cache_prefix_path + tag2 + '_tfidf_sim_test.pkl'
+        path  = config.cache_prefix_path + tag1 + '_' + tag2 + '_tfidf_sim.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -398,12 +388,8 @@ class Feature():
         def extract_word2vec_ave_sim(left, right):
             return [tool.cos_sim(left, right)]
         print("getting word2vec average sim...")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'word2vec_sim_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'word2vec_sim_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'word2vec_sim_test.pkl'
+
+        path = config.cache_prefix_path + tag + 'word2vec_sim.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -411,8 +397,8 @@ class Feature():
         embedding_matrix = self.embeddings.get_embedding_matrix('es')
         if tag == 'train' or tag == 'dev':
             _, _, left, right, _ = self.preprocess.get_index_data(tag)
-        elif tag == 'test':
-            _, _, left, right = self.preprocess.get_index_data(tag)
+        elif tag == 'test_b':
+            left, right = self.preprocess.get_index_data(tag)
         left, right = self.deal_average_word2vec(left, right, embedding_matrix)
 
         feature = []
@@ -432,13 +418,7 @@ class Feature():
             return [tool.cos_sim(left, right)]
 
         print("getting lda sim...")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'lda_sim_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'lda_sim_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'lda_sim_test.pkl'
-
+        path = config.cache_prefix_path + tag + '_lda_sim.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -504,12 +484,7 @@ class Feature():
             return [tool.cos_sim(left, right)]
 
         print("getting lsa sim...")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'lsa_sim_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'lsa_sim_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'lsa_sim_test.pkl'
+        path = config.cache_prefix_path + tag + 'lsa_sim.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -543,12 +518,8 @@ class Feature():
             return [tool.cos_sim(left, right)]
 
         print("getting doc2vec sim...")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'doc2vec_sim_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'doc2vec_sim_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'doc2vec_sim_test.pkl'
+
+        path  = config.cache_prefix_path + tag + '_doc2vec_sim.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -560,9 +531,9 @@ class Feature():
         elif tag == 'dev':
             left_vector = getVecs(model, 40000, 41400, dic, self.embeddings.vec_dim)
             right_vector = getVecs(model, 41400, 42800, dic, self.embeddings.vec_dim)
-        elif tag == 'test':
-            left_vector = getVecs(model, 42800, 47800, dic, self.embeddings.vec_dim)
-            right_vector = getVecs(model, 47800, 52800, dic, self.embeddings.vec_dim)
+        elif tag == 'test_b':
+            left_vector = getVecs(model, 52800, 62800, dic, self.embeddings.vec_dim)
+            right_vector = getVecs(model, 62800, 72800, dic, self.embeddings.vec_dim)
 
         feature = []
         for i in tqdm(range(left_vector.shape[0])):
@@ -578,12 +549,7 @@ class Feature():
     def get_length(self, tag):
         print('getting length...')
 
-        if tag == 'train':
-            path = config.cache_prefix_path + 'length_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'length_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'length_test.pkl'
+        path = config.cache_prefix_path + tag + '_length.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -607,12 +573,7 @@ class Feature():
             return [abs(len(left) - len(right))]
 
         print("getting length diff...")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'length_diff_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'length_diff_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'length_diff_test.pkl'
+        path = config.cache_prefix_path + tag + '_length_diff.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -638,12 +599,7 @@ class Feature():
                 return [0.]
 
         print("getting length diff Rate...")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'length_diff_rate_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'length_diff_rate_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'length_diff_rate_test.pkl'
+        path = config.cache_prefix_path + tag + '_length_diff_rate.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -680,7 +636,7 @@ class Feature():
             dum_num = {}
             dum_num = add_dul_num(dum_num, 'train')
             dum_num = add_dul_num(dum_num, 'dev')
-            dum_num = add_dul_num(dum_num, 'test')
+            dum_num = add_dul_num(dum_num, 'test_b')
 
             with open(path, 'wb') as pkl:
                 pickle.dump(dum_num, pkl)
@@ -688,12 +644,7 @@ class Feature():
             return dum_num
 
         print("getting sentence dul num...")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'dum_num_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'dum_num_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'dum_num_test.pkl'
+        path = config.cache_prefix_path + tag + '_dum_num.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -727,12 +678,7 @@ class Feature():
             return fs
 
         print("getting ngram jaccard coef......")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'ngram_jaccard_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'ngram_jaccard_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'ngram_jaccard_test.pkl'
+        path = config.cache_prefix_path + tag + '_ngram_jaccard.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -758,12 +704,7 @@ class Feature():
             return fs
 
         print("getting ngram dice distance......")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'ngram_dice_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'ngram_dice_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'ngram_dice_test.pkl'
+        path = config.cache_prefix_path + tag + '_ngram_dice.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -786,12 +727,7 @@ class Feature():
 
         print("getting distance......")
 
-        if tag == 'train':
-            path = config.cache_prefix_path + 'edit_dis_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'edit_dis_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'edit_dis_test.pkl'
+        path = config.cache_prefix_path + tag + 'edit_dis.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -835,7 +771,7 @@ class Feature():
 
         idf, q_set, length = add_idf_dic_tag(idf, q_set, length, 'train')
         idf, q_set, length = add_idf_dic_tag(idf, q_set, length, 'dev')
-        idf, q_set, length = add_idf_dic_tag(idf, q_set, length,'test')
+        idf, q_set, length = add_idf_dic_tag(idf, q_set, length, 'test')
 
         for word in idf:
             idf[word] = math.log(length / (idf[word] + 1)) / math.log(2.)
@@ -1266,8 +1202,6 @@ class Feature():
         return feature
 
 
-
-
     def addtional_feature(self, tag, modeltype):
 
         lsa_sim = self.get_lsa_sim(tag)
@@ -1310,37 +1244,37 @@ class Feature():
 
 if __name__ == '__main__':
     feature = Feature()
-    # feature.get_tfidf_sim('train','char')
-    # feature.get_tfidf_word_share('train')
-    # feature.get_tfidf_word_share('dev')
-    # feature.get_tfidf_word_share('test')
-    # feature.get_tfidf_statistics('train')
-    # feature.get_tfidf_statistics('dev')
-    # feature.get_tfidf_statistics('test')
-    # feature.get_no_feature('train')
-    # feature.get_no_feature('dev')
-    # feature.get_no_feature('test')
-    # feature.get_fuzz_feature('train')
-    # feature.get_fuzz_feature('dev')
-    # feature.get_fuzz_feature('test')
-    # feature.get_longest_common_sequence('train')
-    # feature.get_longest_common_sequence('dev')
-    # feature.get_longest_common_sequence('test')
-    # feature.get_longest_common_prefix_suffix('train')
-    # feature.get_longest_common_prefix_suffix('dev')
-    # feature.get_longest_common_prefix_suffix('test')
-    # feature.get_lcs_diff('train')
-    # feature.get_lcs_diff('dev')
-    # feature.get_lcs_diff('test')
-    # feature.get_inter_pos('train')
-    # feature.get_inter_pos('dev')
-    # feature.get_inter_pos('test')
-    # feature.get_w2v_feature('train')
-    # feature.get_w2v_feature('dev')
-    # feature.get_w2v_feature('test')
-    # feature.get_nmf_sim('train')
-    # feature.get_nmf_sim('dev')
-    # feature.get_nmf_sim('test')
+    feature.get_tfidf_sim('train','char')
+    feature.get_tfidf_word_share('train')
+    feature.get_tfidf_word_share('dev')
+    feature.get_tfidf_word_share('test_b')
+    feature.get_tfidf_statistics('train')
+    feature.get_tfidf_statistics('dev')
+    feature.get_tfidf_statistics('test_b')
+    feature.get_no_feature('train')
+    feature.get_no_feature('dev')
+    feature.get_no_feature('test_b')
+    feature.get_fuzz_feature('train')
+    feature.get_fuzz_feature('dev')
+    feature.get_fuzz_feature('test_b')
+    feature.get_longest_common_sequence('train')
+    feature.get_longest_common_sequence('dev')
+    feature.get_longest_common_sequence('test_b')
+    feature.get_longest_common_prefix_suffix('train')
+    feature.get_longest_common_prefix_suffix('dev')
+    feature.get_longest_common_prefix_suffix('test_b')
+    feature.get_lcs_diff('train')
+    feature.get_lcs_diff('dev')
+    feature.get_lcs_diff('test_b')
+    feature.get_inter_pos('train')
+    feature.get_inter_pos('dev')
+    feature.get_inter_pos('test_b')
+    feature.get_w2v_feature('train')
+    feature.get_w2v_feature('dev')
+    feature.get_w2v_feature('test_b')
+    feature.get_nmf_sim('train')
+    feature.get_nmf_sim('dev')
+    feature.get_nmf_sim('test_b')
     feature.get_same_subgraph_feature('train')
     feature.get_same_subgraph_feature('dev')
-    feature.get_same_subgraph_feature('test')
+    feature.get_same_subgraph_feature('test_b')

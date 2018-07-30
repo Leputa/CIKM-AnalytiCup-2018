@@ -100,12 +100,7 @@ class PowerfulWord():
                     tags.append(0.0)
             return tags
 
-        if tag == 'train':
-            path = config.cache_prefix_path + 'pword_dside_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'pword_dside_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'pword_dside_test.pkl'
+        path = config.cache_prefix_path + tag + '_pword_dside.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -138,12 +133,7 @@ class PowerfulWord():
             rate = [1 - num for num in rate]
             return rate
 
-        if tag == 'train':
-            path = config.cache_prefix_path + 'pword_dside_rate_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'pword_dside_rate_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'pword_dside_rate_test.pkl'
+        path = config.cache_prefix_path + tag + 'pword_dside_rate.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -177,12 +167,7 @@ class PowerfulWord():
             rate = [1 - num for num in rate]
             return rate
 
-        if tag == 'train':
-            path = config.cache_prefix_path + 'pword_oside_rate_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'pword_oside_rate_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'pword_oside_rate_test.pkl'
+        path = config.cache_prefix_path + tag + 'pword_oside_rate.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -220,8 +205,8 @@ class PowerfulWord():
         }
         if tag == 'train' or tag == 'dev':
             _, _, left, right, _ = self.preprocess.load_train_data(dic[tag])
-        elif tag == 'test':
-            left, right = self.preprocess.load_test()
+        elif tag == 'test_a' or tag == 'test_b':
+            left, right = self.preprocess.load_test(tag[-1].upper())
 
         return left, right
 

@@ -33,7 +33,7 @@ class Xgboost(BaseMlModel):
                          'silent':True,
                          'gamma': 0.1,
                          #'scale_pos_weight': 0.25,  #测试的时候应该是0.12
-                         'eval_metric':'auc'
+                         'eval_metric':'logloss'
                     }
         self.num_rounds = 5000
         self.test_num_rounds = 900
