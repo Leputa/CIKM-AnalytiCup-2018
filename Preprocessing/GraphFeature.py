@@ -24,15 +24,16 @@ class GraphFeature():
             'dev': 'es'
         }
         labels = None
+        print(tag)
         if tag == 'train' or tag == 'dev':
             _, _, left, right, labels = self.preprocess.load_train_data(dic[tag])
-        elif tag == 'test':
-            left, right = self.preprocess.load_test()
+        elif tag == 'test_a' or tag == 'test_b':
+            left, right = self.preprocess.load_test(tag[-1].upper())
         return left, right, labels
 
     def sentence2id(self):
         def add_s2id(tag, s2id):
-            left, right = self.load_left_right(tag)
+            left, right, _ = self.load_left_right(tag)
             for i in range(len(left)):
                 left_sentence = " ".join(left[i])
                 right_sentence = " ".join(right[i])
@@ -51,7 +52,8 @@ class GraphFeature():
         s2id = {}
         s2id = add_s2id('train', s2id)
         s2id = add_s2id('dev', s2id)
-        s2id = add_s2id('test', s2id)
+        s2id = add_s2id('test_b', s2id)
+        s2id = add_s2id('test_a', s2id)
 
         with open(path, 'wb') as pkl:
             pickle.dump(s2id, pkl)
@@ -59,12 +61,7 @@ class GraphFeature():
 
     def get_sentence_index_data(self, tag):
         print("getting sentence index data...")
-        if tag == 'train':
-            path = config.cache_prefix_path + 'sentence2index_train.pkl'
-        elif tag == 'dev':
-            path = config.cache_prefix_path + 'sentence2index_dev.pkl'
-        elif tag == 'test':
-            path = config.cache_prefix_path + 'sentence2index_test.pkl'
+        path = config.cache_prefix_path + tag + '_sentence2index.pkl'
         if os.path.exists(path):
             with open(path, 'rb') as pkl:
                 return pickle.load(pkl)
@@ -94,26 +91,19 @@ class GraphFeature():
             elif feature_tag == 'char_sim':
                 weights = self.Feature.get_tfidf_sim(tag, 'char')
             elif feature_tag == 'label':
-                if tag == 'train' or tag == 'dev':
-                    # 这样会在dev时泄漏数据，感觉不靠谱
                     weights = labels
-                else:
-                    weights = [0.5]*len(left_ids)
+
             elif feature_tag == 'label_2':
-                if tag == 'train' or tag == 'dev':
-                    for i in range(len(left_ids)):
-                        if labels[i] == 1:
-                            G.add_edge(left_ids[i], right_ids[i], weights=labels[i])
-                            e2weight[(left_ids[i], right_ids[i])] = 1
-                            e2weight[(right_ids[i], left_ids[i])] = 1
-                        else:
-                            G.add_edge(left_ids[i], right_ids[i], weights=100)
-                            e2weight[(left_ids[i], right_ids[i])] = 100
-                            e2weight[(right_ids[i], left_ids[i])] = 100
-                elif tag == 'test':
-                    for i in range(len(left_ids)):
-                        G.add_node(left_ids[i])
-                        G.add_node(right_ids[i])
+                # 不知道bug处在哪儿，GG
+                for i in range(len(left_ids)):
+                    if labels[i] == 1:
+                        G.add_edge(left_ids[i], right_ids[i], weights=labels[i])
+                        e2weight[(left_ids[i], right_ids[i])] = 1
+                        e2weight[(right_ids[i], left_ids[i])] = 1
+                    else:
+                        G.add_edge(left_ids[i], right_ids[i], weights=100)
+                        e2weight[(left_ids[i], right_ids[i])] = 100
+                        e2weight[(right_ids[i], left_ids[i])] = 100
                 return G, e2weight
 
             for i in range(len(left_ids)):
@@ -122,6 +112,7 @@ class GraphFeature():
                 G.add_edge(left_ids[i], right_ids[i], weight = 1 - weights[i])
                 e2weight[(left_ids[i], right_ids[i])] = 1 - weights[i]
                 e2weight[(right_ids[i], left_ids[i])] = 1 - weights[i]
+
             return G, e2weight
 
         print('generating graph...')
@@ -132,7 +123,7 @@ class GraphFeature():
 
         G = nx.Graph()
         e2weight = {}
-        G, e2weight = add_G('test', feature_tag, G, e2weight)
+        # G, e2weight = add_G('test_b', feature_tag, G, e2weight)
         G, e2weight = add_G('train', feature_tag, G, e2weight)
         G, e2weight = add_G('dev', feature_tag, G, e2weight)
 
@@ -142,18 +133,23 @@ class GraphFeature():
         return G, e2weight
 
     def get_shortest_path(self, tag, feature_tag):
-        def extract_row(qid1, qid2, G, e2weight, feature_tag):
+        def extract_row(qid1, qid2, G, e2weight, feature_tag, i):
             if feature_tag == 'label_2':
                 shortest_path = -1
             else:
                 shortest_path = 100
-            if tag =='test':
-                if nx.has_path(G, qid1, qid2):
-                    shortest_path =  nx.dijkstra_path_length(G, qid1, qid2)
+            if tag == 'test_b' or tag == 'test_a':
+                if qid1 in nx.nodes(G) and qid2 in nx.nodes(G):
+                    if nx.has_path(G, qid1, qid2):
+                        shortest_path = nx.dijkstra_path_length(G, qid1, qid2)
+                        if i+1 == 35:
+                            print(shortest_path)
+                            print(qid1, qid2)
+                            print(nx.dijkstra_path(G, qid1, qid2))
             else:
                 G.remove_edge(qid1, qid2)
                 if nx.has_path(G, qid1, qid2):
-                    shortest_path =  nx.dijkstra_path_length(G, qid1, qid2)
+                    shortest_path = nx.dijkstra_path_length(G, qid1, qid2)
                 G.add_edge(qid1, qid2, weight = e2weight[(qid1, qid2)])
 
             return [shortest_path]
@@ -169,7 +165,7 @@ class GraphFeature():
 
         feature = []
         for i in tqdm(range(len(left_ids))):
-            feature.append(extract_row(left_ids[i], right_ids[i], G, e2weight, feature_tag))
+            feature.append(extract_row(left_ids[i], right_ids[i], G, e2weight, feature_tag, i))
         feature = np.array(feature)
 
         with open(path, 'wb') as pkl:
@@ -366,7 +362,16 @@ class GraphFeature():
 
 if __name__ == "__main__":
     graph = GraphFeature()
-    graph.get_shortest_path('test', 'label')
+    G, _ = graph.generate_graph('label_2')
+    edges = list(nx.edges(G))
+    print(edges)
+    weights = nx.get_edge_attributes(G, 'weights')
+    print(weights[(3703, 3702)])
+    # for edge in edges:
+    #     if weights[edge] != 1 and weights[edge] != 100:
+    #         print(weights[edge])
+        #print(weights[edge])
+    # graph.get_shortest_path('test_b', 'label')
 
 
 

@@ -32,7 +32,7 @@ class LightGbm(BaseMlModel):
                 'min_data_in_leaf': 10,# 一个叶子中最少数据个数，用于制止过拟合
                 # 'min_sum_hessian_in_leaf':0.00001,# minimal sum hessian in one leaf,制止过拟合
                 # 'feature_fraction':1.0,# 随机抽取的特征列的占比，用于加快训练和防止过拟合
-                'feature_fraction_seed':2018,# 随机抽取的特征列的随机产生种子
+                # 'feature_fraction_seed':2018,# 随机抽取的特征列的随机产生种子
                 # 'bagging_fraction':1.0,# 随机选择部分数据的占比，用于加快训练和防止过拟合
                 # 'bagging_freq':1,# 每隔k次就进行随机bagging，k=0表示不bagging
                 'bagging_seed': 2018,# bagging的随机产生种子
@@ -154,6 +154,6 @@ class LightGbm(BaseMlModel):
 
 if __name__ == "__main__":
     model = LightGbm()
-    model.train('human_feature')
-    # model.test('human_feature')
+    # model.train('human_feature')
+    model.test('human_feature')
     # model.cv('human_feature')

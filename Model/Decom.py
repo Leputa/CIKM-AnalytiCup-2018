@@ -13,16 +13,20 @@ class Decomposable_Attention_Model(BaseDeepModel):
     sim: 0.35
     concat-mlp: 0.37
     '''
-    def __init__(self, lang = 'es',clip_gradients=False):
+    def __init__(self, lang = 'es', clip_gradients=False):
         super().__init__(lang)
+        self.model_type = 'Decom'
+
         if lang == 'es':
-            self.lr = 3e-5
-            self.keep_prob = 0.5
-            self.atten_keep_prob = 0.8
+            self.lr = 3e-4
+            self.keep_prob = 1.0
+            self.atten_keep_prob = 1.0
             self.l2_reg = 0.004
             self.atten_l2_reg = 0.0
 
+            self.num_features = self.get_feature_num(self.model_type)
             self.hidden_dim = 300
+            self.num_layers = 3
 
             self.batch_size = 64
             self.n_epoch = 50
@@ -33,6 +37,7 @@ class Decomposable_Attention_Model(BaseDeepModel):
             self.l2_reg = 0.004
             self.atten_l2_reg = 0.0
 
+            self.num_features = self.get_feature_num(self.model_type)
             self.hidden_dim = 300
 
             self.batch_size = 64
@@ -43,7 +48,7 @@ class Decomposable_Attention_Model(BaseDeepModel):
         self.left_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='left_sentence')
         self.right_sentence = tf.placeholder(tf.int32, shape=[None, self.sentence_length], name='right_sentence')
         self.label = tf.placeholder(tf.int32, shape=[None], name='label')
-        #self.features = tf.placeholder(tf.float32, shape=[None, self.num_features], name="features")
+        self.features = tf.placeholder(tf.float32, shape=[None, self.num_features], name="features")
         self.trainable = tf.placeholder(bool, shape=[], name = 'trainable')
         self.dropout_keep_prob = tf.placeholder(tf.float32, shape=[], name='dropout_keep_prob')
 
@@ -63,11 +68,32 @@ class Decomposable_Attention_Model(BaseDeepModel):
         left_seq_length, left_mask = tool.length(self.left_sentence)
         right_seq_length, right_mask = tool.length(self.right_sentence)
 
+        def lstm_cell():
+            cell = tf.contrib.rnn.BasicLSTMCell(self.hidden_dim)
+            return cell
+
         with tf.name_scope('Bi-LSTM'):
-            left_outputs, _ = tool.biLSTM(left_inputs, self.hidden_dim, left_seq_length, 'left')
-            right_outputs, _ = tool.biLSTM(right_inputs, self.hidden_dim, right_seq_length, 'right')
-            left_outputs = tf.concat(left_outputs, axis=2)
-            right_outputs = tf.concat(right_outputs, axis=2)
+            # left_outputs, _ = tool.biLSTM(left_inputs, self.hidden_dim, left_seq_length, 'left')
+            # right_outputs, _ = tool.biLSTM(right_inputs, self.hidden_dim, right_seq_length, 'right')
+            with tf.variable_scope('left_lstm'):
+                left_cell = tf.contrib.rnn.MultiRNNCell([lstm_cell()] * self.num_layers)
+                (left_outputs_fw, left_outputs_bw), states = tf.nn.bidirectional_dynamic_rnn(
+                    left_cell,
+                    left_cell,
+                    inputs=left_inputs,
+                    sequence_length=left_seq_length,
+                    dtype=tf.float32)
+            with tf.variable_scope('right_lstm'):
+                right_cell = tf.contrib.rnn.MultiRNNCell([lstm_cell()] * self.num_layers)
+                (right_outputs_fw, right_outputs_bw), states = tf.nn.bidirectional_dynamic_rnn(
+                    right_cell,
+                    right_cell,
+                    inputs=right_inputs,
+                    sequence_length=right_seq_length,
+                    dtype=tf.float32)
+
+            left_outputs = tf.concat([left_outputs_fw, left_outputs_bw], axis=2)
+            right_outputs = tf.concat([right_outputs_fw, right_outputs_bw], axis=2)
 
             # left_outputs_mask = left_outputs * tf.expand_dims(left_mask, -1)
             # right_outputs_mask = right_outputs * tf.expand_dims(right_mask, -1)
@@ -134,11 +160,31 @@ class Decomposable_Attention_Model(BaseDeepModel):
 
 
         with tf.name_scope('MLP'):
-            self.output = tf.layers.dense(
+            v_output = tf.concat([v_output, self.features], axis=1)
+            v_output = tf.layers.batch_normalization(v_output)
+            self.fc1 = tf.layers.dense(
                 inputs = v_output,
-                units = self.num_classes,
+                units = 128,
                 kernel_initializer = tf.contrib.layers.xavier_initializer(),
                 kernel_regularizer = tf.contrib.layers.l2_regularizer(scale = self.atten_l2_reg),
+                activation=tf.nn.relu
+            )
+            self.fc1 = tf.nn.dropout(self.fc1, keep_prob=self.keep_prob)
+
+            self.fc2 = tf.layers.dense(
+                inputs = self.fc1,
+                units = 32,
+                kernel_initializer = tf.contrib.layers.xavier_initializer(),
+                kernel_regularizer = tf.contrib.layers.l2_regularizer(scale=self.atten_l2_reg),
+                activation=tf.nn.relu
+            )
+            self.fc2 = tf.nn.dropout(self.fc2, keep_prob=self.keep_prob)
+
+            self.output = tf.layers.dense(
+                inputs = self.fc2,
+                units = self.num_classes,
+                kernel_initializer = tf.contrib.layers.xavier_initializer(),
+                kernel_regularizer = tf.contrib.layers.l2_regularizer(scale=self.atten_l2_reg),
             )
 
             self.prediction = tf.contrib.layers.softmax(self.output)[:, 1]
@@ -169,8 +215,10 @@ class Decomposable_Attention_Model(BaseDeepModel):
                 units = hidden_dim,
                 kernel_initializer = tf.contrib.layers.xavier_initializer(),
                 kernel_regularizer = tf.contrib.layers.l2_regularizer(scale = self.atten_l2_reg),
-                activation = tf.nn.relu,
             )
+
+            F_bn = tf.layers.batch_normalization(F_output)
+            F_bn = tf.nn.relu(F_bn)
             if trainable == True:
                 if name == 'Aggregate':
                     keep_drop = self.keep_prob
@@ -178,7 +226,6 @@ class Decomposable_Attention_Model(BaseDeepModel):
                     keep_drop = self.atten_keep_prob
             else:
                 keep_drop = 1.0
-            F_bn = tf.layers.batch_normalization(F_output)
             F_drop = tf.nn.dropout(F_bn, keep_drop)
             return F_drop
 
@@ -197,6 +244,6 @@ class Decomposable_Attention_Model(BaseDeepModel):
 
 if __name__ == '__main__':
     tf.set_random_seed(1)
-    model = Decomposable_Attention_Model()
+    model = Decomposable_Attention_Model(lang='es')
     # model.define_model()
-    model.train('dev')
+    model.train('dev', model.model_type)

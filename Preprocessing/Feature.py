@@ -21,8 +21,6 @@ from Config import tool
 from Config.utils import NgramUtil,DistanceUtil,MathUtil
 
 
-
-
 class Feature():
     def __init__(self):
         self.preprocess = Preprocess.Preprocess()
@@ -1210,7 +1208,7 @@ class Feature():
         doc2vec_sim = self.get_doc2vec_sim(tag)
 
         # ABCNN只选了这3个
-        if modeltype.startswith('ABCNN') or modeltype == 'LexDecomp':
+        if modeltype.startswith('ABCNN') or modeltype == 'LexDecomp' or modeltype == 'Decom':
             return np.hstack([lsa_sim, word_share, doc2vec_sim])
 
         word2vec_sim = self.get_word2vec_ave_sim(tag)

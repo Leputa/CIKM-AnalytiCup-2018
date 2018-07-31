@@ -26,17 +26,17 @@ class Xgboost(BaseMlModel):
                          # 'min_child_weight':5,
                          'subsample':0.7,
                          'colsample_bytree':0.7,
-                         'lambda':8,  # 控制模型复杂度的权重值的L2正则化项参数，参数越大，模型越不容易过拟合。
+                         'lambda':9,  # 控制模型复杂度的权重值的L2正则化项参数，参数越大，模型越不容易过拟合。
                          'alpha':1,   # L1正则化
-                         'seed':2018,
+                         #'seed':2018,
                          'nthread':7,
                          'silent':True,
                          'gamma': 0.1,
                          #'scale_pos_weight': 0.25,  #测试的时候应该是0.12
-                         'eval_metric':'logloss'
+                         'eval_metric':'auc'
                     }
         self.num_rounds = 5000
-        self.test_num_rounds = 900
+        self.test_num_rounds = 960
         self.early_stop_rounds = 200
 
 
@@ -134,8 +134,8 @@ class Xgboost(BaseMlModel):
 if __name__ == "__main__":
     model = Xgboost()
     # model.train('human_feature')
-    model.test('human_feature')
-    # model.cv('human_feature')
+    # model.test('human_feature')
+    model.cv('human_feature')
 
 
 

@@ -213,7 +213,7 @@ class PowerfulWord():
     def addtional_feature(self, tag, modeltype):
         dwords_rate = self.add_double_rate_feature(tag)
         owords_rate = self.add_one_rate_feature(tag)
-        if modeltype == 'LexDecomp' or modeltype == 'Xgboost' or modeltype == 'LightGbm' or modeltype == 'FM_FTRL':
+        if modeltype == 'LexDecomp' or modeltype == 'Xgboost' or modeltype == 'LightGbm' or modeltype == 'FM_FTRL' or modeltype=='Decom':
             return np.hstack([dwords_rate, owords_rate])
 
 

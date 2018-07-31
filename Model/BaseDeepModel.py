@@ -86,7 +86,7 @@ class BaseDeepModel():
         words_feature = self.Powerfulwords.addtional_feature(tag, modeltype)
         if modeltype.startswith('ABCNN'):
             return statistic_feature
-        if modeltype == 'LexDecomp':
+        if modeltype == 'LexDecomp' or modeltype == 'Decom':
             return np.hstack([statistic_feature, words_feature])
 
     def prepare_data(self, tag, modeltype, lang):

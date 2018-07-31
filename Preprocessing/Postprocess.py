@@ -5,6 +5,8 @@ from Config import config
 from Preprocessing import Preprocess
 from Preprocessing import GraphFeature
 
+import math
+
 
 
 class Postprocess():
@@ -18,7 +20,7 @@ class Postprocess():
         print('asserting one labels')
 
         short_path_length = self.GraphFeture.get_shortest_path(tag, 'label')
-        _, _, labels = self.Proprocess.get_es_index_data(tag)
+        _, _, _, _, labels = self.Proprocess.get_index_data(tag)
         sum = 0
         cnt = 0
 
@@ -37,7 +39,7 @@ class Postprocess():
         # 验证级完美
         print('asserting zero labels')
         short_path_length = self.GraphFeture.get_shortest_path(tag, 'label_2')
-        _, _, labels = self.Proprocess.get_es_index_data(tag)
+        _, _, _, _, labels = self.Proprocess.get_index_data(tag)
         sum = 0
         cnt = 0
         assert len(short_path_length) == len(labels)
@@ -50,8 +52,9 @@ class Postprocess():
         print(cnt/sum)
 
     def graph_revise(self, filename):
-        label_1_short_path_length = self.GraphFeture.get_shortest_path('test', 'label')
-        label_2_short_path_length = self.GraphFeture.get_shortest_path('test', 'label_2')
+        label_1_short_path_length = self.GraphFeture.get_shortest_path('test_b', 'label')
+        label_2_short_path_length = self.GraphFeture.get_shortest_path('test_b', 'label_2')
+        test_left, test_right = self.Proprocess.load_test('B')
 
         sub = []
         with open(filename, 'r') as fr:
@@ -59,18 +62,36 @@ class Postprocess():
             for line in lines:
                 sub.append(float(line.strip()))
 
+        cnt = 0
+        sum = 0
         # 1 revise
         for i in range(len(sub)):
             if label_1_short_path_length[i] == 0:
-                if sub[i] < 0.99:
+                if label_2_short_path_length[i] == 1 and sub[i] < 0.99:
+                    sum += (math.log(sub[i]))
+                    sub[i] = 1
+                if 'hablar' in test_left[i] or 'hablar' in test_right[i]:
+                    continue
+                if sub[i] > 0.8 and sub[i] < 0.99:
+                    sum += (math.log(sub[i]) - math.log(0.99))
+                    cnt += 1
                     sub[i] = 0.99
+        print(cnt)
+        print(sum)
+
+        cnt = 0
+        sum = 0
         # 0 revise
         for i in range(len(sub)):
-            if label_2_short_path_length[i] > 100 and label_2_short_path_length[i]%100 != 0:
-                if sub[i] > 0.01:
-                    sub[i] = 0.01
+            if label_2_short_path_length[i] == 0:
+                assert  ' '.join(test_left[i]) == ' '.join(test_right[i])
+                sum += (math.log(sub[i]))
+                sub[i] = 1
+                cnt += 1
+        print(cnt)
+        print(sum)
 
-        with open(config.output_prefix_path + 'xgboost_revise_2.txt', 'w') as fr:
+        with open(config.output_prefix_path + filename.split('.')[0] + 'revise.txt', 'w') as fr:
             for s in sub:
                 fr.write(str(s) + '\n')
 
@@ -107,6 +128,7 @@ class Postprocess():
 
 if __name__ == '__main__':
     postprocess = Postprocess()
-    #postprocess.graph_revise(config.output_prefix_path + 'xgboost_human_feature-summit——0.40857.txt')
-    #postprocess.assert_zero('dev')
-    postprocess.rescale('xgboost_human_feature-summit——0.40224.txt')
+    # postprocess.assert_one('train')
+    postprocess.graph_revise(config.output_prefix_path + 'blending.txt')
+    # postprocess.assert_zero('train')
+    #postprocess.rescale('xgboost_human_feature-summit——0.40224.txt')

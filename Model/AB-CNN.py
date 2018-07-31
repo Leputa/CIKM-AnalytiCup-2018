@@ -299,9 +299,9 @@ if __name__ == '__main__':
     np.random.seed(2018)
     # tf.set_random_seed(2018)
     ABCNN = AB_CNN(model_type='ABCNN3', lang='es')
-    # ABCNN.train('dev', ABCNN.model_type)
+    ABCNN.train('dev', ABCNN.model_type)
     # ABCNN.train('train', ABCNN.model_type)
     # ABCNN.test(ABCNN.model_type)
-    ABCNN.cv(ABCNN.model_type, 4)
+    # ABCNN.cv(ABCNN.model_type, 4)
 
 
