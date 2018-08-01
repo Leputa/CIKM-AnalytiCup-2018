@@ -37,13 +37,13 @@
     vi.GraphFeature.py 图特征(该部分特征导致线上线下不一致，最终未采用)  
     vii.Postprocess.py 利用图提取的规则修正最终结果以及rescale(最终未采用)  
     viii.GoogleTranslation.py 调用Google翻译翻译西班牙语料(最终未使用)
-* ./Model:
+* ./Model:  
     i.LexDecomp.py  
     implementation of the Answer Selection (AS) model proposed in the paper Sentence Similarity Learning by Lexical Decomposition and Composition, by (Wang et al., 2016).  
-    论文地址：https://arxiv.org/pdf/1602.07019.pdf
+    论文地址：https://arxiv.org/pdf/1602.07019.pdf  
     ii. AB-CNN.py  
     论文地址：https://arxiv.org/pdf/1512.05193.pdf  
-    iii.Xgboost.py  Xgboost模型 
+    iii.Xgboost.py  Xgboost模型   
     iv.Embedding.py  获取Word2Vec及训练Doc2Vec  
     v.其他为父类或最终未采用的模型 
 * ./Config:  

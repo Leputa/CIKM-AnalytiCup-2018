@@ -18,8 +18,7 @@ def get_subs(fileNames):
 
 
 if __name__ == '__main__':
-    # fileNames = ['ABCNN3-submit——0.40833.txt','xgboost_human_feature-summit——0.40224.txt', 'LexDecomp-submit——0.41079.txt']
-    fileNames = ['es_ABCNN3-submit.txt', '960_xgboost_human_feature-summit.txt', '800_lightgbmhuman_feature-summit.txt','3_cv_es_LexDecomp-submit_0.001.txt', '3_cv_es_LexDecomp-submit_0.0009.txt']
+    fileNames = ['es_ABCNN3-submit.txt', '960_xgboost_human_feature-summit.txt','3_cv_es_LexDecomp-submit_0.001.txt', '3_cv_es_LexDecomp-submit_0.0009.txt']
 
     predict_list = get_subs(fileNames)
     gc.collect()
@@ -30,9 +29,7 @@ if __name__ == '__main__':
     #     predictions = np.add(predictions, rankdata(predict)/predictions.shape[0])
     #     gc.collect()
     # predictions /= len(predict_list)
-
-    # predictions = predict_list[0] * 0.33 + predict_list[1] * 0.4 + predict_list[2] * 0.27
-    predictions = predict_list[0] * 0.27 + predict_list[1] * 0.15 + predict_list[2] * 0.08 + predict_list[3] * 0.3 + predict_list[4] * 0.2
+    predictions = predict_list[0] * 0.27 + predict_list[1] * 0.23 +  predict_list[2] * 0.3 + predict_list[3] * 0.2
 
     with open(config.output_prefix_path + 'blending.txt', 'w') as fr:
         for sub in predictions:
